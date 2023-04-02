@@ -1,0 +1,79 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: obridge-chain-client-evm-bsc-server-9006
+  namespace: "{{.Deployment.Namespace}}"
+spec:
+  selector:
+    app: obridge-chain-client-evm-bsc-9006
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: obridge-chain-client-evm-bsc-api-9006
+      port: 9100
+      targetPort: 9100
+---
+# Source: obridge-chain-client-evm/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obridge-chain-client-evm-bsc-9006
+  namespace: "{{.Deployment.Namespace}}"
+  labels:
+    app: obridge-chain-client-evm-bsc-9006
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obridge-chain-client-evm-bsc-9006
+  template:
+    metadata:
+      labels:
+        app: obridge-chain-client-evm-bsc-9006
+    spec:
+      containers:
+        - name: obridge-chain-client-evm-bsc-9006
+          image: "{{.Deployment.Image}}"
+          ports:
+            - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}9100{{ end }}
+          env:
+            - name: CLEAR_PADDING
+              value: 'true'
+            - name: "STATUS_KEY"
+              value: "obridge-chain-client-status-report-{{.Deployment.Name}}"
+            - name: CHAIN_TYPE
+              value: "evm"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password
+            - name: EVM_CLIENT_PORT
+              value: "9100"
+            - name: REDIS_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: SYSTEM_CHAIN_ID
+              value: "9006"
+            - name: CHAIN_ID
+              value: "97"
+            - name: OS_API_KEY
+              value: "{{.Deployment.OsApiKey}}"
+            - name: OS_API_SECRET
+              value: "{{.Deployment.OsApiSecret}}"
+            - name: OS_SYSTEM_SERVER
+              value: "{{.Deployment.OsSystemServer}}"
+            - name: CONTRACT_ADDRESS
+              value: "0x9D18cc6cFC0614e05AF80355aB836E2cF945a91C"
+
+            - name: START_BLOCK
+              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}24345141{{ end }}"
+            - name: RPC_URL
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://blockchain2.byte-trade.com:31267/bsc-archive-testnet{{ end }}"
+# START_BLOCK
+# RPC_URL
+# image
+# image = {{.Deployment.Image}}

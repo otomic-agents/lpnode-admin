@@ -1,0 +1,141 @@
+基础数据
+curl --request GET \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/baseData/chainDataList \
+  --header 'Content-Type: multipart/form-data'
+
+
+安装升级
+列表
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/listInstall \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"installType":"ammClient"
+}'
+
+安装lpclient
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/installLpClient \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"type": "near",
+		"imageRepository": "kldtks/edge:obridge-chain-client-near-37b587b2",
+		"install":true,
+		"startBlock":"100"
+	}
+}'
+
+卸载lpclient
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/uninstallLpClient \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"type": "near",
+		"uninstall":true
+	}
+}'
+安装amm
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/installAmm \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"imageRepository": "magicpigdocker/amm:v0.11",
+		"install":true
+		
+	}
+}'
+
+卸载amm
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/uninstallAmm \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"install":true
+	}
+}'curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/uninstallAmm \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"install":true
+	}
+}'
+
+安装做市程序
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/installAmmMarket \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"imageRepository": "magicpigdocker/lp-market:v0.1",
+		"install":true
+		
+	}
+}'
+
+卸载做市程序
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/uninstallAmmMarket \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"install":true
+	}
+}'
+
+更新版本
+
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/ctrl/updateDeployment \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"setupConfig": {
+		"installType": "ammClient",
+		"name": "near",
+		"imageRepository": "kldtks/edge:obridge-chain-client-near-37b587b2",
+		"update": true
+	}
+}'
+
+
+Token 管理
+curl --request GET \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/tokenManager/list
+
+
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/tokenManager/create \
+  --header 'Content-Type: application/json' \
+  --data '{
+}'
+
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/tokenManager/delete \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"_id":"lp-wallet-1"
+}'
+
+
+钱包管理
+curl --request GET \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/dexWallet/list
+
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/dexWallet/create \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"walletName":"lp-wallet-1",
+	"privateKey":"51ca8c970c41e8550454dbdd0a8eb4dbc2a95a33fb397c0a064bd204c0678fde"
+}'
+
+curl --request POST \
+  --url http://localhost:18006/lpnode/lpnode_admin_panel/dexWallet/delete \
+  --header 'Content-Type: application/json' \
+  --data '{
+	"_id":"lp-wallet-1"
+}'

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "obridge-user-app-{{.Deployment.Name}}"
+  labels:
+    app: "obridge-user-app-{{.Deployment.Name}}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "obridge-user-app-{{.Deployment.Name}}"
+  template:
+    metadata:
+      labels:
+        app: "obridge-user-app-{{.Deployment.Name}}"
+    spec:
+      containers:
+        - name: "obridge-user-app-{{.Deployment.Name}}"
+          image: "{{.Deployment.Image}}"
+          ports:
+            - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}17001{{ end }}
+          env:
+            - name: "STATUS_KEY"
+              value: "obridge-user-app-status-report-{{.Deployment.Name}}"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: APP_NAME
+              value: "{{.Deployment.Name}}"
+            - name: APP_VERSION
+              value: "{{.Deployment.Image}}"
+            - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: LP_NODE_DATA_MONGO_URL
+              value: "obridge-lpnode-db-mongodb"
+            - name: NODE_ENV
+              value: "production"
+            - name: LP_MARKET_SERVICE_URL
+              value: "obridge-lpnode-market"
+            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
+              value: "http://lpnode-admin-server:18006"
+            - name: MONGODBPASS
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-mongodb
+                  key: mongodb-root-password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password

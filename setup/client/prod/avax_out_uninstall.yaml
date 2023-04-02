@@ -1,0 +1,66 @@
+# Source: obridge-chain-client-evm/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: obridge-chain-client-evm-avax-server-9000
+  namespace: ""
+spec:
+  selector:
+    app: obridge-chain-client-evm-avax-9000
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: obridge-chain-client-evm-avax-api-9000
+      port: 9100
+      targetPort: 9100
+---
+# Source: obridge-chain-client-evm/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obridge-chain-client-evm-avax-9000
+  namespace: ""
+  labels:
+    app: obridge-chain-client-evm-avax-9000
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obridge-chain-client-evm-avax-9000
+  template:
+    metadata:
+      labels:
+        app: obridge-chain-client-evm-avax-9000
+    spec:
+      containers:
+        - name: obridge-chain-client-evm-avax-9000
+          image: "kldtks/edge:obridge-chain-client-near-37b587b2"
+          ports:
+            - containerPort: 9100
+          env:
+            - name: CHAIN_TYPE
+              value: "evm"
+            
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password
+            - name: EVM_CLIENT_PORT
+              value: "9100"
+            - name: REDIS_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: CONTRACT_ADDRESS
+              value: "0xad9314f18852c214e9e0bd39970bc6c390c11075"
+            - name: SYSTEM_CHAIN_ID
+              value: "9000"
+            - name: CHAIN_ID
+              value: "43114"
+
+            - name: START_BLOCK
+              value: "15806313"
+            - name: RPC_URL
+              value: "bscrpc"
+# START_BLOCK
+# RPC_URL
+# image

@@ -1,0 +1,8 @@
+var shell = require("shelljs")
+shell.exec("rm -rf gen")
+shell.exec("goa gen admin-panel/design")
+shell.exec("rm -rf cmd/api_service/http.go")
+shell.exec("rm -rf cmd/api_service/main.go")
+shell.exec("goa example admin-panel/design")
+shell.exec("rm -rf api_service api_service-cli")
+shell.exec("go build ./cmd/api_service && go build ./cmd/api_service-cli")

@@ -1,0 +1,83 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: obridge-chain-client-near-server-397
+  namespace: "{{.Deployment.Namespace}}"
+spec:
+  selector:
+    app: obridge-chain-client-near-397
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: obridge-chain-client-near-api-397
+      port: 9100
+      targetPort: 9100
+---
+# Source: obridge-chain-client-near/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obridge-chain-client-near-397
+  namespace: "{{.Deployment.Namespace}}"
+  labels:
+    app: obridge-chain-client-near-397
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obridge-chain-client-near-397
+  template:
+    metadata:
+      labels:
+        app: obridge-chain-client-near-397
+    spec:
+      containers:
+        - name: obridge-chain-client-near-397
+          image: "{{.Deployment.Image}}"
+          ports:
+            - containerPort: 9100
+          env:
+            - name: "STATUS_KEY"
+              value: "obridge-chain-client-status-report-{{.Deployment.Name}}"
+            - name: CHAIN_TYPE
+              value: "near"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password
+            - name: NEAR_CLIENT_PORT
+              value: "9100"
+            - name: REDIS_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: CONTRACT_ADDRESS
+              value: "otv1.saidev.testnet"
+            - name: SYSTEM_CHAIN_ID
+              value: "397"
+            - name: LAKE_BUCKET
+              value: "near-lake-data-testnet"
+            - name: LAKE_REGION
+              value: "eu-central-1"
+            - name: LAKE_POOLSIZE
+              value: "200"
+            - name: CONNECTION_NETWORKID
+              value: "testnet"
+
+            - name: CONNECTION_NODEURL
+              value: "{{ if .Deployment.ConnectionNodeurl }}{{.Deployment.ConnectionNodeurl}}{{ else }}https://rpc.testnet.near.org{{ end }}"
+            - name: CONNECTION_WALLETURL
+              value: "{{ if .Deployment.ConnectionWalleturl }}{{.Deployment.ConnectionWalleturl}}{{ else }}https://wallet.testnet.near.org{{ end }}"
+            - name: CONNECTION_HELPERURL
+              value: "{{ if .Deployment.ConnectionHelperurl }}{{.Deployment.ConnectionHelperurl}}{{ else }}https://helper.testnet.near.org{{ end }}"
+            - name: CONNECTION_EXPLORERURL
+              value: "{{ if .Deployment.ConnectionExplorerurl }}{{.Deployment.ConnectionExplorerurl}}{{ else }}https://explorer.testnet.near.org{{ end }}"
+            - name: AWS_ACCESS_KEY_ID
+              value: "{{ if .Deployment.AwsAccessKeyId }}{{.Deployment.AwsAccessKeyId}}{{ else }}{{ end }}"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "{{ if .Deployment.AwsSecretAccessKey }}{{.Deployment.AwsSecretAccessKey}}{{ else }}{{ end }}"
+            - name: START_BLOCK
+              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}107532286{{ end }}"

@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: obridge-chain-client-evm-bsc-server-9006
+  namespace: ""
+spec:
+  selector:
+    app: obridge-chain-client-evm-bsc-9006
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: obridge-chain-client-evm-bsc-api-9006
+      port: 9100
+      targetPort: 9100
+---
+# Source: obridge-chain-client-evm/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obridge-chain-client-evm-bsc-9006
+  namespace: ""
+  labels:
+    app: obridge-chain-client-evm-bsc-9006
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obridge-chain-client-evm-bsc-9006
+  template:
+    metadata:
+      labels:
+        app: obridge-chain-client-evm-bsc-9006
+    spec:
+      containers:
+        - name: obridge-chain-client-evm-bsc-9006
+          image: "kldtks/edge:obridge-chain-client-evm-latest"
+          ports:
+            - containerPort: 9100
+          env:
+            - name: CLEAR_PADDING
+              value: 'true'
+            - name: "STATUS_KEY"
+              value: "obridge-chain-client-status-report-bsc"
+            - name: CHAIN_TYPE
+              value: "evm"
+            
+            - name: "key1"
+              value: "value1"
+            
+            - name: "key2"
+              value: "value3"
+            
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password
+            - name: EVM_CLIENT_PORT
+              value: "9100"
+            - name: REDIS_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: SYSTEM_CHAIN_ID
+              value: "9006"
+            - name: CHAIN_ID
+              value: "56"
+            - name: CONTRACT_ADDRESS
+              value: "0x135764ab71f6a3217d158cde3cb84c390963cb1f"
+
+            - name: START_BLOCK
+              value: "100"
+            - name: RPC_URL
+              value: "https://data-seed-prebsc-2-s1.binance.org:8545"
+# START_BLOCK
+# RPC_URL
+# image
+# image = kldtks/edge:obridge-chain-client-evm-latest

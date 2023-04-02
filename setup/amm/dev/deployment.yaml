@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "obridge-amm-{{.Deployment.Name}}-analyze"
+  labels:
+    app: "obridge-amm-{{.Deployment.Name}}-analyze"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "obridge-amm-{{.Deployment.Name}}-analyze"
+  template:
+    metadata:
+      labels:
+        app: "obridge-amm-{{.Deployment.Name}}-analyze"
+    spec:
+      containers:
+        - name: "obridge-amm-{{.Deployment.Name}}-analyze"
+          image: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
+          imagePullPolicy: "Always"
+          env:
+            - name: APP_NAME
+              value: "{{.Deployment.Name}}-analyze"
+            - name: APP_VERSION
+              value: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
+            - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: LP_NODE_DATA_MONGO_URL
+              value: "obridge-lpnode-db-mongodb"
+            - name: NODE_ENV
+              value: "production"
+            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
+              value: "http://lpnode-admin-server:18006"
+            - name: MONGODBPASS
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-mongodb
+                  key: mongodb-root-password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "obridge-amm-{{.Deployment.Name}}"
+  labels:
+    app: "obridge-amm-{{.Deployment.Name}}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "obridge-amm-{{.Deployment.Name}}"
+  template:
+    metadata:
+      labels:
+        app: "obridge-amm-{{.Deployment.Name}}"
+    spec:
+      containers:
+        - name: "obridge-amm-{{.Deployment.Name}}"
+          image: "{{.Deployment.Image}}"
+          ports:
+            - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18081{{ end }}
+          env:
+            - name: "STATUS_KEY"
+              value: "obridge-amm-status-report-{{.Deployment.Name}}"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: APP_NAME
+              value: "{{.Deployment.Name}}"
+            - name: APP_VERSION
+              value: "{{.Deployment.Image}}"
+            - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: LP_NODE_DATA_MONGO_URL
+              value: "obridge-lpnode-db-mongodb"
+            - name: NODE_ENV
+              value: "production"
+            - name: LP_MARKET_SERVICE_URL
+              value: "obridge-lpnode-market"
+            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
+              value: "http://lpnode-admin-server:18006"
+            - name: MONGODBPASS
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-mongodb
+                  key: mongodb-root-password
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password

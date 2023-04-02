@@ -1,0 +1,3 @@
+goa gen admin-panel/design
+goa example admin-panel/design
+go build ./cmd/calc && go build ./cmd/calc-cli

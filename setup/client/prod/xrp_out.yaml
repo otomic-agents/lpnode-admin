@@ -1,0 +1,74 @@
+---
+# Source: obridge-chain-client-xrp/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: obridge-chain-client-xrp-server-144
+  namespace: "{{.Deployment.Namespace}}"
+spec:
+  selector:
+    app: obridge-chain-client-xrp-144
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: obridge-chain-client-xrp-api-144
+      port: 9100
+      targetPort: 9100
+---
+# Source: obridge-chain-client-xrp/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obridge-chain-client-xrp-144
+  namespace: "{{.Deployment.Namespace}}"
+  labels:
+    app: obridge-chain-client-xrp-144
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obridge-chain-client-xrp-144
+  template:
+    metadata:
+      labels:
+        app: obridge-chain-client-xrp-144
+    spec:
+      containers:
+        - name: obridge-chain-client-xrp-144
+          image: "{{.Deployment.Image}}"
+          ports:
+            - containerPort: 9100
+          env:
+            - name: "STATUS_KEY"
+              value: "obridge-chain-client-status-report-{{.Deployment.Name}}"
+            - name: CHAIN_TYPE
+              value: "xrp"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password
+            - name: XRP_CLIENT_PORT
+              value: "9100"
+            - name: REDIS_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: CONTRACT_ADDRESS
+              value: ""
+            - name: SYSTEM_CHAIN_ID
+              value: "144"
+            - name: CHAIN_ID
+              value: ""
+            - name: DEV_MONITOR
+              value: "false"
+
+            - name: RPC_URL
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}wss://s.altnet.rippletest.net:51233{{ end }}"
+            - name: START_BLOCK
+              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}35408124{{ end }}"
+# START_BLOCK
+# RPC_URL
+# image

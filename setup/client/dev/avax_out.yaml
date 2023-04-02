@@ -1,0 +1,76 @@
+# Source: obridge-chain-client-evm/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: obridge-chain-client-evm-avax-server-9000
+  namespace: "{{.Deployment.Namespace}}"
+spec:
+  selector:
+    app: obridge-chain-client-evm-avax-9000
+  type: ClusterIP
+  ports:
+    - protocol: TCP
+      name: obridge-chain-client-evm-avax-api-9000
+      port: 9100
+      targetPort: 9100
+---
+# Source: obridge-chain-client-evm/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: obridge-chain-client-evm-avax-9000
+  namespace: "{{.Deployment.Namespace}}"
+  labels:
+    app: obridge-chain-client-evm-avax-9000
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: obridge-chain-client-evm-avax-9000
+  template:
+    metadata:
+      labels:
+        app: obridge-chain-client-evm-avax-9000
+    spec:
+      containers:
+        - name: obridge-chain-client-evm-avax-9000
+          image: "{{.Deployment.Image}}"
+          ports:
+            - containerPort: 9100
+          env:
+            - name: "STATUS_KEY"
+              value: "obridge-chain-client-status-report-{{.Deployment.Name}}"
+            - name: CHAIN_TYPE
+              value: "evm"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: obridge-lpnode-db-redis
+                  key: redis-password
+            - name: EVM_CLIENT_PORT
+              value: "9100"
+            - name: REDIS_HOST
+              value: "obridge-lpnode-db-redis-master"
+            - name: CONTRACT_ADDRESS
+              value: "0xE244204c900613dd084ED8543b15616bA43B560A"
+            - name: SYSTEM_CHAIN_ID
+              value: "9000"
+            - name: CHAIN_ID
+              value: "43113"
+            - name: OS_API_KEY
+              value: "{{.Deployment.OsApiKey}}"
+            - name: OS_API_SECRET
+              value: "{{.Deployment.OsApiSecret}}"
+            - name: OS_SYSTEM_SERVER
+              value: "{{.Deployment.OsSystemServer}}"
+            - name: START_BLOCK
+              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}28119986{{ end }}"
+            - name: RPC_URL
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://rpc.ankr.com/avalanche_fuji{{ end }}"
+# START_BLOCK
+# RPC_URL
+# image

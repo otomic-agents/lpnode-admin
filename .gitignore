@@ -1,0 +1,8 @@
+./node_modules
+node_modules
+/.idea/
+/cmd/api_service/go_build_admin_panel
+/api_service
+/api_service-cli
+!/env.json
+cmd/api_service/__debug_bin
