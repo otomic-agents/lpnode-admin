@@ -294,6 +294,7 @@ func unmarshalListBridgeItemResponseBodyToBridgeconfigListBridgeItem(v *ListBrid
 		SrcToken:          v.SrcToken,
 		WalletName:        v.WalletName,
 		WalletID:          v.WalletID,
+		EnableHedge:       v.EnableHedge,
 	}
 
 	return res

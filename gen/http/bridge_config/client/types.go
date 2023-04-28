@@ -29,7 +29,8 @@ type BridgeCreateRequestBody struct {
 	// mongodb的主键,walletList 中获取
 	SrcWalletID string `form:"srcWalletId" json:"srcWalletId" xml:"srcWalletId"`
 	// amm安装时候的name
-	AmmName string `form:"ammName" json:"ammName" xml:"ammName"`
+	AmmName     string `form:"ammName" json:"ammName" xml:"ammName"`
+	EnableHedge bool   `form:"enableHedge" json:"enableHedge" xml:"enableHedge"`
 }
 
 // BridgeDeleteRequestBody is the type of the "bridgeConfig" service
@@ -96,6 +97,7 @@ type ListBridgeItemResponseBody struct {
 	SrcToken          *string `form:"srcToken,omitempty" json:"srcToken,omitempty" xml:"srcToken,omitempty"`
 	WalletName        *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
 	WalletID          *string `form:"walletId,omitempty" json:"walletId,omitempty" xml:"walletId,omitempty"`
+	EnableHedge       *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
 }
 
 // NewBridgeCreateRequestBody builds the HTTP request body from the payload of
@@ -110,6 +112,13 @@ func NewBridgeCreateRequestBody(p *bridgeconfig.BridgeItem) *BridgeCreateRequest
 		WalletID:    p.WalletID,
 		SrcWalletID: p.SrcWalletID,
 		AmmName:     p.AmmName,
+		EnableHedge: p.EnableHedge,
+	}
+	{
+		var zero bool
+		if body.EnableHedge == zero {
+			body.EnableHedge = true
+		}
 	}
 	return body
 }

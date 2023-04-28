@@ -174,6 +174,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		"dstToken_id": dstTokenInfo.ID,
 	}, bson.M{
 		"$set": bson.M{
+			"enableHedge":       p.EnableHedge,
 			"bridgeName":        p.BridgeName,
 			"srcChainId":        srcChainInfo.ChainId,
 			"dstChainId":        dstChainInfo.ChainId,

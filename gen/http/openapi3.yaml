@@ -178,6 +178,7 @@ paths:
                             bridgeName: Quas laborum nesciunt reprehenderit.
                             dstChainId: Sit velit.
                             dstTokenId: Sit modi.
+                            enableHedge: true
                             srcChainId: Maxime dolores recusandae cupiditate.
                             srcTokenId: Quisquam facere dolores quos ex voluptatibus.
                             srcWalletId: Voluptatem quo ducimus repellat quia explicabo delectus.
@@ -190,9 +191,9 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/BridgeCreateResponseBody'
                             example:
-                                code: 3631872795703142142
-                                message: Soluta aut repudiandae maxime culpa.
-                                result: 4104984737862595098
+                                code: 4104984737862595098
+                                message: Aut repudiandae maxime culpa beatae praesentium.
+                                result: 7863739441932810704
     /lpnode/lpnode_admin_panel/bridge/delete:
         post:
             tags:
@@ -206,7 +207,7 @@ paths:
                         schema:
                             $ref: '#/components/schemas/BridgeDeleteRequestBody'
                         example:
-                            id: Eveniet mollitia fuga nihil magni dolores qui.
+                            id: Magni dolores qui quod voluptas sit.
             responses:
                 "200":
                     description: OK response.
@@ -215,9 +216,9 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/BridgeCreateResponseBody'
                             example:
-                                code: 8555508271784154388
-                                message: Ad reiciendis animi odio in repellat.
-                                result: 5039672962761224546
+                                code: 2707116789315526381
+                                message: Odio in repellat facilis sint iusto ea.
+                                result: 1480090896160082772
     /lpnode/lpnode_admin_panel/bridge/list:
         get:
             tags:
@@ -232,41 +233,77 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/BridgeListResponseBody'
                             example:
-                                code: 8854764830298940049
-                                message: Dolorum et consequatur.
+                                code: 4635798258453920610
+                                message: Et consequatur numquam eveniet mollitia fuga.
                                 result:
-                                    - _id: Praesentium architecto nisi suscipit quo a.
-                                      ammName: Odio voluptas voluptatum.
-                                      bridgeName: Expedita culpa error.
-                                      dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                                      dstChainRawId: 3641097007975202995
-                                      dstClientUri: Qui quas cum a sit.
-                                      dstToken: Ipsam perspiciatis eius ut ad tempore.
-                                      dstTokenId: Voluptas temporibus et blanditiis.
-                                      lpReceiverAddress: Et et aut quibusdam labore sunt.
-                                      msmqName: Sit aut consequatur aspernatur magnam.
-                                      srcChainId: Et pariatur omnis eligendi et nemo.
-                                      srcChainRawId: 3670242822805910088
-                                      srcToken: Odio ullam et ut.
-                                      srcTokenId: Quas natus consequatur.
+                                    - _id: Nisi suscipit quo a non.
+                                      ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                                      bridgeName: Culpa error blanditiis.
+                                      dstChainId: Velit quae perspiciatis quis.
+                                      dstChainRawId: 9213859659994809406
+                                      dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                                      dstToken: Ut ad tempore rerum et.
+                                      dstTokenId: Fugit error voluptas temporibus.
+                                      enableHedge: false
+                                      lpReceiverAddress: Aut quibusdam labore sunt quia.
+                                      msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                                      srcChainId: Blanditiis eveniet.
+                                      srcChainRawId: 729506532412582434
+                                      srcToken: Et ut quae est amet qui sed.
+                                      srcTokenId: Pariatur omnis eligendi et nemo facilis.
                                       walletId: Aut est unde debitis est quia molestias.
-                                      walletName: Est amet qui sed tenetur molestias est.
-                                    - _id: Praesentium architecto nisi suscipit quo a.
-                                      ammName: Odio voluptas voluptatum.
-                                      bridgeName: Expedita culpa error.
-                                      dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                                      dstChainRawId: 3641097007975202995
-                                      dstClientUri: Qui quas cum a sit.
-                                      dstToken: Ipsam perspiciatis eius ut ad tempore.
-                                      dstTokenId: Voluptas temporibus et blanditiis.
-                                      lpReceiverAddress: Et et aut quibusdam labore sunt.
-                                      msmqName: Sit aut consequatur aspernatur magnam.
-                                      srcChainId: Et pariatur omnis eligendi et nemo.
-                                      srcChainRawId: 3670242822805910088
-                                      srcToken: Odio ullam et ut.
-                                      srcTokenId: Quas natus consequatur.
+                                      walletName: Molestias est.
+                                    - _id: Nisi suscipit quo a non.
+                                      ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                                      bridgeName: Culpa error blanditiis.
+                                      dstChainId: Velit quae perspiciatis quis.
+                                      dstChainRawId: 9213859659994809406
+                                      dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                                      dstToken: Ut ad tempore rerum et.
+                                      dstTokenId: Fugit error voluptas temporibus.
+                                      enableHedge: false
+                                      lpReceiverAddress: Aut quibusdam labore sunt quia.
+                                      msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                                      srcChainId: Blanditiis eveniet.
+                                      srcChainRawId: 729506532412582434
+                                      srcToken: Et ut quae est amet qui sed.
+                                      srcTokenId: Pariatur omnis eligendi et nemo facilis.
                                       walletId: Aut est unde debitis est quia molestias.
-                                      walletName: Est amet qui sed tenetur molestias est.
+                                      walletName: Molestias est.
+                                    - _id: Nisi suscipit quo a non.
+                                      ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                                      bridgeName: Culpa error blanditiis.
+                                      dstChainId: Velit quae perspiciatis quis.
+                                      dstChainRawId: 9213859659994809406
+                                      dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                                      dstToken: Ut ad tempore rerum et.
+                                      dstTokenId: Fugit error voluptas temporibus.
+                                      enableHedge: false
+                                      lpReceiverAddress: Aut quibusdam labore sunt quia.
+                                      msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                                      srcChainId: Blanditiis eveniet.
+                                      srcChainRawId: 729506532412582434
+                                      srcToken: Et ut quae est amet qui sed.
+                                      srcTokenId: Pariatur omnis eligendi et nemo facilis.
+                                      walletId: Aut est unde debitis est quia molestias.
+                                      walletName: Molestias est.
+                                    - _id: Nisi suscipit quo a non.
+                                      ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                                      bridgeName: Culpa error blanditiis.
+                                      dstChainId: Velit quae perspiciatis quis.
+                                      dstChainRawId: 9213859659994809406
+                                      dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                                      dstToken: Ut ad tempore rerum et.
+                                      dstTokenId: Fugit error voluptas temporibus.
+                                      enableHedge: false
+                                      lpReceiverAddress: Aut quibusdam labore sunt quia.
+                                      msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                                      srcChainId: Blanditiis eveniet.
+                                      srcChainRawId: 729506532412582434
+                                      srcToken: Et ut quae est amet qui sed.
+                                      srcTokenId: Pariatur omnis eligendi et nemo facilis.
+                                      walletId: Aut est unde debitis est quia molestias.
+                                      walletName: Molestias est.
     /lpnode/lpnode_admin_panel/bridge/test:
         post:
             tags:
@@ -280,7 +317,7 @@ paths:
                         schema:
                             $ref: '#/components/schemas/BridgeTestRequestBody'
                         example:
-                            id: Sint iusto ea aliquam quia sit.
+                            id: Quia sit.
             responses:
                 "200":
                     description: OK response.
@@ -1437,6 +1474,10 @@ components:
                     type: string
                     description: mongodb的主键,tokenList中获取
                     example: Distinctio dicta praesentium corporis eos odit ut.
+                enableHedge:
+                    type: boolean
+                    default: true
+                    example: false
                 srcChainId:
                     type: string
                     description: mongodb的主键,baseData中获取
@@ -1454,14 +1495,15 @@ components:
                     description: mongodb的主键,walletList 中获取
                     example: Nisi aspernatur enim perspiciatis quaerat architecto quo.
             example:
-                ammName: Provident facere rem cupiditate.
-                bridgeName: Natus aut illo.
-                dstChainId: Quidem perspiciatis quae quisquam.
-                dstTokenId: Repudiandae voluptas necessitatibus.
-                srcChainId: Facere qui dignissimos.
-                srcTokenId: Ex accusamus.
-                srcWalletId: Esse et.
-                walletId: Repellendus ipsam harum placeat accusantium.
+                ammName: Dolor possimus omnis quo vel dolorem.
+                bridgeName: Aut illo non.
+                dstChainId: Perspiciatis quae quisquam similique ex accusamus omnis.
+                dstTokenId: Harum placeat.
+                enableHedge: true
+                srcChainId: Qui dignissimos sint.
+                srcTokenId: Voluptas necessitatibus qui repellendus.
+                srcWalletId: Rem cupiditate quidem.
+                walletId: Ipsum esse et dignissimos provident.
             required:
                 - bridgeName
                 - srcChainId
@@ -1476,29 +1518,29 @@ components:
             properties:
                 code:
                     type: integer
-                    example: 7242195334436522632
+                    example: 1734930443671469467
                     format: int64
                 message:
                     type: string
-                    example: Possimus omnis quo vel dolorem sint sapiente.
+                    example: Quos veritatis vitae quo.
                 result:
                     type: integer
                     description: 是否成功
-                    example: 8535766166151801022
+                    example: 4699538723721223933
                     format: int64
             example:
-                code: 4699538723721223933
-                message: Veritatis vitae quo quos minus enim ut.
-                result: 7400983286180351592
+                code: 8678572460678550195
+                message: Ut incidunt illo dolores est labore commodi.
+                result: 7354552596576625108
         BridgeDeleteRequestBody:
             type: object
             properties:
                 id:
                     type: string
                     description: Mongodb 的主键
-                    example: Commodi nisi asperiores totam.
+                    example: Eos odio.
             example:
-                id: Quis optio odit ducimus aspernatur.
+                id: Aut architecto.
             required:
                 - id
         BridgeListResponseBody:
@@ -1506,134 +1548,123 @@ components:
             properties:
                 code:
                     type: integer
-                    example: 3362770010992955491
+                    example: 8838661967690816875
                     format: int64
                 message:
                     type: string
-                    example: Repellendus quo eos odio nulla aut architecto.
+                    example: Eveniet laboriosam.
                 result:
                     type: array
                     items:
                         $ref: '#/components/schemas/ListBridgeItem'
                     description: 链的列表
                     example:
-                        - _id: Praesentium architecto nisi suscipit quo a.
-                          ammName: Odio voluptas voluptatum.
-                          bridgeName: Expedita culpa error.
-                          dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                          dstChainRawId: 3641097007975202995
-                          dstClientUri: Qui quas cum a sit.
-                          dstToken: Ipsam perspiciatis eius ut ad tempore.
-                          dstTokenId: Voluptas temporibus et blanditiis.
-                          lpReceiverAddress: Et et aut quibusdam labore sunt.
-                          msmqName: Sit aut consequatur aspernatur magnam.
-                          srcChainId: Et pariatur omnis eligendi et nemo.
-                          srcChainRawId: 3670242822805910088
-                          srcToken: Odio ullam et ut.
-                          srcTokenId: Quas natus consequatur.
+                        - _id: Nisi suscipit quo a non.
+                          ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                          bridgeName: Culpa error blanditiis.
+                          dstChainId: Velit quae perspiciatis quis.
+                          dstChainRawId: 9213859659994809406
+                          dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                          dstToken: Ut ad tempore rerum et.
+                          dstTokenId: Fugit error voluptas temporibus.
+                          enableHedge: false
+                          lpReceiverAddress: Aut quibusdam labore sunt quia.
+                          msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                          srcChainId: Blanditiis eveniet.
+                          srcChainRawId: 729506532412582434
+                          srcToken: Et ut quae est amet qui sed.
+                          srcTokenId: Pariatur omnis eligendi et nemo facilis.
                           walletId: Aut est unde debitis est quia molestias.
-                          walletName: Est amet qui sed tenetur molestias est.
-                        - _id: Praesentium architecto nisi suscipit quo a.
-                          ammName: Odio voluptas voluptatum.
-                          bridgeName: Expedita culpa error.
-                          dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                          dstChainRawId: 3641097007975202995
-                          dstClientUri: Qui quas cum a sit.
-                          dstToken: Ipsam perspiciatis eius ut ad tempore.
-                          dstTokenId: Voluptas temporibus et blanditiis.
-                          lpReceiverAddress: Et et aut quibusdam labore sunt.
-                          msmqName: Sit aut consequatur aspernatur magnam.
-                          srcChainId: Et pariatur omnis eligendi et nemo.
-                          srcChainRawId: 3670242822805910088
-                          srcToken: Odio ullam et ut.
-                          srcTokenId: Quas natus consequatur.
+                          walletName: Molestias est.
+                        - _id: Nisi suscipit quo a non.
+                          ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                          bridgeName: Culpa error blanditiis.
+                          dstChainId: Velit quae perspiciatis quis.
+                          dstChainRawId: 9213859659994809406
+                          dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                          dstToken: Ut ad tempore rerum et.
+                          dstTokenId: Fugit error voluptas temporibus.
+                          enableHedge: false
+                          lpReceiverAddress: Aut quibusdam labore sunt quia.
+                          msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                          srcChainId: Blanditiis eveniet.
+                          srcChainRawId: 729506532412582434
+                          srcToken: Et ut quae est amet qui sed.
+                          srcTokenId: Pariatur omnis eligendi et nemo facilis.
                           walletId: Aut est unde debitis est quia molestias.
-                          walletName: Est amet qui sed tenetur molestias est.
-                        - _id: Praesentium architecto nisi suscipit quo a.
-                          ammName: Odio voluptas voluptatum.
-                          bridgeName: Expedita culpa error.
-                          dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                          dstChainRawId: 3641097007975202995
-                          dstClientUri: Qui quas cum a sit.
-                          dstToken: Ipsam perspiciatis eius ut ad tempore.
-                          dstTokenId: Voluptas temporibus et blanditiis.
-                          lpReceiverAddress: Et et aut quibusdam labore sunt.
-                          msmqName: Sit aut consequatur aspernatur magnam.
-                          srcChainId: Et pariatur omnis eligendi et nemo.
-                          srcChainRawId: 3670242822805910088
-                          srcToken: Odio ullam et ut.
-                          srcTokenId: Quas natus consequatur.
+                          walletName: Molestias est.
+                        - _id: Nisi suscipit quo a non.
+                          ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                          bridgeName: Culpa error blanditiis.
+                          dstChainId: Velit quae perspiciatis quis.
+                          dstChainRawId: 9213859659994809406
+                          dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                          dstToken: Ut ad tempore rerum et.
+                          dstTokenId: Fugit error voluptas temporibus.
+                          enableHedge: false
+                          lpReceiverAddress: Aut quibusdam labore sunt quia.
+                          msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                          srcChainId: Blanditiis eveniet.
+                          srcChainRawId: 729506532412582434
+                          srcToken: Et ut quae est amet qui sed.
+                          srcTokenId: Pariatur omnis eligendi et nemo facilis.
                           walletId: Aut est unde debitis est quia molestias.
-                          walletName: Est amet qui sed tenetur molestias est.
-                        - _id: Praesentium architecto nisi suscipit quo a.
-                          ammName: Odio voluptas voluptatum.
-                          bridgeName: Expedita culpa error.
-                          dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                          dstChainRawId: 3641097007975202995
-                          dstClientUri: Qui quas cum a sit.
-                          dstToken: Ipsam perspiciatis eius ut ad tempore.
-                          dstTokenId: Voluptas temporibus et blanditiis.
-                          lpReceiverAddress: Et et aut quibusdam labore sunt.
-                          msmqName: Sit aut consequatur aspernatur magnam.
-                          srcChainId: Et pariatur omnis eligendi et nemo.
-                          srcChainRawId: 3670242822805910088
-                          srcToken: Odio ullam et ut.
-                          srcTokenId: Quas natus consequatur.
-                          walletId: Aut est unde debitis est quia molestias.
-                          walletName: Est amet qui sed tenetur molestias est.
+                          walletName: Molestias est.
             example:
-                code: 3167961537465111824
-                message: Quasi rerum dignissimos dolor.
+                code: 2202371173747043911
+                message: Labore et laborum quod consectetur repellendus.
                 result:
-                    - _id: Praesentium architecto nisi suscipit quo a.
-                      ammName: Odio voluptas voluptatum.
-                      bridgeName: Expedita culpa error.
-                      dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                      dstChainRawId: 3641097007975202995
-                      dstClientUri: Qui quas cum a sit.
-                      dstToken: Ipsam perspiciatis eius ut ad tempore.
-                      dstTokenId: Voluptas temporibus et blanditiis.
-                      lpReceiverAddress: Et et aut quibusdam labore sunt.
-                      msmqName: Sit aut consequatur aspernatur magnam.
-                      srcChainId: Et pariatur omnis eligendi et nemo.
-                      srcChainRawId: 3670242822805910088
-                      srcToken: Odio ullam et ut.
-                      srcTokenId: Quas natus consequatur.
+                    - _id: Nisi suscipit quo a non.
+                      ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                      bridgeName: Culpa error blanditiis.
+                      dstChainId: Velit quae perspiciatis quis.
+                      dstChainRawId: 9213859659994809406
+                      dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                      dstToken: Ut ad tempore rerum et.
+                      dstTokenId: Fugit error voluptas temporibus.
+                      enableHedge: false
+                      lpReceiverAddress: Aut quibusdam labore sunt quia.
+                      msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                      srcChainId: Blanditiis eveniet.
+                      srcChainRawId: 729506532412582434
+                      srcToken: Et ut quae est amet qui sed.
+                      srcTokenId: Pariatur omnis eligendi et nemo facilis.
                       walletId: Aut est unde debitis est quia molestias.
-                      walletName: Est amet qui sed tenetur molestias est.
-                    - _id: Praesentium architecto nisi suscipit quo a.
-                      ammName: Odio voluptas voluptatum.
-                      bridgeName: Expedita culpa error.
-                      dstChainId: Officia velit quae perspiciatis quis ad fugit.
-                      dstChainRawId: 3641097007975202995
-                      dstClientUri: Qui quas cum a sit.
-                      dstToken: Ipsam perspiciatis eius ut ad tempore.
-                      dstTokenId: Voluptas temporibus et blanditiis.
-                      lpReceiverAddress: Et et aut quibusdam labore sunt.
-                      msmqName: Sit aut consequatur aspernatur magnam.
-                      srcChainId: Et pariatur omnis eligendi et nemo.
-                      srcChainRawId: 3670242822805910088
-                      srcToken: Odio ullam et ut.
-                      srcTokenId: Quas natus consequatur.
+                      walletName: Molestias est.
+                    - _id: Nisi suscipit quo a non.
+                      ammName: Natus consequatur molestiae odio voluptas voluptatum excepturi.
+                      bridgeName: Culpa error blanditiis.
+                      dstChainId: Velit quae perspiciatis quis.
+                      dstChainRawId: 9213859659994809406
+                      dstClientUri: Quas cum a sit molestiae ipsam perspiciatis.
+                      dstToken: Ut ad tempore rerum et.
+                      dstTokenId: Fugit error voluptas temporibus.
+                      enableHedge: false
+                      lpReceiverAddress: Aut quibusdam labore sunt quia.
+                      msmqName: Aut consequatur aspernatur magnam fuga dignissimos.
+                      srcChainId: Blanditiis eveniet.
+                      srcChainRawId: 729506532412582434
+                      srcToken: Et ut quae est amet qui sed.
+                      srcTokenId: Pariatur omnis eligendi et nemo facilis.
                       walletId: Aut est unde debitis est quia molestias.
-                      walletName: Est amet qui sed tenetur molestias est.
+                      walletName: Molestias est.
         BridgeTestRequestBody:
             type: object
             properties:
                 id:
                     type: string
-                    example: Voluptatum nihil iste suscipit rem dicta.
+                    example: Reprehenderit magni quasi.
             example:
-                id: Dolore sit consequuntur et doloribus.
+                id: Dignissimos dolor quisquam commodi nisi asperiores.
         BridgeTestResponseBody:
             type: object
             properties:
                 code:
                     type: integer
-                    example: 8241714622266471484
+                    example: 8455019543888236516
                     format: int64
             example:
-                code: 6857322101842176120
+                code: 7992877132631328635
         CexAccountBalance:
             type: object
             properties:
@@ -1694,24 +1725,24 @@ components:
                 chainId:
                     type: integer
                     description: ChainId
-                    example: 4151659123012047304
+                    example: 7537698190066720777
                     format: int64
                 chainName:
                     type: string
                     description: chainName
-                    example: Quod occaecati suscipit ea harum vel amet.
+                    example: Odit ducimus aspernatur omnis voluptatum nihil iste.
                 name:
                     type: string
-                    example: Nihil vel modi quis tempore.
+                    example: Rem dicta occaecati dolore.
                 tokenName:
                     type: string
                     description: tokenName
-                    example: Qui incidunt.
+                    example: Consequuntur et doloribus.
             example:
-                chainId: 27635445004257804
-                chainName: Nulla laborum quasi optio perferendis rerum.
-                name: Doloremque amet fuga architecto ipsa.
-                tokenName: Laudantium magni quis dolorum provident asperiores sed.
+                chainId: 8241714622266471484
+                chainName: Aut deleniti quod occaecati suscipit ea.
+                name: Vel amet aliquid.
+                tokenName: Vel modi quis tempore minima.
         ChainDataListResponseBody:
             type: object
             properties:
@@ -1758,14 +1789,14 @@ components:
                 clientId:
                     type: string
                     description: 客户端提交的id
-                    example: Explicabo dolores molestias.
+                    example: Consequatur consequatur similique molestias quo libero.
                 id:
                     type: string
                     description: mongodb的id
-                    example: Molestias quo.
+                    example: Molestiae excepturi est aspernatur.
             example:
-                clientId: Aut esse quod.
-                id: Eos non ducimus odio numquam ut repudiandae.
+                clientId: Ut repudiandae consequatur aut.
+                id: Dolores molestias et eos non ducimus odio.
             required:
                 - id
         CreateDexWalletResponseBody:
@@ -1796,21 +1827,21 @@ components:
             properties:
                 appName:
                     type: string
-                    example: Quod deleniti recusandae.
+                    example: Nobis voluptatem et impedit corrupti est a.
                 clientId:
                     type: string
-                    example: Deserunt veniam eos.
+                    example: Rerum reiciendis laudantium odit eligendi quod deleniti.
                 template:
                     type: string
-                    example: Aut ea consequatur et sit voluptas.
+                    example: Rerum qui at odio unde deserunt.
                 version:
                     type: string
-                    example: Qui at odio.
+                    example: Ratione velit itaque ab qui.
             example:
-                appName: Aspernatur quia occaecati dolores consequatur.
-                clientId: Magnam molestiae excepturi.
-                template: Aspernatur illo consequatur.
-                version: Molestias ut.
+                appName: Eos ut aut.
+                clientId: Aspernatur quia occaecati dolores consequatur.
+                template: Molestias ut.
+                version: Consequatur et sit voluptas.
             required:
                 - appName
                 - clientId
@@ -1820,16 +1851,16 @@ components:
                 code:
                     type: integer
                     description: 0是成功
-                    example: 2289081874480567929
+                    example: 5886933636032345703
                     format: int64
                 message:
                     type: string
-                    example: Adipisci aut.
+                    example: Quod molestias adipisci aut molestiae reiciendis.
                 result:
                     $ref: '#/components/schemas/ConfigResultIDItem'
             example:
-                code: 4241064679992687945
-                message: Qui eligendi nobis aliquid eveniet.
+                code: 2664366136420082487
+                message: Nobis aliquid eveniet.
                 result:
                     clientId: Ad possimus non sit.
                     id: Dolor quibusdam.
@@ -1869,15 +1900,15 @@ components:
                 _id:
                     type: string
                     description: mongodb的id
-                    example: Minus voluptatem molestiae eum eos blanditiis sunt.
+                    example: Magni quis dolorum.
                 chainId:
                     type: integer
                     description: ChainId
-                    example: 4984827197505029742
+                    example: 4196963861267761145
                     format: int64
             example:
-                _id: Amet incidunt mollitia.
-                chainId: 8218965404442140795
+                _id: Sed asperiores at.
+                chainId: 3632933998194543023
             required:
                 - _id
                 - chainId
@@ -1886,19 +1917,19 @@ components:
             properties:
                 code:
                     type: integer
-                    example: 7406460810002984707
+                    example: 6173880199052223754
                     format: int64
                 data:
                     type: integer
-                    example: 5698956415189170299
+                    example: 3206034756433371989
                     format: int64
                 message:
                     type: string
-                    example: Fugiat eos.
+                    example: Rerum quia reprehenderit.
             example:
-                code: 5976857643484617508
-                data: 5705188434283834972
-                message: Ea tempore.
+                code: 80991800114340641
+                data: 5397235820741379507
+                message: Corporis consequuntur doloremque inventore necessitatibus.
         DeploymentSetupConfig:
             type: object
             properties:
@@ -2245,16 +2276,16 @@ components:
             properties:
                 _id:
                     type: string
-                    example: Dolores est labore commodi ut occaecati.
+                    example: Nam voluptatem possimus incidunt et.
                 ammName:
                     type: string
-                    example: Error et vel ut reprehenderit.
+                    example: Ut reprehenderit vitae.
                 bridgeName:
                     type: string
-                    example: Voluptatem consequatur neque facere.
+                    example: Consequatur neque facere.
                 dstChainId:
                     type: string
-                    example: Voluptatem possimus.
+                    example: Minus omnis eligendi soluta esse omnis mollitia.
                 dstChainRawId:
                     type: integer
                     example: 9208178428719726892
@@ -2267,7 +2298,10 @@ components:
                     example: Magni dicta corrupti eius eveniet.
                 dstTokenId:
                     type: string
-                    example: Et dignissimos.
+                    example: Et et.
+                enableHedge:
+                    type: boolean
+                    example: false
                 lpReceiverAddress:
                     type: string
                     example: Dolorem sunt quam optio cumque laboriosam distinctio.
@@ -2276,7 +2310,7 @@ components:
                     example: Quia qui nulla voluptate id consequatur.
                 srcChainId:
                     type: string
-                    example: Omnis eligendi soluta esse omnis mollitia vero.
+                    example: Cumque ducimus doloremque.
                 srcChainRawId:
                     type: integer
                     example: 2863592298295532282
@@ -2286,7 +2320,7 @@ components:
                     example: Est adipisci qui quo aperiam.
                 srcTokenId:
                     type: string
-                    example: Et quia cumque ducimus doloremque facere.
+                    example: Rem error et.
                 walletId:
                     type: string
                     example: Vitae est dolorem est voluptatem modi.
@@ -2294,22 +2328,23 @@ components:
                     type: string
                     example: Praesentium non.
             example:
-                _id: Ratione aut ipsum.
-                ammName: Rerum saepe est modi odio minus ea.
-                bridgeName: Incidunt at voluptatibus officia nemo aut.
-                dstChainId: Aut expedita quas neque quaerat ullam.
-                dstChainRawId: 234467102943434158
-                dstClientUri: Porro eum ut omnis itaque magni.
-                dstToken: Sunt neque.
-                dstTokenId: Et ut minus dolores consectetur.
-                lpReceiverAddress: Provident voluptatem ut expedita natus.
-                msmqName: Ullam explicabo quia vitae ratione est ut.
-                srcChainId: Dolorum nesciunt sunt exercitationem.
-                srcChainRawId: 6838432188190072337
-                srcToken: Velit sed beatae fugit atque aut.
-                srcTokenId: Distinctio neque deleniti pariatur sed vero.
-                walletId: Est mollitia labore et laborum.
-                walletName: Qui cum eveniet laboriosam.
+                _id: Aut ipsum ut aut expedita.
+                ammName: Est modi.
+                bridgeName: Minus ea quod incidunt at voluptatibus.
+                dstChainId: Neque quaerat ullam molestias.
+                dstChainRawId: 7899201405178263117
+                dstClientUri: Aut rem vel.
+                dstToken: Eum ut omnis.
+                dstTokenId: Ut minus dolores consectetur magnam dolorum nesciunt.
+                enableHedge: false
+                lpReceiverAddress: Magni autem sunt neque.
+                msmqName: Provident voluptatem ut expedita natus.
+                srcChainId: Exercitationem dolore distinctio.
+                srcChainRawId: 1757727053700793603
+                srcToken: Explicabo quia vitae ratione.
+                srcTokenId: Deleniti pariatur sed vero numquam rerum.
+                walletId: Fugit atque aut.
+                walletName: Ut est officiis velit sed.
         ListDexWalletResponseBody:
             type: object
             properties:
@@ -2739,15 +2774,15 @@ components:
                 chainData:
                     type: string
                     description: JSON Stored String
-                    example: Velit itaque ab qui qui.
+                    example: Vero ea tempore.
                 chainId:
                     type: integer
                     description: ChainId
-                    example: 6822659056722815602
+                    example: 5976857643484617508
                     format: int64
             example:
-                chainData: Laudantium odit.
-                chainId: 2551114085448938965
+                chainData: Et quis ut.
+                chainId: 2986534302184530902
             required:
                 - chainId
                 - chainData
@@ -2757,21 +2792,21 @@ components:
                 _id:
                     type: string
                     description: mongodb的id
-                    example: Et quis ut.
+                    example: Minus voluptatem molestiae eum eos blanditiis sunt.
                 chainId:
                     type: integer
                     description: ChainId
-                    example: 2986534302184530902
+                    example: 4984827197505029742
                     format: int64
                 usd:
                     type: integer
                     description: usd value
-                    example: 1622716808602891540
+                    example: 8218965404442140795
                     format: int64
             example:
-                _id: Et impedit corrupti est.
-                chainId: 6451387563553092381
-                usd: 2062588636851687037
+                _id: Incidunt mollitia quia nostrum accusamus fugiat.
+                chainId: 3419174217678577748
+                usd: 1065581729653452624
             required:
                 - usd
                 - _id
@@ -2807,12 +2842,16 @@ components:
                       chainName: Voluptatem non maxime maxime fuga.
                       name: Nemo aliquid atque quasi maxime.
                       tokenName: Ex repellat.
+                    - chainId: 8842128240358381
+                      chainName: Voluptatem non maxime maxime fuga.
+                      name: Nemo aliquid atque quasi maxime.
+                      tokenName: Ex repellat.
         SetChainListResponseBody:
             type: object
             properties:
                 code:
                     type: integer
-                    example: 6173880199052223754
+                    example: 27635445004257804
                     format: int64
                 data:
                     type: array
@@ -2832,15 +2871,11 @@ components:
                           chainName: Ut rem eos.
                           name: Facilis consequuntur voluptas aut veritatis enim aut.
                           tokenName: Minus dicta sunt laudantium quaerat non.
-                        - chainId: 8765581062336180857
-                          chainName: Ut rem eos.
-                          name: Facilis consequuntur voluptas aut veritatis enim aut.
-                          tokenName: Minus dicta sunt laudantium quaerat non.
                 message:
                     type: string
-                    example: Rerum quia reprehenderit.
+                    example: Laborum quasi.
             example:
-                code: 80991800114340641
+                code: 144706531595395639
                 data:
                     - chainId: 8765581062336180857
                       chainName: Ut rem eos.
@@ -2850,7 +2885,11 @@ components:
                       chainName: Ut rem eos.
                       name: Facilis consequuntur voluptas aut veritatis enim aut.
                       tokenName: Minus dicta sunt laudantium quaerat non.
-                message: Corporis consequuntur doloremque inventore necessitatibus.
+                    - chainId: 8765581062336180857
+                      chainName: Ut rem eos.
+                      name: Facilis consequuntur voluptas aut veritatis enim aut.
+                      tokenName: Minus dicta sunt laudantium quaerat non.
+                message: Accusantium doloremque amet fuga architecto ipsa.
         StatListResponseBody:
             type: object
             properties:

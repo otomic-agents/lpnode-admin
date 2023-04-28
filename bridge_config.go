@@ -141,6 +141,7 @@ func (s *bridgeConfigsrvc) BridgeList(ctx context.Context) (res *bridgeconfig.Br
 			SrcToken:          ptr.String(v.SrcToken),
 			WalletName:        ptr.String(v.WalletName),
 			WalletID:          ptr.String(v.Wallet_ID.Hex()),
+			EnableHedge:       ptr.Bool(v.EnableHedge),
 		})
 	}
 	res.Code = ptr.Int64(0)

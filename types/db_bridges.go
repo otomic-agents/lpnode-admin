@@ -22,6 +22,7 @@ type DBBridgeRow struct {
 	DstClientUri      string             `bson:"dstClientUri"`
 	RelayApiKey       string             `bson:"relayApiKey"`
 	AmmName           string             `bson:"ammName"`
+	EnableHedge       bool               `bson:"enableHedge"`
 }
 
 type DBBridgeDstChainAggregateItem struct {

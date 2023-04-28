@@ -69,7 +69,8 @@ type BridgeItem struct {
 	// mongodb的主键,walletList 中获取
 	SrcWalletID string
 	// amm安装时候的name
-	AmmName string
+	AmmName     string
+	EnableHedge bool
 }
 
 // BridgeListResult is the result type of the bridgeConfig service bridgeList
@@ -117,4 +118,5 @@ type ListBridgeItem struct {
 	SrcToken          *string
 	WalletName        *string
 	WalletID          *string
+	EnableHedge       *bool
 }

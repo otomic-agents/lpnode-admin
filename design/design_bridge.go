@@ -14,6 +14,9 @@ var BridgeConfig_bridgeItem = Type("bridgeItem", func() {
 	Attribute("walletId", String, "mongodb的主键,walletList 中获取")    // 付款钱包信息
 	Attribute("srcWalletId", String, "mongodb的主键,walletList 中获取") // 收款钱包信息
 	Attribute("ammName", String, "amm安装时候的name")
+	Attribute("enableHedge", Boolean, func() { // 是否开启币对的对冲
+		Default(true)
+	})
 	//Attribute("receiveAddress", String, "") // 原始链收款地址 , 这个应该程序，通过收款钱包 id来获取
 	// Attribute("msmqName", String, "应当根据链和TokenAddress自动生成一个 ****")
 	// Attribute("dstChainClientUri", String, "根据dstChainId 查install记录 并找到对应的serviceName ****")
@@ -37,6 +40,7 @@ var BridgeConfig_listItem = Type("listBridgeItem", func() {
 	Attribute("srcToken", String)
 	Attribute("walletName", String)
 	Attribute("walletId", String)
+	Attribute("enableHedge", Boolean)
 })
 var BridgeConfig_DeleteBridgeFilter = Type("deleteBridgeFilter", func() {
 	Attribute("id", String, "Mongodb 的主键")

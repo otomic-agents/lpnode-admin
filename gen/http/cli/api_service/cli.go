@@ -919,6 +919,7 @@ Example:
       "bridgeName": "Quas laborum nesciunt reprehenderit.",
       "dstChainId": "Sit velit.",
       "dstTokenId": "Sit modi.",
+      "enableHedge": true,
       "srcChainId": "Maxime dolores recusandae cupiditate.",
       "srcTokenId": "Quisquam facere dolores quos ex voluptatibus.",
       "srcWalletId": "Voluptatem quo ducimus repellat quia explicabo delectus.",
@@ -945,7 +946,7 @@ BridgeDelete implements bridgeDelete.
 
 Example:
     %[1]s bridge-config bridge-delete --body '{
-      "id": "Eveniet mollitia fuga nihil magni dolores qui."
+      "id": "Magni dolores qui quod voluptas sit."
    }'
 `, os.Args[0])
 }
@@ -958,7 +959,7 @@ BridgeTest implements bridgeTest.
 
 Example:
     %[1]s bridge-config bridge-test --body '{
-      "id": "Sint iusto ea aliquam quia sit."
+      "id": "Quia sit."
    }'
 `, os.Args[0])
 }
