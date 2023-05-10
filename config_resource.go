@@ -205,7 +205,7 @@ func (s *configResourcesrvc) EditResult(ctx context.Context, p *configresource.E
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
 	res.Result = ptr.String(v.Id.Hex())
-	msg := fmt.Sprintf(`{"type":"configResourceUpdate","payload":{"clientId":"%s"}}`, v.Id.Hex())
+	msg := fmt.Sprintf(`{"type":"configResourceUpdate","payload":{"clientId":"%s","appName":"%s"}}`, v.Id.Hex(), ptr.ToString(p.AppName))
 	redisbus.GetRedisBus().PublishEvent("LP_SYSTEM_Notice", msg)
 	s.logger.Print("configResource.editResult")
 	return
