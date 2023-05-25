@@ -77,6 +77,7 @@ var _ = Service("dexWallet", func() {
 			Attribute("code", Int64, "")
 			Attribute("result", ArrayOf(DexWallet_VaultRow), "列表")
 			Attribute("message", String)
+			Required("result")
 		})
 		HTTP(func() {
 			POST("/lpnode/lpnode_admin_panel/dexWallet/vaultList")

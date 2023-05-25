@@ -193,11 +193,9 @@ func NewVaultListResultOK(body *VaultListResponseBody) *dexwallet.VaultListResul
 		Code:    body.Code,
 		Message: body.Message,
 	}
-	if body.Result != nil {
-		v.Result = make([]*dexwallet.VaultRow, len(body.Result))
-		for i, val := range body.Result {
-			v.Result[i] = unmarshalVaultRowResponseBodyToDexwalletVaultRow(val)
-		}
+	v.Result = make([]*dexwallet.VaultRow, len(body.Result))
+	for i, val := range body.Result {
+		v.Result[i] = unmarshalVaultRowResponseBodyToDexwalletVaultRow(val)
 	}
 
 	return v
@@ -212,6 +210,15 @@ func ValidateListDexWalletResponseBody(body *ListDexWalletResponseBody) (err err
 				err = goa.MergeErrors(err, err2)
 			}
 		}
+	}
+	return
+}
+
+// ValidateVaultListResponseBody runs the validations defined on
+// VaultListResponseBody
+func ValidateVaultListResponseBody(body *VaultListResponseBody) (err error) {
+	if body.Result == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("result", "body"))
 	}
 	return
 }

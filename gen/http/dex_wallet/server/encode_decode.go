@@ -142,9 +142,6 @@ func marshalDexwalletWalletRowToWalletRowResponseBody(v *dexwallet.WalletRow) *W
 // marshalDexwalletVaultRowToVaultRowResponseBody builds a value of type
 // *VaultRowResponseBody from a value of type *dexwallet.VaultRow.
 func marshalDexwalletVaultRowToVaultRowResponseBody(v *dexwallet.VaultRow) *VaultRowResponseBody {
-	if v == nil {
-		return nil
-	}
 	res := &VaultRowResponseBody{
 		Address:    v.Address,
 		HostType:   v.HostType,

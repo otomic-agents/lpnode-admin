@@ -3239,6 +3239,8 @@ components:
                       id: Sed quidem eius numquam natus.
                       name: Iste nihil explicabo quia.
                       secertType: Autem corrupti perspiciatis.
+            required:
+                - result
         VaultRow:
             type: object
             properties:

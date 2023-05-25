@@ -563,6 +563,8 @@ paths:
                     description: OK response.
                     schema:
                         $ref: '#/definitions/DexWalletVaultListResponseBody'
+                        required:
+                            - result
             schemes:
                 - http
     /lpnode/lpnode_admin_panel/hedge/del:
@@ -2149,6 +2151,8 @@ definitions:
                   id: Sed quidem eius numquam natus.
                   name: Iste nihil explicabo quia.
                   secertType: Autem corrupti perspiciatis.
+        required:
+            - result
     HedgeDelRequestBody:
         title: HedgeDelRequestBody
         type: object

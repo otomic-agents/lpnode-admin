@@ -249,6 +249,10 @@ func DecodeVaultListResponse(decoder func(*http.Response) goahttp.Decoder, resto
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("dexWallet", "vaultList", err)
 			}
+			err = ValidateVaultListResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("dexWallet", "vaultList", err)
+			}
 			res := NewVaultListResultOK(&body)
 			return res, nil
 		default:
@@ -285,9 +289,6 @@ func unmarshalWalletRowResponseBodyToDexwalletWalletRow(v *WalletRowResponseBody
 // unmarshalVaultRowResponseBodyToDexwalletVaultRow builds a value of type
 // *dexwallet.VaultRow from a value of type *VaultRowResponseBody.
 func unmarshalVaultRowResponseBodyToDexwalletVaultRow(v *VaultRowResponseBody) *dexwallet.VaultRow {
-	if v == nil {
-		return nil
-	}
 	res := &dexwallet.VaultRow{
 		Address:    v.Address,
 		HostType:   v.HostType,

@@ -73,7 +73,7 @@ type DeleteDexWalletResponseBody struct {
 type VaultListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	// 列表
-	Result  []*VaultRowResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Result  []*VaultRowResponseBody `form:"result" json:"result" xml:"result"`
 	Message *string                 `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
