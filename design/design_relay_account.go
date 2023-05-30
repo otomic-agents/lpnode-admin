@@ -41,4 +41,18 @@ var _ = Service("relayAccount", func() {
 			POST("/lpnode/lpnode_admin_panel/relayAccount/register")
 		})
 	})
+	Method("deleteAccount", func() {
+		Payload(func() {
+			Attribute("id", String)
+			Required("id")
+		})
+		Result(func() {
+			Attribute("code", Int64)
+			Attribute("result", String)
+			Attribute("message", String)
+		})
+		HTTP(func() {
+			POST("/lpnode/lpnode_admin_panel/relayAccount/delete")
+		})
+	})
 })

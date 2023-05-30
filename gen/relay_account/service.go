@@ -17,6 +17,8 @@ type Service interface {
 	ListAccount(context.Context) (res *ListAccountResult, err error)
 	// RegisterAccount implements registerAccount.
 	RegisterAccount(context.Context, *RegisterAccountPayload) (res *RegisterAccountResult, err error)
+	// DeleteAccount implements deleteAccount.
+	DeleteAccount(context.Context, *DeleteAccountPayload) (res *DeleteAccountResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -27,7 +29,21 @@ const ServiceName = "relayAccount"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [2]string{"listAccount", "registerAccount"}
+var MethodNames = [3]string{"listAccount", "registerAccount", "deleteAccount"}
+
+// DeleteAccountPayload is the payload type of the relayAccount service
+// deleteAccount method.
+type DeleteAccountPayload struct {
+	ID string
+}
+
+// DeleteAccountResult is the result type of the relayAccount service
+// deleteAccount method.
+type DeleteAccountResult struct {
+	Code    *int64
+	Result  *string
+	Message *string
+}
 
 // ListAccountResult is the result type of the relayAccount service listAccount
 // method.

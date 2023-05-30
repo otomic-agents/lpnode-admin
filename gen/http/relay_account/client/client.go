@@ -25,6 +25,10 @@ type Client struct {
 	// registerAccount endpoint.
 	RegisterAccountDoer goahttp.Doer
 
+	// DeleteAccount Doer is the HTTP client used to make requests to the
+	// deleteAccount endpoint.
+	DeleteAccountDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -47,6 +51,7 @@ func NewClient(
 	return &Client{
 		ListAccountDoer:     doer,
 		RegisterAccountDoer: doer,
+		DeleteAccountDoer:   doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -93,6 +98,30 @@ func (c *Client) RegisterAccount() goa.Endpoint {
 		resp, err := c.RegisterAccountDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("relayAccount", "registerAccount", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// DeleteAccount returns an endpoint that makes HTTP requests to the
+// relayAccount service deleteAccount server.
+func (c *Client) DeleteAccount() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeDeleteAccountRequest(c.encoder)
+		decodeResponse = DecodeDeleteAccountResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildDeleteAccountRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.DeleteAccountDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("relayAccount", "deleteAccount", err)
 		}
 		return decodeResponse(resp)
 	}

@@ -66,6 +66,43 @@ func DecodeRegisterAccountRequest(mux goahttp.Muxer, decoder func(*http.Request)
 	}
 }
 
+// EncodeDeleteAccountResponse returns an encoder for responses returned by the
+// relayAccount deleteAccount endpoint.
+func EncodeDeleteAccountResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*relayaccount.DeleteAccountResult)
+		enc := encoder(ctx, w)
+		body := NewDeleteAccountResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeDeleteAccountRequest returns a decoder for requests sent to the
+// relayAccount deleteAccount endpoint.
+func DecodeDeleteAccountRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body DeleteAccountRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateDeleteAccountRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewDeleteAccountPayload(&body)
+
+		return payload, nil
+	}
+}
+
 // marshalRelayaccountRelayAccountItemToRelayAccountItemResponseBody builds a
 // value of type *RelayAccountItemResponseBody from a value of type
 // *relayaccount.RelayAccountItem.

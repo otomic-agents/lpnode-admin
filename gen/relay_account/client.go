@@ -17,13 +17,15 @@ import (
 type Client struct {
 	ListAccountEndpoint     goa.Endpoint
 	RegisterAccountEndpoint goa.Endpoint
+	DeleteAccountEndpoint   goa.Endpoint
 }
 
 // NewClient initializes a "relayAccount" service client given the endpoints.
-func NewClient(listAccount, registerAccount goa.Endpoint) *Client {
+func NewClient(listAccount, registerAccount, deleteAccount goa.Endpoint) *Client {
 	return &Client{
 		ListAccountEndpoint:     listAccount,
 		RegisterAccountEndpoint: registerAccount,
+		DeleteAccountEndpoint:   deleteAccount,
 	}
 }
 
@@ -46,4 +48,15 @@ func (c *Client) RegisterAccount(ctx context.Context, p *RegisterAccountPayload)
 		return
 	}
 	return ires.(*RegisterAccountResult), nil
+}
+
+// DeleteAccount calls the "deleteAccount" endpoint of the "relayAccount"
+// service.
+func (c *Client) DeleteAccount(ctx context.Context, p *DeleteAccountPayload) (res *DeleteAccountResult, err error) {
+	var ires interface{}
+	ires, err = c.DeleteAccountEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*DeleteAccountResult), nil
 }

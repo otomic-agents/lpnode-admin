@@ -16,3 +16,8 @@ func ListAccountRelayAccountPath() string {
 func RegisterAccountRelayAccountPath() string {
 	return "/lpnode/lpnode_admin_panel/relayAccount/register"
 }
+
+// DeleteAccountRelayAccountPath returns the URL path to the relayAccount service deleteAccount HTTP endpoint.
+func DeleteAccountRelayAccountPath() string {
+	return "/lpnode/lpnode_admin_panel/relayAccount/delete"
+}

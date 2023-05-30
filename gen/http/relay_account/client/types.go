@@ -20,6 +20,12 @@ type RegisterAccountRequestBody struct {
 	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
 }
 
+// DeleteAccountRequestBody is the type of the "relayAccount" service
+// "deleteAccount" endpoint HTTP request body.
+type DeleteAccountRequestBody struct {
+	ID string `form:"id" json:"id" xml:"id"`
+}
+
 // ListAccountResponseBody is the type of the "relayAccount" service
 // "listAccount" endpoint HTTP response body.
 type ListAccountResponseBody struct {
@@ -34,6 +40,14 @@ type RegisterAccountResponseBody struct {
 	Code    *int64                        `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result  *RelayAccountItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                       `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
+// DeleteAccountResponseBody is the type of the "relayAccount" service
+// "deleteAccount" endpoint HTTP response body.
+type DeleteAccountResponseBody struct {
+	Code    *int64  `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	Result  *string `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
 // RelayAccountItemResponseBody is used to define fields on response body types.
@@ -52,6 +66,15 @@ func NewRegisterAccountRequestBody(p *relayaccount.RegisterAccountPayload) *Regi
 	body := &RegisterAccountRequestBody{
 		Name:    p.Name,
 		Profile: p.Profile,
+	}
+	return body
+}
+
+// NewDeleteAccountRequestBody builds the HTTP request body from the payload of
+// the "deleteAccount" endpoint of the "relayAccount" service.
+func NewDeleteAccountRequestBody(p *relayaccount.DeleteAccountPayload) *DeleteAccountRequestBody {
+	body := &DeleteAccountRequestBody{
+		ID: p.ID,
 	}
 	return body
 }
@@ -82,6 +105,18 @@ func NewRegisterAccountResultOK(body *RegisterAccountResponseBody) *relayaccount
 	}
 	if body.Result != nil {
 		v.Result = unmarshalRelayAccountItemResponseBodyToRelayaccountRelayAccountItem(body.Result)
+	}
+
+	return v
+}
+
+// NewDeleteAccountResultOK builds a "relayAccount" service "deleteAccount"
+// endpoint result from a HTTP "OK" response.
+func NewDeleteAccountResultOK(body *DeleteAccountResponseBody) *relayaccount.DeleteAccountResult {
+	v := &relayaccount.DeleteAccountResult{
+		Code:    body.Code,
+		Result:  body.Result,
+		Message: body.Message,
 	}
 
 	return v

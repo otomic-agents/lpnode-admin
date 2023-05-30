@@ -21,12 +21,30 @@ func BuildRegisterAccountPayload(relayAccountRegisterAccountBody string) (*relay
 	{
 		err = json.Unmarshal([]byte(relayAccountRegisterAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Commodi aut possimus laboriosam omnis.\",\n      \"profile\": \"Quia et vel dolor aut adipisci.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Et iusto voluptatem debitis.\",\n      \"profile\": \"Voluptatem dolorem.\"\n   }'")
 		}
 	}
 	v := &relayaccount.RegisterAccountPayload{
 		Name:    body.Name,
 		Profile: body.Profile,
+	}
+
+	return v, nil
+}
+
+// BuildDeleteAccountPayload builds the payload for the relayAccount
+// deleteAccount endpoint from CLI flags.
+func BuildDeleteAccountPayload(relayAccountDeleteAccountBody string) (*relayaccount.DeleteAccountPayload, error) {
+	var err error
+	var body DeleteAccountRequestBody
+	{
+		err = json.Unmarshal([]byte(relayAccountDeleteAccountBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Quo et.\"\n   }'")
+		}
+	}
+	v := &relayaccount.DeleteAccountPayload{
+		ID: body.ID,
 	}
 
 	return v, nil

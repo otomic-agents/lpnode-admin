@@ -140,6 +140,73 @@ func DecodeRegisterAccountResponse(decoder func(*http.Response) goahttp.Decoder,
 	}
 }
 
+// BuildDeleteAccountRequest instantiates a HTTP request object with method and
+// path set to call the "relayAccount" service "deleteAccount" endpoint
+func (c *Client) BuildDeleteAccountRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DeleteAccountRelayAccountPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("relayAccount", "deleteAccount", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeDeleteAccountRequest returns an encoder for requests sent to the
+// relayAccount deleteAccount server.
+func EncodeDeleteAccountRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*relayaccount.DeleteAccountPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("relayAccount", "deleteAccount", "*relayaccount.DeleteAccountPayload", v)
+		}
+		body := NewDeleteAccountRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("relayAccount", "deleteAccount", err)
+		}
+		return nil
+	}
+}
+
+// DecodeDeleteAccountResponse returns a decoder for responses returned by the
+// relayAccount deleteAccount endpoint. restoreBody controls whether the
+// response body should be restored after having been read.
+func DecodeDeleteAccountResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body DeleteAccountResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("relayAccount", "deleteAccount", err)
+			}
+			res := NewDeleteAccountResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("relayAccount", "deleteAccount", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // unmarshalRelayAccountItemResponseBodyToRelayaccountRelayAccountItem builds a
 // value of type *relayaccount.RelayAccountItem from a value of type
 // *RelayAccountItemResponseBody.

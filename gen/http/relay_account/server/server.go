@@ -21,6 +21,7 @@ type Server struct {
 	Mounts          []*MountPoint
 	ListAccount     http.Handler
 	RegisterAccount http.Handler
+	DeleteAccount   http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -52,9 +53,11 @@ func New(
 		Mounts: []*MountPoint{
 			{"ListAccount", "GET", "/lpnode/lpnode_admin_panel/relayAccount/list"},
 			{"RegisterAccount", "POST", "/lpnode/lpnode_admin_panel/relayAccount/register"},
+			{"DeleteAccount", "POST", "/lpnode/lpnode_admin_panel/relayAccount/delete"},
 		},
 		ListAccount:     NewListAccountHandler(e.ListAccount, mux, decoder, encoder, errhandler, formatter),
 		RegisterAccount: NewRegisterAccountHandler(e.RegisterAccount, mux, decoder, encoder, errhandler, formatter),
+		DeleteAccount:   NewDeleteAccountHandler(e.DeleteAccount, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -65,6 +68,7 @@ func (s *Server) Service() string { return "relayAccount" }
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.ListAccount = m(s.ListAccount)
 	s.RegisterAccount = m(s.RegisterAccount)
+	s.DeleteAccount = m(s.DeleteAccount)
 }
 
 // MethodNames returns the methods served.
@@ -74,6 +78,7 @@ func (s *Server) MethodNames() []string { return relayaccount.MethodNames[:] }
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountListAccountHandler(mux, h.ListAccount)
 	MountRegisterAccountHandler(mux, h.RegisterAccount)
+	MountDeleteAccountHandler(mux, h.DeleteAccount)
 }
 
 // Mount configures the mux to serve the relayAccount endpoints.
@@ -155,6 +160,57 @@ func NewRegisterAccountHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "registerAccount")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "relayAccount")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountDeleteAccountHandler configures the mux to serve the "relayAccount"
+// service "deleteAccount" endpoint.
+func MountDeleteAccountHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/lpnode/lpnode_admin_panel/relayAccount/delete", f)
+}
+
+// NewDeleteAccountHandler creates a HTTP handler which loads the HTTP request
+// and calls the "relayAccount" service "deleteAccount" endpoint.
+func NewDeleteAccountHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeDeleteAccountRequest(mux, decoder)
+		encodeResponse = EncodeDeleteAccountResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "deleteAccount")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "relayAccount")
 		payload, err := decodeRequest(r)
 		if err != nil {

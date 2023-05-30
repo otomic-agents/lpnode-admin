@@ -50,7 +50,7 @@ dex-wallet (list-dex-wallet|create-dex-wallet|delete-dex-wallet|vault-list)
 hedge (list|edit|del)
 order-center list
 lp-register (register-all|un-register-all)
-relay-account (list-account|register-account)
+relay-account (list-account|register-account|delete-account)
 status-list stat-list
 token-manager (token-list|token-create|token-delete)
 `
@@ -61,13 +61,13 @@ func UsageExamples() string {
 	return os.Args[0] + ` main-logic main-logic` + "\n" +
 		os.Args[0] + ` account-cex wallet-info` + "\n" +
 		os.Args[0] + ` account-dex wallet-info --body '{
-      "chainId": 1164588511062483529
+      "chainId": 4274700244429811574
    }'` + "\n" +
 		os.Args[0] + ` amm-order-center list --body '{
-      "ammName": "Similique libero.",
-      "page": 4368146639592428914,
-      "pageSize": 6610596915914434775,
-      "status": 5461709349788583969
+      "ammName": "Quod vel.",
+      "page": 739591788445374475,
+      "pageSize": 2712362574178749344,
+      "status": 1989417172459910826
    }'` + "\n" +
 		os.Args[0] + ` base-data chain-data-list` + "\n" +
 		""
@@ -209,6 +209,9 @@ func ParseEndpoint(
 		relayAccountRegisterAccountFlags    = flag.NewFlagSet("register-account", flag.ExitOnError)
 		relayAccountRegisterAccountBodyFlag = relayAccountRegisterAccountFlags.String("body", "REQUIRED", "")
 
+		relayAccountDeleteAccountFlags    = flag.NewFlagSet("delete-account", flag.ExitOnError)
+		relayAccountDeleteAccountBodyFlag = relayAccountDeleteAccountFlags.String("body", "REQUIRED", "")
+
 		statusListFlags = flag.NewFlagSet("status-list", flag.ContinueOnError)
 
 		statusListStatListFlags = flag.NewFlagSet("stat-list", flag.ExitOnError)
@@ -287,6 +290,7 @@ func ParseEndpoint(
 	relayAccountFlags.Usage = relayAccountUsage
 	relayAccountListAccountFlags.Usage = relayAccountListAccountUsage
 	relayAccountRegisterAccountFlags.Usage = relayAccountRegisterAccountUsage
+	relayAccountDeleteAccountFlags.Usage = relayAccountDeleteAccountUsage
 
 	statusListFlags.Usage = statusListUsage
 	statusListStatListFlags.Usage = statusListStatListUsage
@@ -523,6 +527,9 @@ func ParseEndpoint(
 			case "register-account":
 				epf = relayAccountRegisterAccountFlags
 
+			case "delete-account":
+				epf = relayAccountDeleteAccountFlags
+
 			}
 
 		case "status-list":
@@ -731,6 +738,9 @@ func ParseEndpoint(
 			case "register-account":
 				endpoint = c.RegisterAccount()
 				data, err = relayaccountc.BuildRegisterAccountPayload(*relayAccountRegisterAccountBodyFlag)
+			case "delete-account":
+				endpoint = c.DeleteAccount()
+				data, err = relayaccountc.BuildDeleteAccountPayload(*relayAccountDeleteAccountBodyFlag)
 			}
 		case "status-list":
 			c := statuslistc.NewClient(scheme, host, doer, enc, dec, restore)
@@ -831,7 +841,7 @@ WalletInfo implements walletInfo.
 
 Example:
     %[1]s account-dex wallet-info --body '{
-      "chainId": 1164588511062483529
+      "chainId": 4274700244429811574
    }'
 `, os.Args[0])
 }
@@ -858,10 +868,10 @@ List implements list.
 
 Example:
     %[1]s amm-order-center list --body '{
-      "ammName": "Similique libero.",
-      "page": 4368146639592428914,
-      "pageSize": 6610596915914434775,
-      "status": 5461709349788583969
+      "ammName": "Quod vel.",
+      "page": 739591788445374475,
+      "pageSize": 2712362574178749344,
+      "status": 1989417172459910826
    }'
 `, os.Args[0])
 }
@@ -915,15 +925,15 @@ func bridgeConfigBridgeCreateUsage() {
 
 Example:
     %[1]s bridge-config bridge-create --body '{
-      "ammName": "Porro aut aut rerum.",
-      "bridgeName": "Quas laborum nesciunt reprehenderit.",
-      "dstChainId": "Sit velit.",
-      "dstTokenId": "Sit modi.",
-      "enableHedge": true,
-      "srcChainId": "Maxime dolores recusandae cupiditate.",
-      "srcTokenId": "Quisquam facere dolores quos ex voluptatibus.",
-      "srcWalletId": "Voluptatem quo ducimus repellat quia explicabo delectus.",
-      "walletId": "Voluptate magni voluptas eos."
+      "ammName": "Et pariatur omnis eligendi et nemo.",
+      "bridgeName": "Eos quia voluptatem quo ducimus repellat quia.",
+      "dstChainId": "Rerum labore et nihil soluta aut repudiandae.",
+      "dstTokenId": "Suscipit quo a non officia velit.",
+      "enableHedge": false,
+      "srcChainId": "Delectus officia porro aut.",
+      "srcTokenId": "Culpa beatae praesentium architecto.",
+      "srcWalletId": "Voluptas temporibus et blanditiis.",
+      "walletId": "Perspiciatis quis ad fugit."
    }'
 `, os.Args[0])
 }
@@ -946,7 +956,7 @@ BridgeDelete implements bridgeDelete.
 
 Example:
     %[1]s bridge-config bridge-delete --body '{
-      "id": "Magni dolores qui quod voluptas sit."
+      "id": "Repellat repellat natus ut rem eos."
    }'
 `, os.Args[0])
 }
@@ -959,7 +969,7 @@ BridgeTest implements bridgeTest.
 
 Example:
     %[1]s bridge-config bridge-test --body '{
-      "id": "Quia sit."
+      "id": "Aut a minus dicta sunt laudantium."
    }'
 `, os.Args[0])
 }
@@ -992,22 +1002,22 @@ Example:
     %[1]s chain-config set-chain-list --body '{
       "chainList": [
          {
-            "chainId": 8842128240358381,
-            "chainName": "Voluptatem non maxime maxime fuga.",
-            "name": "Nemo aliquid atque quasi maxime.",
-            "tokenName": "Ex repellat."
+            "chainId": 6784931415385022117,
+            "chainName": "Nisi deserunt ducimus est excepturi necessitatibus est.",
+            "name": "Veniam sit ea commodi quo.",
+            "tokenName": "Dolore labore voluptatem distinctio dolor aspernatur."
          },
          {
-            "chainId": 8842128240358381,
-            "chainName": "Voluptatem non maxime maxime fuga.",
-            "name": "Nemo aliquid atque quasi maxime.",
-            "tokenName": "Ex repellat."
+            "chainId": 6784931415385022117,
+            "chainName": "Nisi deserunt ducimus est excepturi necessitatibus est.",
+            "name": "Veniam sit ea commodi quo.",
+            "tokenName": "Dolore labore voluptatem distinctio dolor aspernatur."
          },
          {
-            "chainId": 8842128240358381,
-            "chainName": "Voluptatem non maxime maxime fuga.",
-            "name": "Nemo aliquid atque quasi maxime.",
-            "tokenName": "Ex repellat."
+            "chainId": 6784931415385022117,
+            "chainName": "Nisi deserunt ducimus est excepturi necessitatibus est.",
+            "name": "Veniam sit ea commodi quo.",
+            "tokenName": "Dolore labore voluptatem distinctio dolor aspernatur."
          }
       ]
    }'
@@ -1022,8 +1032,8 @@ func chainConfigDelChainListUsage() {
 
 Example:
     %[1]s chain-config del-chain-list --body '{
-      "_id": "Est nam veniam sit ea commodi quo.",
-      "chainId": 6523664875020073430
+      "_id": "Accusamus ea autem repellendus eius.",
+      "chainId": 4402457206062359289
    }'
 `, os.Args[0])
 }
@@ -1046,9 +1056,9 @@ func chainConfigSetChainGasUsdUsage() {
 
 Example:
     %[1]s chain-config set-chain-gas-usd --body '{
-      "_id": "Non et ea consequatur iure.",
-      "chainId": 4435816264699419802,
-      "usd": 8625246950805419602
+      "_id": "Sit dolor facere iusto impedit adipisci perspiciatis.",
+      "chainId": 841273005796704795,
+      "usd": 5487831666024987540
    }'
 `, os.Args[0])
 }
@@ -1061,8 +1071,8 @@ SetChainClientConfig implements setChainClientConfig.
 
 Example:
     %[1]s chain-config set-chain-client-config --body '{
-      "chainData": "Autem repellendus eius deserunt quaerat repudiandae ut.",
-      "chainId": 7080204329849451285
+      "chainData": "Tenetur asperiores in dolor quibusdam inventore.",
+      "chainId": 6850468999259258128
    }'
 `, os.Args[0])
 }
@@ -1093,10 +1103,10 @@ CreateResource implements createResource.
 
 Example:
     %[1]s config-resource create-resource --body '{
-      "appName": "Sed sit dolor.",
-      "clientId": "Suscipit est sunt assumenda.",
-      "template": "Ut molestiae tenetur asperiores.",
-      "version": "Iusto impedit adipisci perspiciatis iure cum."
+      "appName": "Itaque beatae recusandae iure.",
+      "clientId": "Et quod ullam omnis ea sint.",
+      "template": "Quasi doloremque dolores est quas reprehenderit vel.",
+      "version": "Culpa molestias et."
    }'
 `, os.Args[0])
 }
@@ -1109,7 +1119,7 @@ GetResource implements getResource.
 
 Example:
     %[1]s config-resource get-resource --body '{
-      "clientId": "Eos et."
+      "clientId": "Possimus autem quia rem ut itaque ut."
    }'
 `, os.Args[0])
 }
@@ -1142,12 +1152,12 @@ EditResult implements editResult.
 
 Example:
     %[1]s config-resource edit-result --body '{
-      "appName": "Dolores nisi libero et laudantium.",
-      "clientId": "Non exercitationem quasi veritatis praesentium vero.",
-      "template": "Vel quo consequatur et.",
-      "templateResult": "Ipsam non ullam.",
-      "version": "Id ut ipsam consequatur.",
-      "versionHash": "Laudantium dolore non ullam."
+      "appName": "Omnis velit qui delectus doloribus.",
+      "clientId": "In aut non eum autem et ut.",
+      "template": "Architecto quod sint consequatur possimus.",
+      "templateResult": "Molestiae nesciunt exercitationem voluptatem.",
+      "version": "Veniam distinctio tempore quia.",
+      "versionHash": "Consequatur qui."
    }'
 `, os.Args[0])
 }
@@ -1179,7 +1189,7 @@ func installCtrlPanelListInstallUsage() {
 
 Example:
     %[1]s install-ctrl-panel list-install --body '{
-      "installType": "Odio totam."
+      "installType": "Quibusdam odit cum rerum tempore fuga quidem."
    }'
 `, os.Args[0])
 }
@@ -1193,34 +1203,38 @@ InstallLpClient implements installLpClient.
 Example:
     %[1]s install-ctrl-panel install-lp-client --body '{
       "setupConfig": {
-         "awsAccessKeyId": "Et alias eum nostrum.",
-         "awsSecretAccessKey": "Repellat voluptas consectetur vitae ut aliquam sed.",
-         "connectionExplorerurl": "Neque provident quam necessitatibus.",
-         "connectionHelperurl": "Natus doloremque a quae.",
-         "connectionNodeurl": "Ex sit et voluptatem.",
-         "connectionWalleturl": "Laboriosam eaque aut aut aut quas et.",
-         "containerPort": "Quam nostrum pariatur error.",
+         "awsAccessKeyId": "Saepe voluptates aut modi officia dolor debitis.",
+         "awsSecretAccessKey": "Et cumque debitis et est.",
+         "connectionExplorerurl": "Distinctio explicabo sit cum accusamus reprehenderit.",
+         "connectionHelperurl": "Officiis nemo est ipsa.",
+         "connectionNodeurl": "Et ut qui.",
+         "connectionWalleturl": "Expedita quibusdam ut.",
+         "containerPort": "Voluptate illum accusamus qui veniam enim earum.",
          "customEnv": [
             {
-               "key": "Qui ipsa et.",
-               "value": "Ad vero omnis aspernatur aspernatur aperiam non."
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
             },
             {
-               "key": "Qui ipsa et.",
-               "value": "Ad vero omnis aspernatur aspernatur aperiam non."
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
             },
             {
-               "key": "Qui ipsa et.",
-               "value": "Ad vero omnis aspernatur aspernatur aperiam non."
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
+            },
+            {
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
             }
          ],
-         "deploymentName": "Id esse aut labore.",
-         "imageRepository": "Iste similique vitae quibusdam.",
-         "install": true,
-         "rpcUrl": "Occaecati non aut.",
-         "serviceName": "Cum rerum tempore fuga.",
-         "startBlock": "Ad inventore quisquam ut tempora perspiciatis.",
-         "type": "Provident consequatur laudantium reiciendis asperiores sequi."
+         "deploymentName": "Quam nostrum pariatur error.",
+         "imageRepository": "Provident quam necessitatibus.",
+         "install": false,
+         "rpcUrl": "Corporis omnis ullam quia.",
+         "serviceName": "Et alias eum nostrum.",
+         "startBlock": "Ut enim ea magni fuga magni neque.",
+         "type": "Repellat voluptas consectetur vitae ut aliquam sed."
       }
    }'
 `, os.Args[0])
@@ -1235,8 +1249,8 @@ UninstallLpClient implements uninstallLpClient.
 Example:
     %[1]s install-ctrl-panel uninstall-lp-client --body '{
       "setupConfig": {
-         "type": "Est ipsa pariatur.",
-         "uninstall": false
+         "type": "Quo voluptatum mollitia debitis cumque suscipit suscipit.",
+         "uninstall": true
       }
    }'
 `, os.Args[0])
@@ -1251,25 +1265,29 @@ InstallDeployment implements installDeployment.
 Example:
     %[1]s install-ctrl-panel install-deployment --body '{
       "setupConfig": {
-         "containerPort": "Et est ipsum illum qui dolores vel.",
+         "containerPort": "Et dolor laboriosam unde beatae.",
          "customEnv": [
             {
-               "key": "Qui ipsa et.",
-               "value": "Ad vero omnis aspernatur aspernatur aperiam non."
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
             },
             {
-               "key": "Qui ipsa et.",
-               "value": "Ad vero omnis aspernatur aspernatur aperiam non."
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
             },
             {
-               "key": "Qui ipsa et.",
-               "value": "Ad vero omnis aspernatur aspernatur aperiam non."
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
+            },
+            {
+               "key": "Aut quas.",
+               "value": "Voluptatem natus doloremque a quae ut."
             }
          ],
-         "imageRepository": "Earum saepe et cumque.",
+         "imageRepository": "Qui et incidunt sit iure.",
          "install": false,
-         "installType": "amm",
-         "name": "Cumque veritatis pariatur alias."
+         "installType": "market",
+         "name": "Qui ex et porro."
       }
    }'
 `, os.Args[0])
@@ -1284,9 +1302,9 @@ UninstallDeployment implements uninstallDeployment.
 Example:
     %[1]s install-ctrl-panel uninstall-deployment --body '{
       "setupConfig": {
-         "installType": "Soluta repellat et quam qui et et.",
-         "name": "Sed quis eligendi eaque.",
-         "uninstall": true
+         "installType": "Itaque et.",
+         "name": "Vitae nulla harum perferendis.",
+         "uninstall": false
       }
    }'
 `, os.Args[0])
@@ -1301,9 +1319,9 @@ UpdateDeployment implements updateDeployment.
 Example:
     %[1]s install-ctrl-panel update-deployment --body '{
       "setupConfig": {
-         "installContext": "Et est laborum numquam et ut laudantium.",
-         "installType": "Aut qui ex et porro saepe.",
-         "name": "Et sed.",
+         "installContext": "Adipisci quis sequi repellat repellat accusamus consectetur.",
+         "installType": "Maxime voluptatem cum voluptatem.",
+         "name": "Neque qui in officiis nam.",
          "update": false
       }
    }'
@@ -1345,17 +1363,17 @@ CreateDexWallet implements createDexWallet.
 
 Example:
     %[1]s dex-wallet create-dex-wallet --body '{
-      "accountId": "Et facilis deleniti ea sit praesentium.",
-      "address": "Consequatur dolorum.",
-      "chainId": 7070136605965844913,
-      "chainType": "Qui est sint maiores minima ex.",
-      "id": "Sint vel mollitia.",
-      "privateKey": "Deleniti cumque eum velit vero.",
-      "storeId": "Velit odit nobis in pariatur eaque.",
-      "vaultHostType": "Quidem officiis ipsam distinctio ducimus ipsum.",
-      "vaultName": "Nisi non dolore quidem.",
-      "vaultSecertType": "Voluptas doloremque quasi.",
-      "walletName": "Dolorem quod numquam.",
+      "accountId": "Dolores officiis est sed.",
+      "address": "Autem harum ullam ut dicta rerum eveniet.",
+      "chainId": 7935885781834240208,
+      "chainType": "Assumenda voluptas ullam culpa.",
+      "id": "Nisi non dolore quidem.",
+      "privateKey": "Accusamus maxime blanditiis cumque.",
+      "storeId": "Vitae repellendus rerum enim consectetur corporis.",
+      "vaultHostType": "At id quis neque ad dolorem.",
+      "vaultName": "Sed quidem eius numquam natus.",
+      "vaultSecertType": "Iste nihil explicabo quia.",
+      "walletName": "Voluptas doloremque quasi.",
       "walletType": "storeId"
    }'
 `, os.Args[0])
@@ -1369,7 +1387,7 @@ DeleteDexWallet implements deleteDexWallet.
 
 Example:
     %[1]s dex-wallet delete-dex-wallet --body '{
-      "id": "Assumenda voluptas ullam culpa."
+      "id": "Provident non maxime."
    }'
 `, os.Args[0])
 }
@@ -1418,8 +1436,8 @@ Edit implements edit.
 Example:
     %[1]s hedge edit --body '{
       "hedge": {
-         "hedgeType": "Quia assumenda rerum sed.",
-         "id": "Autem possimus reprehenderit unde porro quam aliquid."
+         "hedgeType": "Debitis quisquam commodi tenetur dolor.",
+         "id": "Qui enim laudantium est cum."
       }
    }'
 `, os.Args[0])
@@ -1433,7 +1451,7 @@ Del implements del.
 
 Example:
     %[1]s hedge del --body '{
-      "id": "Eius consequuntur porro."
+      "id": "Sapiente quas impedit explicabo consectetur."
    }'
 `, os.Args[0])
 }
@@ -1460,9 +1478,9 @@ List implements list.
 
 Example:
     %[1]s order-center list --body '{
-      "page": 296079324223575006,
-      "pageSize": 5768036956203467588,
-      "status": 7455122834547886855
+      "page": 3682289567629197664,
+      "pageSize": 2970694313805301066,
+      "status": 7067822581562921434
    }'
 `, os.Args[0])
 }
@@ -1512,6 +1530,7 @@ Usage:
 COMMAND:
     list-account: ListAccount implements listAccount.
     register-account: RegisterAccount implements registerAccount.
+    delete-account: DeleteAccount implements deleteAccount.
 
 Additional help:
     %[1]s relay-account COMMAND --help
@@ -1535,8 +1554,21 @@ RegisterAccount implements registerAccount.
 
 Example:
     %[1]s relay-account register-account --body '{
-      "name": "Commodi aut possimus laboriosam omnis.",
-      "profile": "Quia et vel dolor aut adipisci."
+      "name": "Et iusto voluptatem debitis.",
+      "profile": "Voluptatem dolorem."
+   }'
+`, os.Args[0])
+}
+
+func relayAccountDeleteAccountUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] relay-account delete-account -body JSON
+
+DeleteAccount implements deleteAccount.
+    -body JSON: 
+
+Example:
+    %[1]s relay-account delete-account --body '{
+      "id": "Quo et."
    }'
 `, os.Args[0])
 }
@@ -1599,15 +1631,15 @@ TokenCreate implements tokenCreate.
 
 Example:
     %[1]s token-manager token-create --body '{
-      "_id": "Ullam incidunt labore rem quibusdam.",
-      "address": "Ratione labore.",
-      "chainId": 292853625738359609,
-      "chainType": "Voluptatem ut ipsa et.",
-      "coinType": "coin",
-      "marketName": "Quod amet ratione.",
-      "precision": 13,
-      "tokenId": "Rerum illum recusandae.",
-      "tokenName": "Debitis fugiat dolores asperiores velit illo harum."
+      "_id": "Neque quia esse fugit.",
+      "address": "Sunt quam sunt aliquam.",
+      "chainId": 2274057036594097376,
+      "chainType": "Officia laboriosam saepe.",
+      "coinType": "stable_coin",
+      "marketName": "Blanditiis neque voluptatem nihil debitis et.",
+      "precision": 9,
+      "tokenId": "Laboriosam tenetur numquam.",
+      "tokenName": "Dolorem deleniti magnam et molestias sint."
    }'
 `, os.Args[0])
 }
@@ -1620,7 +1652,7 @@ TokenDelete implements tokenDelete.
 
 Example:
     %[1]s token-manager token-delete --body '{
-      "_id": "Nam dolorum sint asperiores error nulla."
+      "_id": "Illo et alias vel similique repellendus."
    }'
 `, os.Args[0])
 }

@@ -20,6 +20,12 @@ type RegisterAccountRequestBody struct {
 	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
 }
 
+// DeleteAccountRequestBody is the type of the "relayAccount" service
+// "deleteAccount" endpoint HTTP request body.
+type DeleteAccountRequestBody struct {
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+}
+
 // ListAccountResponseBody is the type of the "relayAccount" service
 // "listAccount" endpoint HTTP response body.
 type ListAccountResponseBody struct {
@@ -34,6 +40,14 @@ type RegisterAccountResponseBody struct {
 	Code    *int64                        `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result  *RelayAccountItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                       `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
+// DeleteAccountResponseBody is the type of the "relayAccount" service
+// "deleteAccount" endpoint HTTP response body.
+type DeleteAccountResponseBody struct {
+	Code    *int64  `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	Result  *string `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
 // RelayAccountItemResponseBody is used to define fields on response body types.
@@ -75,6 +89,17 @@ func NewRegisterAccountResponseBody(res *relayaccount.RegisterAccountResult) *Re
 	return body
 }
 
+// NewDeleteAccountResponseBody builds the HTTP response body from the result
+// of the "deleteAccount" endpoint of the "relayAccount" service.
+func NewDeleteAccountResponseBody(res *relayaccount.DeleteAccountResult) *DeleteAccountResponseBody {
+	body := &DeleteAccountResponseBody{
+		Code:    res.Code,
+		Result:  res.Result,
+		Message: res.Message,
+	}
+	return body
+}
+
 // NewRegisterAccountPayload builds a relayAccount service registerAccount
 // endpoint payload.
 func NewRegisterAccountPayload(body *RegisterAccountRequestBody) *relayaccount.RegisterAccountPayload {
@@ -86,11 +111,30 @@ func NewRegisterAccountPayload(body *RegisterAccountRequestBody) *relayaccount.R
 	return v
 }
 
+// NewDeleteAccountPayload builds a relayAccount service deleteAccount endpoint
+// payload.
+func NewDeleteAccountPayload(body *DeleteAccountRequestBody) *relayaccount.DeleteAccountPayload {
+	v := &relayaccount.DeleteAccountPayload{
+		ID: *body.ID,
+	}
+
+	return v
+}
+
 // ValidateRegisterAccountRequestBody runs the validations defined on
 // RegisterAccountRequestBody
 func ValidateRegisterAccountRequestBody(body *RegisterAccountRequestBody) (err error) {
 	if body.Name == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	return
+}
+
+// ValidateDeleteAccountRequestBody runs the validations defined on
+// DeleteAccountRequestBody
+func ValidateDeleteAccountRequestBody(body *DeleteAccountRequestBody) (err error) {
+	if body.ID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
 	}
 	return
 }

@@ -2,6 +2,7 @@ package adminapiservice
 
 import (
 	relayaccount "admin-panel/gen/relay_account"
+	"admin-panel/logger"
 	database "admin-panel/mongo_database"
 	"admin-panel/service"
 	"admin-panel/types"
@@ -93,6 +94,12 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 		err = errors.WithMessage(err, "更新数据库记录发生了错误:")
 		return
 	}
+	bcls := service.NewBridgeConfigLogicService()
+	_, err = bcls.ConfigLp()
+	if err != nil {
+		err = errors.WithMessage(err, "ConfigLp 发生了错误.")
+		return
+	}
 	_id := ""
 	if ret.UpsertedID != nil {
 		_id = ret.UpsertedID.(primitive.ObjectID).Hex()
@@ -104,5 +111,36 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 	res.Result.RelayAPIKey = ptr.String(registerResult.RelayApiKey)
 	res.Result.LpIDFake = ptr.String(registerResult.LpIdFake)
 	log.Println(ret)
+	return
+}
+func (s *relayAccountsrvc) DeleteAccount(ctx context.Context, p *relayaccount.DeleteAccountPayload) (res *relayaccount.DeleteAccountResult, err error) {
+	res = &relayaccount.DeleteAccountResult{}
+	mongoId, err := primitive.ObjectIDFromHex(p.ID)
+	if err != nil {
+		err = errors.WithMessage(err, "id格式不正确无法转为Mongoid")
+		return
+	}
+	var v struct {
+		Id primitive.ObjectID `bson:"_id"`
+	} = struct {
+		Id primitive.ObjectID `bson:"_id"`
+	}{}
+	err = database.FindOne("main", "relayAccounts", bson.M{"_id": mongoId}, &v)
+	if err != nil {
+		err = errors.WithMessage(err, "查询数据库错误")
+		return
+	}
+	if v.Id.Hex() == types.MongoEmptyIdHex {
+		err = errors.New("没有找到relayaccount")
+		return
+	}
+	delCount, err := database.DeleteOne("main", "relayAccounts", bson.M{"_id": mongoId})
+	logger.System.Debug("删除了%d个账号", delCount)
+	if err != nil {
+		return
+	}
+	res.Code = ptr.Int64(0)
+	res.Message = ptr.String("ok")
+	res.Result = ptr.String("ok")
 	return
 }

@@ -17,6 +17,7 @@ import (
 type Endpoints struct {
 	ListAccount     goa.Endpoint
 	RegisterAccount goa.Endpoint
+	DeleteAccount   goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "relayAccount" service with endpoints.
@@ -24,6 +25,7 @@ func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
 		ListAccount:     NewListAccountEndpoint(s),
 		RegisterAccount: NewRegisterAccountEndpoint(s),
+		DeleteAccount:   NewDeleteAccountEndpoint(s),
 	}
 }
 
@@ -31,6 +33,7 @@ func NewEndpoints(s Service) *Endpoints {
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.ListAccount = m(e.ListAccount)
 	e.RegisterAccount = m(e.RegisterAccount)
+	e.DeleteAccount = m(e.DeleteAccount)
 }
 
 // NewListAccountEndpoint returns an endpoint function that calls the method
@@ -47,5 +50,14 @@ func NewRegisterAccountEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*RegisterAccountPayload)
 		return s.RegisterAccount(ctx, p)
+	}
+}
+
+// NewDeleteAccountEndpoint returns an endpoint function that calls the method
+// "deleteAccount" of service "relayAccount".
+func NewDeleteAccountEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*DeleteAccountPayload)
+		return s.DeleteAccount(ctx, p)
 	}
 }
