@@ -70,6 +70,12 @@ spec:
             - name: "{{.Key}}"
               value: "{{.Value}}"
             {{end}}
+            - name: OS_API_KEY
+              value: "{{.Deployment.OsApiKey}}"
+            - name: OS_API_SECRET
+              value: "{{.Deployment.OsApiSecret}}"
+            - name: OS_SYSTEM_SERVER
+              value: "{{.Deployment.OsSystemServer}}"
             - name: APP_NAME
               value: "{{.Deployment.Name}}"
             - name: APP_VERSION

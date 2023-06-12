@@ -71,11 +71,14 @@ type AmmSetupConfigDeploymentCustomEnv struct {
 type AmmSetupConfigService struct {
 }
 type AmmSetupConfigDeployment struct {
-	Namespace     string                              `json:"namespace"`
-	CustomEnv     []AmmSetupConfigDeploymentCustomEnv `json:"customEnv"`
-	Image         string                              `json:"image"`
-	Name          string                              `json:"name"`
-	ContainerPort string                              `json:"containerPort"`
+	Namespace      string                              `json:"namespace"`
+	CustomEnv      []AmmSetupConfigDeploymentCustomEnv `json:"customEnv"`
+	Image          string                              `json:"image"`
+	Name           string                              `json:"name"`
+	ContainerPort  string                              `json:"containerPort"`
+	OsSystemServer string                              `json:"osSystemServer"`
+	OsApiSecret    string                              `json:"osApiSecret"`
+	OsApiKey       string                              `json:"osApiKey"`
 }
 
 type AmmSetupConfig struct {

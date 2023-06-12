@@ -359,11 +359,14 @@ func (s *installCtrlPanelsrvc) InstallDeployment(ctx context.Context, p *install
 	setupConfig := types.AmmSetupConfig{
 		Service: types.AmmSetupConfigService{},
 		Deployment: types.AmmSetupConfigDeployment{
-			Namespace:     os.Getenv("POD_NAMESPACE"),
-			Name:          p.SetupConfig.Name,
-			CustomEnv:     customEnv,
-			Image:         p.SetupConfig.ImageRepository,
-			ContainerPort: ptr.ToString(p.SetupConfig.ContainerPort),
+			OsSystemServer: os.Getenv("OS_SYSTEM_SERVER"),
+			OsApiSecret:    os.Getenv("OS_API_SECRET"),
+			OsApiKey:       os.Getenv("OS_API_KEY"),
+			Namespace:      os.Getenv("POD_NAMESPACE"),
+			Name:           p.SetupConfig.Name,
+			CustomEnv:      customEnv,
+			Image:          p.SetupConfig.ImageRepository,
+			ContainerPort:  ptr.ToString(p.SetupConfig.ContainerPort),
 		},
 	}
 	tmpWriter := &types.TemplateWriter{}
