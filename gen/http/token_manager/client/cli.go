@@ -23,7 +23,7 @@ func BuildTokenCreatePayload(tokenManagerTokenCreateBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Neque quia esse fugit.\",\n      \"address\": \"Sunt quam sunt aliquam.\",\n      \"chainId\": 2274057036594097376,\n      \"chainType\": \"Officia laboriosam saepe.\",\n      \"coinType\": \"stable_coin\",\n      \"marketName\": \"Blanditiis neque voluptatem nihil debitis et.\",\n      \"precision\": 9,\n      \"tokenId\": \"Laboriosam tenetur numquam.\",\n      \"tokenName\": \"Dolorem deleniti magnam et molestias sint.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Voluptatem alias ex sunt.\",\n      \"address\": \"Totam ut necessitatibus impedit blanditiis enim.\",\n      \"chainId\": 6228119598923032452,\n      \"chainType\": \"Quis consequatur iure et.\",\n      \"coinType\": \"stable_coin\",\n      \"marketName\": \"Et est sunt consectetur delectus saepe.\",\n      \"precision\": 12,\n      \"tokenId\": \"Dolores est reprehenderit illo porro beatae et.\",\n      \"tokenName\": \"Ab labore maiores odit porro consequatur.\"\n   }'")
 		}
 		if body.Precision < 6 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.precision", body.Precision, 6, true))
@@ -61,7 +61,7 @@ func BuildTokenDeletePayload(tokenManagerTokenDeleteBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenDeleteBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Illo et alias vel similique repellendus.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Nisi consequatur illum nulla nostrum soluta molestias.\"\n   }'")
 		}
 	}
 	v := &tokenmanager.DeleteTokenFilter{

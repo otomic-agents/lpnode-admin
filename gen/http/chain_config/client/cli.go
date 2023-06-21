@@ -21,7 +21,7 @@ func BuildSetChainListPayload(chainConfigSetChainListBody string) (*chainconfig.
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainList\": [\n         {\n            \"chainId\": 6784931415385022117,\n            \"chainName\": \"Nisi deserunt ducimus est excepturi necessitatibus est.\",\n            \"name\": \"Veniam sit ea commodi quo.\",\n            \"tokenName\": \"Dolore labore voluptatem distinctio dolor aspernatur.\"\n         },\n         {\n            \"chainId\": 6784931415385022117,\n            \"chainName\": \"Nisi deserunt ducimus est excepturi necessitatibus est.\",\n            \"name\": \"Veniam sit ea commodi quo.\",\n            \"tokenName\": \"Dolore labore voluptatem distinctio dolor aspernatur.\"\n         },\n         {\n            \"chainId\": 6784931415385022117,\n            \"chainName\": \"Nisi deserunt ducimus est excepturi necessitatibus est.\",\n            \"name\": \"Veniam sit ea commodi quo.\",\n            \"tokenName\": \"Dolore labore voluptatem distinctio dolor aspernatur.\"\n         }\n      ]\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainList\": [\n         {\n            \"chainId\": 8039505103587176397,\n            \"chainName\": \"Repellendus eius deserunt quaerat repudiandae.\",\n            \"name\": \"Sint exercitationem.\",\n            \"tokenName\": \"Praesentium quo ipsam atque cumque.\"\n         },\n         {\n            \"chainId\": 8039505103587176397,\n            \"chainName\": \"Repellendus eius deserunt quaerat repudiandae.\",\n            \"name\": \"Sint exercitationem.\",\n            \"tokenName\": \"Praesentium quo ipsam atque cumque.\"\n         }\n      ]\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainListPayload{}
@@ -43,7 +43,7 @@ func BuildDelChainListPayload(chainConfigDelChainListBody string) (*chainconfig.
 	{
 		err = json.Unmarshal([]byte(chainConfigDelChainListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Accusamus ea autem repellendus eius.\",\n      \"chainId\": 4402457206062359289\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Impedit nostrum eos et.\",\n      \"chainId\": 2031005260904629279\n   }'")
 		}
 	}
 	v := &chainconfig.DelChainListPayload{
@@ -62,7 +62,7 @@ func BuildSetChainGasUsdPayload(chainConfigSetChainGasUsdBody string) (*chaincon
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainGasUsdBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Sit dolor facere iusto impedit adipisci perspiciatis.\",\n      \"chainId\": 841273005796704795,\n      \"usd\": 5487831666024987540\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Doloremque dolores est quas reprehenderit vel esse.\",\n      \"chainId\": 2885005782751723716,\n      \"usd\": 5450437637379237693\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainGasUsdPayload{
@@ -82,7 +82,7 @@ func BuildSetChainClientConfigPayload(chainConfigSetChainClientConfigBody string
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainClientConfigBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainData\": \"Tenetur asperiores in dolor quibusdam inventore.\",\n      \"chainId\": 6850468999259258128\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainData\": \"Et quidem pariatur sunt et corrupti.\",\n      \"chainId\": 1837657479056530763\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainClientConfigPayload{

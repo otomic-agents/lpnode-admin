@@ -83,6 +83,10 @@ func init() {
 	if err != nil {
 		log.Println("基础数据错误", err)
 	}
+	err = InitMonitor()
+	if err != nil {
+		log.Println(("初始化Monitor失败"))
+	}
 }
 func initDbData() {
 	initData, err := ioutil.ReadFile("./init_data/init_data.js")

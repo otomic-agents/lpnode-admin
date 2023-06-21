@@ -25,6 +25,7 @@ import (
 	ordercentersvr "admin-panel/gen/http/order_center/server"
 	relayaccountsvr "admin-panel/gen/http/relay_account/server"
 	statuslistsvr "admin-panel/gen/http/status_list/server"
+	taskmanagersvr "admin-panel/gen/http/task_manager/server"
 	tokenmanagersvr "admin-panel/gen/http/token_manager/server"
 	installctrlpanel "admin-panel/gen/install_ctrl_panel"
 	lpregister "admin-panel/gen/lp_register"
@@ -32,6 +33,7 @@ import (
 	ordercenter "admin-panel/gen/order_center"
 	relayaccount "admin-panel/gen/relay_account"
 	statuslist "admin-panel/gen/status_list"
+	taskmanager "admin-panel/gen/task_manager"
 	tokenmanager "admin-panel/gen/token_manager"
 	"context"
 	"log"
@@ -48,7 +50,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainlogic.Endpoints, accountCexEndpoints *accountcex.Endpoints, accountDexEndpoints *accountdex.Endpoints, ammOrderCenterEndpoints *ammordercenter.Endpoints, baseDataEndpoints *basedata.Endpoints, bridgeConfigEndpoints *bridgeconfig.Endpoints, chainConfigEndpoints *chainconfig.Endpoints, configResourceEndpoints *configresource.Endpoints, installCtrlPanelEndpoints *installctrlpanel.Endpoints, dexWalletEndpoints *dexwallet.Endpoints, hedgeEndpoints *hedge.Endpoints, orderCenterEndpoints *ordercenter.Endpoints, lpRegisterEndpoints *lpregister.Endpoints, relayAccountEndpoints *relayaccount.Endpoints, statusListEndpoints *statuslist.Endpoints, tokenManagerEndpoints *tokenmanager.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainlogic.Endpoints, accountCexEndpoints *accountcex.Endpoints, accountDexEndpoints *accountdex.Endpoints, ammOrderCenterEndpoints *ammordercenter.Endpoints, baseDataEndpoints *basedata.Endpoints, bridgeConfigEndpoints *bridgeconfig.Endpoints, chainConfigEndpoints *chainconfig.Endpoints, configResourceEndpoints *configresource.Endpoints, installCtrlPanelEndpoints *installctrlpanel.Endpoints, dexWalletEndpoints *dexwallet.Endpoints, hedgeEndpoints *hedge.Endpoints, orderCenterEndpoints *ordercenter.Endpoints, lpRegisterEndpoints *lpregister.Endpoints, relayAccountEndpoints *relayaccount.Endpoints, statusListEndpoints *statuslist.Endpoints, taskManagerEndpoints *taskmanager.Endpoints, tokenManagerEndpoints *tokenmanager.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -94,6 +96,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 		lpRegisterServer       *lpregistersvr.Server
 		relayAccountServer     *relayaccountsvr.Server
 		statusListServer       *statuslistsvr.Server
+		taskManagerServer      *taskmanagersvr.Server
 		tokenManagerServer     *tokenmanagersvr.Server
 	)
 	{
@@ -113,6 +116,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 		lpRegisterServer = lpregistersvr.New(lpRegisterEndpoints, mux, dec, enc, eh, nil)
 		relayAccountServer = relayaccountsvr.New(relayAccountEndpoints, mux, dec, enc, eh, nil)
 		statusListServer = statuslistsvr.New(statusListEndpoints, mux, dec, enc, eh, nil)
+		taskManagerServer = taskmanagersvr.New(taskManagerEndpoints, mux, dec, enc, eh, nil)
 		tokenManagerServer = tokenmanagersvr.New(tokenManagerEndpoints, mux, dec, enc, eh, nil)
 		if debug {
 			servers := goahttp.Servers{
@@ -131,6 +135,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 				lpRegisterServer,
 				relayAccountServer,
 				statusListServer,
+				taskManagerServer,
 				tokenManagerServer,
 			}
 			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
@@ -152,6 +157,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 	lpregistersvr.Mount(mux, lpRegisterServer)
 	relayaccountsvr.Mount(mux, relayAccountServer)
 	statuslistsvr.Mount(mux, statusListServer)
+	taskmanagersvr.Mount(mux, taskManagerServer)
 	tokenmanagersvr.Mount(mux, tokenManagerServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
@@ -208,6 +214,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 	for _, m := range statusListServer.Mounts {
+		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
+	for _, m := range taskManagerServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 	for _, m := range tokenManagerServer.Mounts {
