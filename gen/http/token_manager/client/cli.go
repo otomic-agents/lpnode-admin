@@ -23,7 +23,7 @@ func BuildTokenCreatePayload(tokenManagerTokenCreateBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Voluptatem alias ex sunt.\",\n      \"address\": \"Totam ut necessitatibus impedit blanditiis enim.\",\n      \"chainId\": 6228119598923032452,\n      \"chainType\": \"Quis consequatur iure et.\",\n      \"coinType\": \"stable_coin\",\n      \"marketName\": \"Et est sunt consectetur delectus saepe.\",\n      \"precision\": 12,\n      \"tokenId\": \"Dolores est reprehenderit illo porro beatae et.\",\n      \"tokenName\": \"Ab labore maiores odit porro consequatur.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"In laboriosam repellendus velit sit dolores sunt.\",\n      \"address\": \"Voluptatem dolores eos laboriosam laborum maiores quas.\",\n      \"chainId\": 7845087362000733147,\n      \"chainType\": \"Officia iste autem voluptatem alias ut.\",\n      \"coinType\": \"stable_coin\",\n      \"marketName\": \"Laborum dicta tempore voluptatem.\",\n      \"precision\": 8,\n      \"tokenId\": \"A est sint autem dolorem voluptas.\",\n      \"tokenName\": \"Ut quas sint.\"\n   }'")
 		}
 		if body.Precision < 6 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.precision", body.Precision, 6, true))
@@ -61,7 +61,7 @@ func BuildTokenDeletePayload(tokenManagerTokenDeleteBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenDeleteBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Nisi consequatur illum nulla nostrum soluta molestias.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Aut porro quis voluptatem dicta quia.\"\n   }'")
 		}
 	}
 	v := &tokenmanager.DeleteTokenFilter{

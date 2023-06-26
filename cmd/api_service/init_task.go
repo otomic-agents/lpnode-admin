@@ -18,7 +18,7 @@ import (
 
 func InitMonitor() (err error) {
 	log.Println("InitMonitor")
-	filters := bson.M{}
+	filters := bson.M{"task_type": "system"}
 	err, cursor := database.FindAll("main", "monitor_list", filters)
 	if err != nil {
 		return
@@ -56,7 +56,7 @@ func deployMonitorList(listData []types.DBMonitorListRow) (err error) {
 		setupSet := types.MonitorSetupConfig{
 			Namespace:  os.Getenv("POD_NAMESPACE"),
 			Name:       v.Name,
-			Corn:       v.Corn,
+			Cron:       v.Cron,
 			ScriptPath: v.ScriptPath,
 		}
 		err = tmpl.Execute(tmpWriter, setupSet)

@@ -6,3 +6,4 @@ node_modules
 /api_service-cli
 !/env.json
 cmd/api_service/__debug_bin
+/user_script/**/*

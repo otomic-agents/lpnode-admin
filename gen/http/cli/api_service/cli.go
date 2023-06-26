@@ -19,6 +19,7 @@ import (
 	hedgec "admin-panel/gen/http/hedge/client"
 	installctrlpanelc "admin-panel/gen/http/install_ctrl_panel/client"
 	lpregisterc "admin-panel/gen/http/lp_register/client"
+	lpmonitc "admin-panel/gen/http/lpmonit/client"
 	mainlogicc "admin-panel/gen/http/main_logic/client"
 	ordercenterc "admin-panel/gen/http/order_center/client"
 	relayaccountc "admin-panel/gen/http/relay_account/client"
@@ -49,6 +50,7 @@ config-resource (create-resource|get-resource|list-resource|delete-result|edit-r
 install-ctrl-panel (list-install|install-lp-client|uninstall-lp-client|install-deployment|uninstall-deployment|update-deployment)
 dex-wallet (list-dex-wallet|create-dex-wallet|delete-dex-wallet|vault-list)
 hedge (list|edit|del)
+lpmonit (add-script|list-script|delete-script|run-script|run-result)
 order-center list
 lp-register (register-all|un-register-all)
 relay-account (list-account|register-account|delete-account)
@@ -63,13 +65,13 @@ func UsageExamples() string {
 	return os.Args[0] + ` main-logic main-logic` + "\n" +
 		os.Args[0] + ` account-cex wallet-info` + "\n" +
 		os.Args[0] + ` account-dex wallet-info --body '{
-      "chainId": 2605497125331556184
+      "chainId": 517246796943780996
    }'` + "\n" +
 		os.Args[0] + ` amm-order-center list --body '{
-      "ammName": "Delectus officia porro aut.",
-      "page": 3859689108772280556,
-      "pageSize": 3306170301836634758,
-      "status": 8274422754402333693
+      "ammName": "Sit enim doloremque rerum minima.",
+      "page": 4906814959670522513,
+      "pageSize": 4493050191874293017,
+      "status": 1245436374065682402
    }'` + "\n" +
 		os.Args[0] + ` base-data chain-data-list` + "\n" +
 		""
@@ -193,6 +195,22 @@ func ParseEndpoint(
 		hedgeDelFlags    = flag.NewFlagSet("del", flag.ExitOnError)
 		hedgeDelBodyFlag = hedgeDelFlags.String("body", "REQUIRED", "")
 
+		lpmonitFlags = flag.NewFlagSet("lpmonit", flag.ContinueOnError)
+
+		lpmonitAddScriptFlags    = flag.NewFlagSet("add-script", flag.ExitOnError)
+		lpmonitAddScriptBodyFlag = lpmonitAddScriptFlags.String("body", "REQUIRED", "")
+
+		lpmonitListScriptFlags = flag.NewFlagSet("list-script", flag.ExitOnError)
+
+		lpmonitDeleteScriptFlags    = flag.NewFlagSet("delete-script", flag.ExitOnError)
+		lpmonitDeleteScriptBodyFlag = lpmonitDeleteScriptFlags.String("body", "REQUIRED", "")
+
+		lpmonitRunScriptFlags    = flag.NewFlagSet("run-script", flag.ExitOnError)
+		lpmonitRunScriptBodyFlag = lpmonitRunScriptFlags.String("body", "REQUIRED", "")
+
+		lpmonitRunResultFlags    = flag.NewFlagSet("run-result", flag.ExitOnError)
+		lpmonitRunResultBodyFlag = lpmonitRunResultFlags.String("body", "REQUIRED", "")
+
 		orderCenterFlags = flag.NewFlagSet("order-center", flag.ContinueOnError)
 
 		orderCenterListFlags    = flag.NewFlagSet("list", flag.ExitOnError)
@@ -295,6 +313,13 @@ func ParseEndpoint(
 	hedgeEditFlags.Usage = hedgeEditUsage
 	hedgeDelFlags.Usage = hedgeDelUsage
 
+	lpmonitFlags.Usage = lpmonitUsage
+	lpmonitAddScriptFlags.Usage = lpmonitAddScriptUsage
+	lpmonitListScriptFlags.Usage = lpmonitListScriptUsage
+	lpmonitDeleteScriptFlags.Usage = lpmonitDeleteScriptUsage
+	lpmonitRunScriptFlags.Usage = lpmonitRunScriptUsage
+	lpmonitRunResultFlags.Usage = lpmonitRunResultUsage
+
 	orderCenterFlags.Usage = orderCenterUsage
 	orderCenterListFlags.Usage = orderCenterListUsage
 
@@ -358,6 +383,8 @@ func ParseEndpoint(
 			svcf = dexWalletFlags
 		case "hedge":
 			svcf = hedgeFlags
+		case "lpmonit":
+			svcf = lpmonitFlags
 		case "order-center":
 			svcf = orderCenterFlags
 		case "lp-register":
@@ -522,6 +549,25 @@ func ParseEndpoint(
 
 			case "del":
 				epf = hedgeDelFlags
+
+			}
+
+		case "lpmonit":
+			switch epn {
+			case "add-script":
+				epf = lpmonitAddScriptFlags
+
+			case "list-script":
+				epf = lpmonitListScriptFlags
+
+			case "delete-script":
+				epf = lpmonitDeleteScriptFlags
+
+			case "run-script":
+				epf = lpmonitRunScriptFlags
+
+			case "run-result":
+				epf = lpmonitRunResultFlags
 
 			}
 
@@ -751,6 +797,25 @@ func ParseEndpoint(
 				endpoint = c.Del()
 				data, err = hedgec.BuildDelPayload(*hedgeDelBodyFlag)
 			}
+		case "lpmonit":
+			c := lpmonitc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "add-script":
+				endpoint = c.AddScript()
+				data, err = lpmonitc.BuildAddScriptPayload(*lpmonitAddScriptBodyFlag)
+			case "list-script":
+				endpoint = c.ListScript()
+				data = nil
+			case "delete-script":
+				endpoint = c.DeleteScript()
+				data, err = lpmonitc.BuildDeleteScriptPayload(*lpmonitDeleteScriptBodyFlag)
+			case "run-script":
+				endpoint = c.RunScript()
+				data, err = lpmonitc.BuildRunScriptPayload(*lpmonitRunScriptBodyFlag)
+			case "run-result":
+				endpoint = c.RunResult()
+				data, err = lpmonitc.BuildRunResultPayload(*lpmonitRunResultBodyFlag)
+			}
 		case "order-center":
 			c := ordercenterc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
@@ -896,7 +961,7 @@ WalletInfo implements walletInfo.
 
 Example:
     %[1]s account-dex wallet-info --body '{
-      "chainId": 2605497125331556184
+      "chainId": 517246796943780996
    }'
 `, os.Args[0])
 }
@@ -923,10 +988,10 @@ List implements list.
 
 Example:
     %[1]s amm-order-center list --body '{
-      "ammName": "Delectus officia porro aut.",
-      "page": 3859689108772280556,
-      "pageSize": 3306170301836634758,
-      "status": 8274422754402333693
+      "ammName": "Sit enim doloremque rerum minima.",
+      "page": 4906814959670522513,
+      "pageSize": 4493050191874293017,
+      "status": 1245436374065682402
    }'
 `, os.Args[0])
 }
@@ -980,15 +1045,15 @@ func bridgeConfigBridgeCreateUsage() {
 
 Example:
     %[1]s bridge-config bridge-create --body '{
-      "ammName": "Aut est unde debitis est quia molestias.",
-      "bridgeName": "Error blanditiis et qui quas.",
-      "dstChainId": "Ut ad tempore rerum et.",
-      "dstTokenId": "Aut consequatur aspernatur magnam fuga dignissimos.",
-      "enableHedge": false,
-      "srcChainId": "A sit molestiae ipsam perspiciatis.",
-      "srcTokenId": "Aut quibusdam labore sunt quia.",
-      "srcWalletId": "Est amet qui sed tenetur molestias est.",
-      "walletId": "Ullam et ut."
+      "ammName": "Sed sit dolor.",
+      "bridgeName": "Et ea consequatur iure.",
+      "dstChainId": "Autem architecto.",
+      "dstTokenId": "Quaerat repudiandae.",
+      "enableHedge": true,
+      "srcChainId": "Dolores voluptas blanditiis.",
+      "srcTokenId": "Accusamus ea autem repellendus eius.",
+      "srcWalletId": "Praesentium quo ipsam atque cumque.",
+      "walletId": "Sint exercitationem."
    }'
 `, os.Args[0])
 }
@@ -1011,7 +1076,7 @@ BridgeDelete implements bridgeDelete.
 
 Example:
     %[1]s bridge-config bridge-delete --body '{
-      "id": "Quos saepe nulla."
+      "id": "Quo consequatur et ut non exercitationem."
    }'
 `, os.Args[0])
 }
@@ -1024,7 +1089,7 @@ BridgeTest implements bridgeTest.
 
 Example:
     %[1]s bridge-config bridge-test --body '{
-      "id": "Autem architecto."
+      "id": "Nisi libero."
    }'
 `, os.Args[0])
 }
@@ -1057,16 +1122,22 @@ Example:
     %[1]s chain-config set-chain-list --body '{
       "chainList": [
          {
-            "chainId": 8039505103587176397,
-            "chainName": "Repellendus eius deserunt quaerat repudiandae.",
-            "name": "Sint exercitationem.",
-            "tokenName": "Praesentium quo ipsam atque cumque."
+            "chainId": 4878686693053206641,
+            "chainName": "Ut ipsam.",
+            "name": "Sequi laudantium dolore non ullam et.",
+            "tokenName": "Doloremque voluptatem id eligendi aut reprehenderit."
          },
          {
-            "chainId": 8039505103587176397,
-            "chainName": "Repellendus eius deserunt quaerat repudiandae.",
-            "name": "Sint exercitationem.",
-            "tokenName": "Praesentium quo ipsam atque cumque."
+            "chainId": 4878686693053206641,
+            "chainName": "Ut ipsam.",
+            "name": "Sequi laudantium dolore non ullam et.",
+            "tokenName": "Doloremque voluptatem id eligendi aut reprehenderit."
+         },
+         {
+            "chainId": 4878686693053206641,
+            "chainName": "Ut ipsam.",
+            "name": "Sequi laudantium dolore non ullam et.",
+            "tokenName": "Doloremque voluptatem id eligendi aut reprehenderit."
          }
       ]
    }'
@@ -1081,8 +1152,8 @@ func chainConfigDelChainListUsage() {
 
 Example:
     %[1]s chain-config del-chain-list --body '{
-      "_id": "Impedit nostrum eos et.",
-      "chainId": 2031005260904629279
+      "_id": "Et ut eius omnis.",
+      "chainId": 2968797716075054871
    }'
 `, os.Args[0])
 }
@@ -1105,9 +1176,9 @@ func chainConfigSetChainGasUsdUsage() {
 
 Example:
     %[1]s chain-config set-chain-gas-usd --body '{
-      "_id": "Doloremque dolores est quas reprehenderit vel esse.",
-      "chainId": 2885005782751723716,
-      "usd": 5450437637379237693
+      "_id": "Omnis aspernatur aspernatur aperiam non.",
+      "chainId": 2509076619254704038,
+      "usd": 3588066447096417934
    }'
 `, os.Args[0])
 }
@@ -1120,8 +1191,8 @@ SetChainClientConfig implements setChainClientConfig.
 
 Example:
     %[1]s chain-config set-chain-client-config --body '{
-      "chainData": "Et quidem pariatur sunt et corrupti.",
-      "chainId": 1837657479056530763
+      "chainData": "Aut labore odio.",
+      "chainId": 1258339624407726688
    }'
 `, os.Args[0])
 }
@@ -1152,10 +1223,10 @@ CreateResource implements createResource.
 
 Example:
     %[1]s config-resource create-resource --body '{
-      "appName": "Sed adipisci suscipit eum aliquam necessitatibus voluptatibus.",
-      "clientId": "Et ut non exercitationem quasi veritatis.",
-      "template": "Vero veritatis.",
-      "version": "Non ullam dignissimos vel quo."
+      "appName": "Ad inventore quisquam ut tempora perspiciatis.",
+      "clientId": "Ex sit et voluptatem.",
+      "template": "Laboriosam eaque aut aut aut quas et.",
+      "version": "Occaecati non aut."
    }'
 `, os.Args[0])
 }
@@ -1168,7 +1239,7 @@ GetResource implements getResource.
 
 Example:
     %[1]s config-resource get-resource --body '{
-      "clientId": "Dolore non ullam et consequatur doloremque."
+      "clientId": "Et repellat voluptas consectetur."
    }'
 `, os.Args[0])
 }
@@ -1201,12 +1272,12 @@ EditResult implements editResult.
 
 Example:
     %[1]s config-resource edit-result --body '{
-      "appName": "Esse aut.",
-      "clientId": "Quibusdam odit cum rerum tempore fuga quidem.",
-      "template": "Aperiam non omnis iste similique.",
-      "templateResult": "Et nobis ad vero omnis aspernatur.",
-      "version": "Odio provident consequatur laudantium.",
-      "versionHash": "Asperiores sequi ea ad inventore."
+      "appName": "Cumque veritatis pariatur alias.",
+      "clientId": "Dolores vel dicta nam.",
+      "template": "Ipsum illum.",
+      "templateResult": "Saepe et cumque debitis et.",
+      "version": "Fuga aliquam quis.",
+      "versionHash": "Quia iusto quia ut ipsum eum et."
    }'
 `, os.Args[0])
 }
@@ -1238,7 +1309,7 @@ func installCtrlPanelListInstallUsage() {
 
 Example:
     %[1]s install-ctrl-panel list-install --body '{
-      "installType": "Eaque aut aut aut quas."
+      "installType": "Ullam sed."
    }'
 `, os.Args[0])
 }
@@ -1252,30 +1323,38 @@ InstallLpClient implements installLpClient.
 Example:
     %[1]s install-ctrl-panel install-lp-client --body '{
       "setupConfig": {
-         "awsAccessKeyId": "Rerum fuga aliquam quis consectetur.",
-         "awsSecretAccessKey": "Qui quo voluptatum mollitia.",
-         "connectionExplorerurl": "Nam ullam cumque veritatis pariatur.",
-         "connectionHelperurl": "Et est ipsum illum qui dolores vel.",
-         "connectionNodeurl": "Qui veniam.",
-         "connectionWalleturl": "Earum saepe et cumque.",
-         "containerPort": "Iusto quia ut ipsum eum.",
+         "awsAccessKeyId": "Eum beatae molestias.",
+         "awsSecretAccessKey": "Dolore aut.",
+         "connectionExplorerurl": "Adipisci quis sequi repellat repellat accusamus consectetur.",
+         "connectionHelperurl": "Neque qui in officiis nam.",
+         "connectionNodeurl": "Nihil quas itaque.",
+         "connectionWalleturl": "Maxime voluptatem cum voluptatem.",
+         "containerPort": "Quam officia fugit voluptatem.",
          "customEnv": [
             {
-               "key": "Ea magni fuga magni.",
-               "value": "Vitae corporis omnis."
+               "key": "Et sed.",
+               "value": "Et est laborum numquam et ut laudantium."
             },
             {
-               "key": "Ea magni fuga magni.",
-               "value": "Vitae corporis omnis."
+               "key": "Et sed.",
+               "value": "Et est laborum numquam et ut laudantium."
+            },
+            {
+               "key": "Et sed.",
+               "value": "Et est laborum numquam et ut laudantium."
+            },
+            {
+               "key": "Et sed.",
+               "value": "Et est laborum numquam et ut laudantium."
             }
          ],
-         "deploymentName": "Est ipsa pariatur.",
-         "imageRepository": "Quia ea et ut.",
+         "deploymentName": "Non ratione itaque et deleniti vitae.",
+         "imageRepository": "Architecto nam ut ut.",
          "install": false,
-         "rpcUrl": "Debitis quae voluptate illum.",
-         "serviceName": "Voluptatem expedita quibusdam ut explicabo officiis.",
-         "startBlock": "Aut modi officia.",
-         "type": "Explicabo sit cum accusamus reprehenderit totam saepe."
+         "rpcUrl": "Dolore a.",
+         "serviceName": "Autem magni blanditiis adipisci cupiditate officiis doloribus.",
+         "startBlock": "Ipsum voluptas consequuntur ipsam dicta sunt molestias.",
+         "type": "Harum perferendis repudiandae dolores incidunt."
       }
    }'
 `, os.Args[0])
@@ -1290,7 +1369,7 @@ UninstallLpClient implements uninstallLpClient.
 Example:
     %[1]s install-ctrl-panel uninstall-lp-client --body '{
       "setupConfig": {
-         "type": "Qui et incidunt sit iure.",
+         "type": "Voluptatem consequuntur excepturi omnis voluptatem.",
          "uninstall": false
       }
    }'
@@ -1306,29 +1385,21 @@ InstallDeployment implements installDeployment.
 Example:
     %[1]s install-ctrl-panel install-deployment --body '{
       "setupConfig": {
-         "containerPort": "Autem magni blanditiis adipisci cupiditate officiis doloribus.",
+         "containerPort": "Ea sit praesentium repudiandae.",
          "customEnv": [
             {
-               "key": "Ea magni fuga magni.",
-               "value": "Vitae corporis omnis."
+               "key": "Et sed.",
+               "value": "Et est laborum numquam et ut laudantium."
             },
             {
-               "key": "Ea magni fuga magni.",
-               "value": "Vitae corporis omnis."
-            },
-            {
-               "key": "Ea magni fuga magni.",
-               "value": "Vitae corporis omnis."
-            },
-            {
-               "key": "Ea magni fuga magni.",
-               "value": "Vitae corporis omnis."
+               "key": "Et sed.",
+               "value": "Et est laborum numquam et ut laudantium."
             }
          ],
-         "imageRepository": "Architecto nam ut ut.",
+         "imageRepository": "Quo et facilis.",
          "install": true,
          "installType": "market",
-         "name": "Itaque et."
+         "name": "Nobis in pariatur eaque porro quidem officiis."
       }
    }'
 `, os.Args[0])
@@ -1343,8 +1414,8 @@ UninstallDeployment implements uninstallDeployment.
 Example:
     %[1]s install-ctrl-panel uninstall-deployment --body '{
       "setupConfig": {
-         "installType": "Voluptatem cum voluptatem occaecati neque qui in.",
-         "name": "Nam totam adipisci.",
+         "installType": "Ut dicta rerum eveniet repudiandae assumenda voluptas.",
+         "name": "Culpa aperiam dolores officiis est sed repellendus.",
          "uninstall": false
       }
    }'
@@ -1360,10 +1431,10 @@ UpdateDeployment implements updateDeployment.
 Example:
     %[1]s install-ctrl-panel update-deployment --body '{
       "setupConfig": {
-         "installContext": "Sed odio ut ratione voluptates est.",
-         "installType": "Sequi et quaerat voluptatem.",
-         "name": "Soluta sapiente.",
-         "update": false
+         "installContext": "Provident non maxime.",
+         "installType": "Perspiciatis error molestias.",
+         "name": "Suscipit qui nemo dolores.",
+         "update": true
       }
    }'
 `, os.Args[0])
@@ -1404,18 +1475,18 @@ CreateDexWallet implements createDexWallet.
 
 Example:
     %[1]s dex-wallet create-dex-wallet --body '{
-      "accountId": "Molestias repudiandae suscipit qui nemo dolores ipsa.",
-      "address": "Iste nihil explicabo quia.",
-      "chainId": 4337349769832747105,
-      "chainType": "Autem corrupti perspiciatis.",
-      "id": "Vitae repellendus rerum enim consectetur corporis.",
-      "privateKey": "Sed quidem eius numquam natus.",
-      "storeId": "Maxime tempore.",
-      "vaultHostType": "Et rem ut quam cumque odit.",
-      "vaultName": "Voluptas quo omnis.",
-      "vaultSecertType": "Autem possimus reprehenderit unde porro quam aliquid.",
-      "walletName": "At id quis neque ad dolorem.",
-      "walletType": "storeId"
+      "accountId": "Et velit amet in quos architecto doloremque.",
+      "address": "Sint dolores.",
+      "chainId": 7870673749487226816,
+      "chainType": "Sed vel qui et soluta in.",
+      "id": "Natus eaque.",
+      "privateKey": "Eveniet nihil.",
+      "storeId": "Iusto perspiciatis pariatur repellendus commodi.",
+      "vaultHostType": "Possimus laboriosam omnis sit.",
+      "vaultName": "Et vel dolor aut adipisci cupiditate.",
+      "vaultSecertType": "Sint exercitationem quas debitis.",
+      "walletName": "Sequi sunt qui culpa nostrum.",
+      "walletType": "privateKey"
    }'
 `, os.Args[0])
 }
@@ -1428,7 +1499,7 @@ DeleteDexWallet implements deleteDexWallet.
 
 Example:
     %[1]s dex-wallet delete-dex-wallet --body '{
-      "id": "Eius consequuntur porro."
+      "id": "Non aut quaerat aut voluptas et est."
    }'
 `, os.Args[0])
 }
@@ -1477,8 +1548,8 @@ Edit implements edit.
 Example:
     %[1]s hedge edit --body '{
       "hedge": {
-         "hedgeType": "Sint dolores.",
-         "id": "Qui culpa nostrum dicta eveniet nihil."
+         "hedgeType": "Dolores asperiores velit illo harum.",
+         "id": "Recusandae ut in ratione labore molestiae debitis."
       }
    }'
 `, os.Args[0])
@@ -1492,7 +1563,88 @@ Del implements del.
 
 Example:
     %[1]s hedge del --body '{
-      "id": "Numquam et velit amet."
+      "id": "Ut ipsa et."
+   }'
+`, os.Args[0])
+}
+
+// lpmonitUsage displays the usage of the lpmonit command and its subcommands.
+func lpmonitUsage() {
+	fmt.Fprintf(os.Stderr, `监控脚本程序
+Usage:
+    %[1]s [globalflags] lpmonit COMMAND [flags]
+
+COMMAND:
+    add-script: add script and save
+    list-script: task_list
+    delete-script: task_list_delete
+    run-script: task_run
+    run-result: run_result
+
+Additional help:
+    %[1]s lpmonit COMMAND --help
+`, os.Args[0])
+}
+func lpmonitAddScriptUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] lpmonit add-script -body JSON
+
+add script and save
+    -body JSON: 
+
+Example:
+    %[1]s lpmonit add-script --body '{
+      "cron": "Qui doloremque nam.",
+      "name": "Est magnam sed.",
+      "scriptBody": "Sint asperiores error nulla quo sunt."
+   }'
+`, os.Args[0])
+}
+
+func lpmonitListScriptUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] lpmonit list-script
+
+task_list
+
+Example:
+    %[1]s lpmonit list-script
+`, os.Args[0])
+}
+
+func lpmonitDeleteScriptUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] lpmonit delete-script -body JSON
+
+task_list_delete
+    -body JSON: 
+
+Example:
+    %[1]s lpmonit delete-script --body '{
+      "_id": "Vel itaque sint."
+   }'
+`, os.Args[0])
+}
+
+func lpmonitRunScriptUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] lpmonit run-script -body JSON
+
+task_run
+    -body JSON: 
+
+Example:
+    %[1]s lpmonit run-script --body '{
+      "scriptContent": "Repellendus veniam quos autem voluptatem."
+   }'
+`, os.Args[0])
+}
+
+func lpmonitRunResultUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] lpmonit run-result -body JSON
+
+run_result
+    -body JSON: 
+
+Example:
+    %[1]s lpmonit run-result --body '{
+      "scriptName": "Dolores delectus unde rerum commodi."
    }'
 `, os.Args[0])
 }
@@ -1519,9 +1671,9 @@ List implements list.
 
 Example:
     %[1]s order-center list --body '{
-      "page": 4886108515874946467,
-      "pageSize": 6926202567884680276,
-      "status": 3361975386989174243
+      "page": 1604709660050959537,
+      "pageSize": 683199864166491359,
+      "status": 6532444392342240853
    }'
 `, os.Args[0])
 }
@@ -1595,8 +1747,8 @@ RegisterAccount implements registerAccount.
 
 Example:
     %[1]s relay-account register-account --body '{
-      "name": "Modi aut rerum repellendus qui vel.",
-      "profile": "Ullam incidunt labore rem quibusdam."
+      "name": "Unde beatae soluta nihil architecto eligendi necessitatibus.",
+      "profile": "Consequatur illum nulla."
    }'
 `, os.Args[0])
 }
@@ -1609,7 +1761,7 @@ DeleteAccount implements deleteAccount.
 
 Example:
     %[1]s relay-account delete-account --body '{
-      "id": "Debitis fugiat dolores asperiores velit illo harum."
+      "id": "Iure quisquam in commodi et natus debitis."
    }'
 `, os.Args[0])
 }
@@ -1673,7 +1825,7 @@ TaskDeploy implements taskDeploy.
 
 Example:
     %[1]s task-manager task-deploy --body '{
-      "_id": "Officia laboriosam saepe."
+      "_id": "Odit et qui."
    }'
 `, os.Args[0])
 }
@@ -1686,7 +1838,7 @@ UnDeploy implements unDeploy.
 
 Example:
     %[1]s task-manager un-deploy --body '{
-      "_id": "Et asperiores."
+      "_id": "Error in voluptatum neque animi."
    }'
 `, os.Args[0])
 }
@@ -1699,12 +1851,12 @@ TaskCreate implements taskCreate.
 
 Example:
     %[1]s task-manager task-create --body '{
-      "_id": "Autem voluptatem aut nulla magnam omnis esse.",
-      "deployMessage": "Unde rerum.",
+      "_id": "Nesciunt provident.",
+      "deployMessage": "Ut quo maxime minus quis saepe.",
       "deployed": false,
-      "schedule": "Quia nesciunt iure deserunt maiores.",
-      "scriptBody": "Est quam vel modi.",
-      "scriptPath": "Quos itaque et quasi est.",
+      "schedule": "Nemo fuga consequuntur fugiat id beatae.",
+      "scriptBody": "Officia facilis deserunt.",
+      "scriptPath": "Iusto numquam in nam alias in voluptatem.",
       "taskType": "customize"
    }'
 `, os.Args[0])
@@ -1744,15 +1896,15 @@ TokenCreate implements tokenCreate.
 
 Example:
     %[1]s token-manager token-create --body '{
-      "_id": "Voluptatem alias ex sunt.",
-      "address": "Totam ut necessitatibus impedit blanditiis enim.",
-      "chainId": 6228119598923032452,
-      "chainType": "Quis consequatur iure et.",
+      "_id": "In laboriosam repellendus velit sit dolores sunt.",
+      "address": "Voluptatem dolores eos laboriosam laborum maiores quas.",
+      "chainId": 7845087362000733147,
+      "chainType": "Officia iste autem voluptatem alias ut.",
       "coinType": "stable_coin",
-      "marketName": "Et est sunt consectetur delectus saepe.",
-      "precision": 12,
-      "tokenId": "Dolores est reprehenderit illo porro beatae et.",
-      "tokenName": "Ab labore maiores odit porro consequatur."
+      "marketName": "Laborum dicta tempore voluptatem.",
+      "precision": 8,
+      "tokenId": "A est sint autem dolorem voluptas.",
+      "tokenName": "Ut quas sint."
    }'
 `, os.Args[0])
 }
@@ -1765,7 +1917,7 @@ TokenDelete implements tokenDelete.
 
 Example:
     %[1]s token-manager token-delete --body '{
-      "_id": "Nisi consequatur illum nulla nostrum soluta molestias."
+      "_id": "Aut porro quis voluptatem dicta quia."
    }'
 `, os.Args[0])
 }

@@ -3,6 +3,6 @@ package types
 type MonitorSetupConfig struct {
 	Namespace  string `json:"namespace"`
 	Name       string `json:"name"`
-	Corn       string `json:"corn"`
+	Cron       string `json:"cron"`
 	ScriptPath string `json:"scriptPath"`
 }

@@ -23,15 +23,15 @@ spec:
               value: "{{.Deployment.Name}}-analyze"
             - name: APP_VERSION
               value: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
-            - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
+            - name: OBRIDGE_REDIS_HOST
               value: "obridge-lpnode-db-redis-master"
-            - name: LP_NODE_DATA_MONGO_URL
+            - name: OBRIDGE_MONGODB_HOST
               value: "obridge-lpnode-db-mongodb"
             - name: NODE_ENV
               value: "production"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
-            - name: MONGODBPASS
+            - name: MONGODB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: obridge-lpnode-db-mongodb
@@ -80,17 +80,17 @@ spec:
               value: "{{.Deployment.Name}}"
             - name: APP_VERSION
               value: "{{.Deployment.Image}}"
-            - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
+            - name: OBRIDGE_REDIS_HOST
               value: "obridge-lpnode-db-redis-master"
-            - name: LP_NODE_DATA_MONGO_URL
+            - name: OBRIDGE_MONGODB_HOST
               value: "obridge-lpnode-db-mongodb"
             - name: NODE_ENV
               value: "production"
-            - name: LP_MARKET_SERVICE_URL
+            - name: LP_MARKET_SERVICE_HOST
               value: "obridge-lpnode-market"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
-            - name: MONGODBPASS
+            - name: MONGODB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: obridge-lpnode-db-mongodb

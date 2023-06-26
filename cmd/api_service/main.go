@@ -13,6 +13,7 @@ import (
 	hedge "admin-panel/gen/hedge"
 	installctrlpanel "admin-panel/gen/install_ctrl_panel"
 	lpregister "admin-panel/gen/lp_register"
+	lpmonit "admin-panel/gen/lpmonit"
 	mainlogic "admin-panel/gen/main_logic"
 	ordercenter "admin-panel/gen/order_center"
 	relayaccount "admin-panel/gen/relay_account"
@@ -64,6 +65,7 @@ func main() {
 		installCtrlPanelSvc installctrlpanel.Service
 		dexWalletSvc        dexwallet.Service
 		hedgeSvc            hedge.Service
+		lpmonitSvc          lpmonit.Service
 		orderCenterSvc      ordercenter.Service
 		lpRegisterSvc       lpregister.Service
 		relayAccountSvc     relayaccount.Service
@@ -83,6 +85,7 @@ func main() {
 		installCtrlPanelSvc = adminapiservice.NewInstallCtrlPanel(logger)
 		dexWalletSvc = adminapiservice.NewDexWallet(logger)
 		hedgeSvc = adminapiservice.NewHedge(logger)
+		lpmonitSvc = adminapiservice.NewLpmonit(logger)
 		orderCenterSvc = adminapiservice.NewOrderCenter(logger)
 		lpRegisterSvc = adminapiservice.NewLpRegister(logger)
 		relayAccountSvc = adminapiservice.NewRelayAccount(logger)
@@ -105,6 +108,7 @@ func main() {
 		installCtrlPanelEndpoints *installctrlpanel.Endpoints
 		dexWalletEndpoints        *dexwallet.Endpoints
 		hedgeEndpoints            *hedge.Endpoints
+		lpmonitEndpoints          *lpmonit.Endpoints
 		orderCenterEndpoints      *ordercenter.Endpoints
 		lpRegisterEndpoints       *lpregister.Endpoints
 		relayAccountEndpoints     *relayaccount.Endpoints
@@ -124,6 +128,7 @@ func main() {
 		installCtrlPanelEndpoints = installctrlpanel.NewEndpoints(installCtrlPanelSvc)
 		dexWalletEndpoints = dexwallet.NewEndpoints(dexWalletSvc)
 		hedgeEndpoints = hedge.NewEndpoints(hedgeSvc)
+		lpmonitEndpoints = lpmonit.NewEndpoints(lpmonitSvc)
 		orderCenterEndpoints = ordercenter.NewEndpoints(orderCenterSvc)
 		lpRegisterEndpoints = lpregister.NewEndpoints(lpRegisterSvc)
 		relayAccountEndpoints = relayaccount.NewEndpoints(relayAccountSvc)
@@ -171,7 +176,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainConfigEndpoints, configResourceEndpoints, installCtrlPanelEndpoints, dexWalletEndpoints, hedgeEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainConfigEndpoints, configResourceEndpoints, installCtrlPanelEndpoints, dexWalletEndpoints, hedgeEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

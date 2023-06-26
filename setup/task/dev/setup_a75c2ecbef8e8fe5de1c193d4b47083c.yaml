@@ -1,10 +1,10 @@
-apiVersion: batch/v1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: "{{.Name}}"
+  name: "weihongjie"
   namespace: "otmoiclp-bigdog"
 spec:
-  schedule: "{{.Corn}}"
+  schedule: "0,5,10,15,20,25,30,35,40,45,50,55 * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -15,8 +15,8 @@ spec:
               persistentVolumeClaim:
                 claimName: user-moniter-script
           containers:
-          - name: "{{.Name}}"
-            image: kldtks/edge:otmoic-lpnode-monitor-94fac437
+          - name: "weihongjie"
+            image: kldtks/edge:otmoic-lpnode-monitor-c96d4564
             volumeMounts:
               - name: user-script
                 mountPath: /user-script
@@ -39,5 +39,5 @@ spec:
             command:
             - /bin/sh
             - -c
-            - date; node dist/{{.ScriptPath}}
+            - date; node dist/m_c_execute.js --script=user_script_1690882328978823000.js
           restartPolicy: Never

@@ -31,8 +31,8 @@ func InitMongoConfig() {
 		MongoDataBaseConfigIns["businessHistory"] = itemBusiness
 		return
 	}
-	item := MongoDbConnectInfoItem{Url: "mongodb://root:123456@127.0.0.1:27017/lp_store?authSource=admin", Database: "lp_store"}
+	item := MongoDbConnectInfoItem{Url: "mongodb://admin:123456@127.0.0.1:27017/lp_store?authSource=admin", Database: "lp_store"}
 	MongoDataBaseConfigIns["main"] = item
-	itemBusiness := MongoDbConnectInfoItem{Url: "mongodb://root:123456@127.0.0.1:27017/businessHistory?authSource=admin", Database: "businessHistory"}
+	itemBusiness := MongoDbConnectInfoItem{Url: "mongodb://admin:123456@127.0.0.1:27017/businessHistory?authSource=admin", Database: "businessHistory"}
 	MongoDataBaseConfigIns["businessHistory"] = itemBusiness
 }

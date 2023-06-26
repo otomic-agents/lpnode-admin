@@ -85,7 +85,7 @@ func init() {
 	}
 	err = InitMonitor()
 	if err != nil {
-		log.Println(("初始化Monitor失败"))
+		log.Println("初始化Monitor失败", err)
 	}
 }
 func initDbData() {

@@ -4,7 +4,7 @@ metadata:
   name: "{{.Name}}"
   namespace: "otmoiclp-bigdog"
 spec:
-  schedule: "{{.Corn}}"
+  schedule: "{{.Cron}}"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -16,7 +16,7 @@ spec:
                 claimName: user-moniter-script
           containers:
           - name: "{{.Name}}"
-            image: kldtks/edge:otmoic-lpnode-monitor-94fac437
+            image: kldtks/edge:otmoic-lpnode-monitor-c96d4564
             volumeMounts:
               - name: user-script
                 mountPath: /user-script
@@ -39,5 +39,5 @@ spec:
             command:
             - /bin/sh
             - -c
-            - date; node dist/{{.ScriptPath}}
+            - date; node dist/m_c_execute.js --script={{.ScriptPath}}
           restartPolicy: Never
