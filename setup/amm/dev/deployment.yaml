@@ -24,23 +24,27 @@ spec:
             - name: APP_VERSION
               value: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
             - name: OBRIDGE_REDIS_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
             - name: OBRIDGE_MONGODB_HOST
-              value: "obridge-lpnode-db-mongodb"
+              value: "{{.Deployment.MongodbHost}}"
             - name: NODE_ENV
               value: "production"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
             - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-mongodb
-                  key: mongodb-root-password
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_DBNAME_HISTORY
+              value: "{{.Deployment.MongodbDbnameHistory}}"
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
+            - name: MONGODB_PORT
+              value: "{{.Deployment.MongodbPort}}"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -81,9 +85,9 @@ spec:
             - name: APP_VERSION
               value: "{{.Deployment.Image}}"
             - name: OBRIDGE_REDIS_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
             - name: OBRIDGE_MONGODB_HOST
-              value: "obridge-lpnode-db-mongodb"
+              value: "{{.Deployment.MongodbHost}}"
             - name: NODE_ENV
               value: "production"
             - name: LP_MARKET_SERVICE_HOST
@@ -91,12 +95,16 @@ spec:
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
             - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-mongodb
-                  key: mongodb-root-password
+              value: "{{.Deployment.MongodbPass}}"
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
+            - name: MONGODB_PORT
+              value: "{{.Deployment.MongodbPort}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_DBNAME_HISTORY
+              value: "{{.Deployment.MongodbDbnameHistory}}"

@@ -38,23 +38,28 @@ spec:
             - name: "STATUS_KEY"
               value: "obridge-amm-market-status-report-{{.Deployment.Name}}"
             - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
             - name: LP_NODE_DATA_MONGO_URL
-              value: "obridge-lpnode-db-mongodb"
+              value: "{{.Deployment.MongodbHost}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
             - name: MONGODBPASS
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-mongodb
-                  key: mongodb-root-password
+              value: "{{.Deployment.MongodbPass}}"
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
             {{range .Deployment.CustomEnv}}
             - name: "{{.Key}}"
-              value: "{{.Value}}"{{end}}
+              value: "{{.Value}}"
+            {{end}}
             - name: "GO_ENV"
               value: "production"
             - name: "SERVICE_PORT"
               value: "{{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18080{{ end }}"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_PORT
+              value: "{{.Deployment.MongodbDbnameHistory}}"

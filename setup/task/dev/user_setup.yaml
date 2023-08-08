@@ -23,15 +23,9 @@ spec:
             imagePullPolicy: IfNotPresent
             env:
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
             - name: MONGODB_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-mongodb
-                  key: mongodb-root-password
+              value: "{{.Deployment.MongodbPass}}"
             - name: REDIS_HOST
               value: obridge-lpnode-db-redis-master
             - name: MONGODB_HOST

@@ -38,14 +38,13 @@ spec:
             - containerPort: 9100
           env:
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
             - name: NEAR_CLIENT_PORT
               value: "9100"
             - name: REDIS_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
             - name: CONTRACT_ADDRESS
               value: "obridge.near"
             - name: SYSTEM_CHAIN_ID

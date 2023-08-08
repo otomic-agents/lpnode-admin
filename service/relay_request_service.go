@@ -23,7 +23,7 @@ func NewRelayRequestService() *RelayRequestService {
 
 func (*RelayRequestService) RegisterAccount(name string, profile string) (res types.RelayRegisterResponse, err error) {
 	res = types.RelayRegisterResponse{}
-	relayUrl := os.Getenv("RELAY-ACCESS-URL")
+	relayUrl := os.Getenv("RELAY_ACCESS_URL")
 	if relayUrl == "" {
 		err = errors.New("Relay url无法获取")
 		return
@@ -42,7 +42,10 @@ func (*RelayRequestService) RegisterAccount(name string, profile string) (res ty
 		LpnodeApiKey: sEnc,
 	}
 	log.Println(sendPayload)
-	resp, body, errs := gorequest.New().Post(fmt.Sprintf("%s/relay-admin-panel/lpnode_admin_panel/register_lp", relayUrl)).
+	url := fmt.Sprintf("%s/relay-admin-panel/lpnode_admin_panel/register_lp", relayUrl)
+	log.Println(url)
+	
+	resp, body, errs := gorequest.New().Post(url).
 		Send(sendPayload).
 		End()
 	if len(errs) > 0 {

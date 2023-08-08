@@ -20,7 +20,7 @@ spec:
         ports:
           - containerPort: 18006
         env:
-          - name: RELAY-ACCESS-URL
+          - name: RELAY_ACCESS_URL
             value: "https://obridge-api-relay.edge-dev.xyz"
           - name: REDIS_PASS
             valueFrom:

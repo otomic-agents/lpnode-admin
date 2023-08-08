@@ -94,12 +94,14 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 		err = errors.WithMessage(err, "更新数据库记录发生了错误:")
 		return
 	}
-	bcls := service.NewBridgeConfigLogicService()
-	_, err = bcls.ConfigLp()
-	if err != nil {
-		err = errors.WithMessage(err, "ConfigLp 发生了错误.")
-		return
-	}
+
+	// bcls := service.NewBridgeConfigLogicService()
+	// _, err = bcls.ConfigLp()
+	// if err != nil {
+	// 	err = errors.WithMessage(err, "ConfigLp 发生了错误.")
+	// 	return
+	// }
+
 	_id := ""
 	if ret.UpsertedID != nil {
 		_id = ret.UpsertedID.(primitive.ObjectID).Hex()

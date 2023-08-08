@@ -42,14 +42,13 @@ spec:
               value: "evm"
             
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
             - name: EVM_CLIENT_PORT
               value: "9100"
             - name: REDIS_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
             - name: CONTRACT_ADDRESS
               value: "0xad9314f18852c214e9e0bd39970bc6c390c11075"
             - name: SYSTEM_CHAIN_ID

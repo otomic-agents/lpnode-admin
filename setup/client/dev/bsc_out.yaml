@@ -48,14 +48,13 @@ spec:
               value: "{{.Value}}"
             {{end}}
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
             - name: EVM_CLIENT_PORT
               value: "9100"
             - name: REDIS_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
             - name: SYSTEM_CHAIN_ID
               value: "9006"
             - name: CHAIN_ID

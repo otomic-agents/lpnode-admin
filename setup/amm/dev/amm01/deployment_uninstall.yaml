@@ -34,9 +34,9 @@ spec:
             - name: APP_VERSION
               value: "kldtks/edge:otmoic-lpnode-amm-edd840f7"
             - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
             - name: LP_NODE_DATA_MONGO_URL
-              value: "obridge-lpnode-db-mongodb"
+              value: "{{.Deployment.MongodbHost}}"
             - name: NODE_ENV
               value: "production"
             - name: LP_MARKET_SERVICE_URL
@@ -44,15 +44,13 @@ spec:
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
             - name: MONGODBPASS
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-mongodb
-                  key: mongodb-root-password
+              value: "{{.Deployment.MongodbPass}}"
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
+            - name: MONGODB_PORT
+              value: "{{.Deployment.MongodbPort}}"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -79,20 +77,18 @@ spec:
             - name: APP_VERSION
               value: "otmoic-lpnode-amm-analyze-latest"
             - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
-              value: "obridge-lpnode-db-redis-master"
+              value: "{{.Deployment.RedisHost}}"
             - name: LP_NODE_DATA_MONGO_URL
-              value: "obridge-lpnode-db-mongodb"
+              value: "{{.Deployment.MongodbHost}}"
             - name: NODE_ENV
               value: "production"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
             - name: MONGODBPASS
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-mongodb
-                  key: mongodb-root-password
+              value: "{{.Deployment.MongodbPass}}"
             - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: obridge-lpnode-db-redis
-                  key: redis-password
+              value: "{{.Deployment.RedisPass}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
+            - name: MONGODB_PORT
+              value: "{{.Deployment.MongodbPort}}"

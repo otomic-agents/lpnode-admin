@@ -23,10 +23,10 @@ func Init() {
 
 // InitRedisConfig 初始化redis需要的配置
 func InitRedisConfig() {
-	prodRedisHost := os.Getenv("OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST")
+	prodRedisHost := os.Getenv("REDIS_HOST")
 	if prodRedisHost != "" {
 		log.Println("使用环境变量中的Redis配置")
-		prodRedisPort := os.Getenv("OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_PORT")
+		prodRedisPort := os.Getenv("REDIS_PORT")
 		prodRedisPass := os.Getenv("REDIS_PASS")
 		RedisDataDataBaseConfigIns["main"] = RedisDbConnectInfoItem{
 			RedisUrl: fmt.Sprintf("%s:%s", prodRedisHost, prodRedisPort),
@@ -36,7 +36,7 @@ func InitRedisConfig() {
 		RedisDataDataBaseConfigIns["statusDb"] = RedisDbConnectInfoItem{
 			RedisUrl: fmt.Sprintf("%s:%s", prodRedisHost, prodRedisPort),
 			RedisPwd: prodRedisPass,
-			DbIndex:  9,
+			DbIndex:  0,
 		}
 		return
 	}
@@ -49,6 +49,6 @@ func InitRedisConfig() {
 	RedisDataDataBaseConfigIns["statusDb"] = RedisDbConnectInfoItem{
 		RedisUrl: "127.0.0.1:6379",
 		RedisPwd: redisPass,
-		DbIndex:  9,
+		DbIndex:  0,
 	}
 }

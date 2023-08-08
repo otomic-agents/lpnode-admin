@@ -61,6 +61,15 @@ type ClientSetupConfigDeployment struct {
 	OsSystemServer        string                              `json:"osSystemServer"`
 	OsApiSecret           string                              `json:"osApiSecret"`
 	OsApiKey              string                              `json:"osApiKey"`
+	RedisHost             string                              `json:"redisHost"`
+	MongodbHost           string                              `json:"mongodbHost"`
+	MongodbPass           string                              `json:"mongodbPass"`
+	RedisPass             string                              `json:"redisPass"`
+	RedisPort             string                              `json:"redisPort"`
+	MongodbPort           string                              `json:"mongodbPort"`
+	MongodbAccount 		  string                              `json:"mongodbAccount"`
+	MongodbDbnameLpStore  string                        	  `json:"mongodbDbnameLpStore"`
+	MongodbDbnameHistory  string					   		  `json:"mongodbDbnameHistory"`
 }
 type AmmSetupConfigDeploymentCustomEnv struct {
 	Key   string `json:"key" bson:"key"`
@@ -79,6 +88,15 @@ type AmmSetupConfigDeployment struct {
 	OsSystemServer string                              `json:"osSystemServer"`
 	OsApiSecret    string                              `json:"osApiSecret"`
 	OsApiKey       string                              `json:"osApiKey"`
+	RedisHost      string                              `json:"redisHost"`
+	MongodbHost    string                              `json:"mongodbHost"`
+	MongodbPass    string                              `json:"mongodbPass"`
+	RedisPass      string                              `json:"redisPass"`
+	RedisPort      string                              `json:"redisPort"`
+	MongodbPort    string                              `json:"mongodbPort"`
+	MongodbAccount string                              `json:"mongodbAccount"`
+	MongodbDbnameLpStore string                        `json:"mongodbDbnameLpStore"`
+	MongodbDbnameHistory	string					   `json:"mongodbDbnameHistory"`
 }
 
 type AmmSetupConfig struct {
