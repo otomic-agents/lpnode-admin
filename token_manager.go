@@ -63,7 +63,7 @@ func (s *tokenManagersrvc) TokenCreate(ctx context.Context, p *tokenmanager.Toke
 		return
 	}
 	if chainRow.ChainType == "" {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "没有正确的chainType")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "chainType is empty")
 		return
 	}
 	uniqAddress, err := utils.GetUniqAddress(p.Address, chainRow.ChainType)
@@ -75,7 +75,7 @@ func (s *tokenManagersrvc) TokenCreate(ctx context.Context, p *tokenmanager.Toke
 	}
 	dataSet := bson.M{
 		"$set": bson.M{
-			"tokenId":    p.TokenID, //Near 链特有的内容
+			"tokenId":    p.TokenID, // Near only
 			"chainId":    p.ChainID,
 			"address":    p.Address,
 			"tokenName":  p.TokenName,
@@ -108,7 +108,7 @@ func (s *tokenManagersrvc) TokenDelete(ctx context.Context, p *tokenmanager.Dele
 
 	objectId, err := primitive.ObjectIDFromHex(p.ID)
 	if err != nil {
-		err = errors.WithMessage(err, "生成Id错误")
+		err = errors.WithMessage(err, "generate objectID failed")
 		return
 	}
 	v := struct {
@@ -122,11 +122,11 @@ func (s *tokenManagersrvc) TokenDelete(ctx context.Context, p *tokenmanager.Dele
 			bson.M{"dstToken_id": objectId}},
 	}, &v)
 	if err != nil {
-		err = errors.WithMessage(err, "查询bridges发生了错误")
+		err = errors.WithMessage(err, "query bridges failed")
 		return
 	}
 	if v.Id.Hex() != types.MongoEmptyIdHex {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("已经有Bridage在使用这个Token ,Amm:%s,Bridge:%s", v.AmmName, v.BridgeName))
+		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("bridge already using this token, amm: %s, bridge: %s", v.AmmName, v.BridgeName))
 		return
 	}
 
@@ -134,7 +134,7 @@ func (s *tokenManagersrvc) TokenDelete(ctx context.Context, p *tokenmanager.Dele
 		"_id": objectId,
 	})
 	if delCount <= 0 {
-		err = errors.New("没有找到删除的记录，无操作.")
+		err = errors.New("cannot find record to delete, no operation")
 		return
 	}
 	redisbus.GetRedisBus().PublishEvent("LP_SYSTEM_Notice", `{"type":"tokenDelete","payload":"{}"}`)

@@ -7,3 +7,4 @@ type VaultDataRow struct {
 	Name       string
 	SecertType string
 }
+

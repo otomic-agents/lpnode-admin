@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 用于管理orderCenter
+// used to manage order
 type Service interface {
 	// List implements list.
 	List(context.Context, *ListPayload) (res *ListResult, err error)

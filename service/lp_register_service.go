@@ -6,14 +6,15 @@ import (
 	"admin-panel/utils"
 	"context"
 	"fmt"
+	"log"
+	"strings"
+	"time"
+
 	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"log"
-	"strings"
-	"time"
 )
 
 type LpRegisterLogicService struct {
@@ -25,23 +26,23 @@ func NewLpRegisterLogicService() *LpRegisterLogicService {
 
 func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName string, clientName string, chainType string, chainId int64, namespace string) (status bool, err error) {
 	if serviceName == "" {
-		err = fmt.Errorf("%s空的ServiceName", installId)
+		err = fmt.Errorf("%s ServiceName is empty", installId)
 		return
 	}
-	log.Println("开始注册", installId, serviceName, clientName, "🏩🏩")
+	log.Println("start registration", installId, serviceName, clientName, "🏩🏩")
 	//clientName avax|bsc|xrp
 	err = NewLpCluster().RestartPod(namespace, "obridge-chain-client-", clientName)
 	if err != nil {
-		log.Println("重启pod发生了错误")
+		log.Println("error restarting pod")
 		return
 	}
-	log.Println("成功重启了pod", "clientName", clientName, "📱📱📱📱📱")
-	log.Println("等待...")
+	log.Println("pod restarted successfully", "clientName", clientName, "📱📱📱📱📱")
+	log.Println("waiting...")
 	time.Sleep(time.Second * 10)
 
-	log.Println("准备注册Client.", lprls.GetServiceUrl(serviceName))
+	log.Println("preparing to register client.", lprls.GetServiceUrl(serviceName))
 	url := fmt.Sprintf("http://%s:9100/%s-client-%d/lpnode/register_lpnode", serviceName, chainType, chainId)
-	log.Println("注册的地址是", url, "🥩🥩🥩🥩🥩🥩🥩")
+	log.Println("registration address is", url)
 	var dataStr = `{"lpnode_server_url":{"on_transfer_out":"http://lpnode-server:9202/lpnode/chain_client/on_transfer_out","on_transfer_in":"http://lpnode-server:9202/lpnode/chain_client/on_transfer_in","on_confirm":"http://lpnode-server:9202/lpnode/chain_client/on_confirm","on_refunded":"http://lpnode-server:9202/lpnode/chain_client/on_refund"}}`
 	dataStr, _ = sjson.Set(dataStr, "chainType", chainType)
 	if chainType == "near" {
@@ -51,7 +52,7 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 		}{}
 		findErr, cursor := database.FindAll("main", "tokens", bson.M{"chainType": "near"})
 		if findErr != nil {
-			err = errors.WithMessage(findErr, "查询币对发生了错误")
+			err = errors.WithMessage(findErr, "error querying token pair")
 			return
 		}
 		if err = cursor.All(context.TODO(), &nearTokenList); err != nil {
@@ -67,7 +68,7 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 			key := strings.Replace(nearToken.TokenId, ".", "\\.", 1)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("token_map.%s.receiver_id", key), tokenHex)
 		}
-		logger.System.Debug("需要传送的值是", dataStr)
+		logger.System.Debug("dataStr:", dataStr)
 	}
 	retryer := utils.RetryerNew().SetOption(&utils.RepetOption{
 		Interval: 2000,
@@ -89,7 +90,7 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 		if ok {
 			return nil
 		} else {
-			return errors.New("暂时未就绪")
+			return errors.New("not ready temporary")
 		}
 	})
 
@@ -97,7 +98,7 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 	log.Println(dataStr)
 	log.Println("___________________")
 	if err != nil {
-		err = errors.WithMessage(err, fmt.Sprintf("注册出错%s", installId))
+		err = errors.WithMessage(err, fmt.Sprintf("register error,install_id: %s", installId))
 		return
 	}
 	log.Println("🩳🩳🩳🩳")
@@ -110,15 +111,15 @@ func (lprls *LpRegisterLogicService) GetServiceUrl(serviceName string) string {
 
 func (lprls *LpRegisterLogicService) UnregisterItem(installId string, serviceName string) (status bool, err error) {
 	if serviceName == "" {
-		err = fmt.Errorf("%s空的ServiceName", installId)
+		err = fmt.Errorf("%s empty servicename", installId)
 		return
 	}
-	log.Println("开始卸载", installId, "📗📗📗📗📗📗📗📗📗📗📗")
+	log.Println("start uninstalling", installId)
 	return
 }
 func (lprls *LpRegisterLogicService) IsRegister(installId string, serviceName string) (status bool, err error) {
 	if serviceName == "" {
-		err = fmt.Errorf("%s空的ServiceName", installId)
+		err = fmt.Errorf("%s empty servicename", installId)
 		return
 	}
 	return
@@ -133,9 +134,25 @@ func (lprls *LpRegisterLogicService) GetRelayApiKey() (apiKey string, err error)
 		return
 	}
 	if v.RelayApiKey == "" {
-		err = errors.New("没有找到RelayApiKey,Lp还没有注册到relay")
+		err = errors.New("cannot find RelayApiKey, lp not register to relay yet")
 		return
 	}
 	apiKey = v.RelayApiKey
+	return
+}
+func (lprls *LpRegisterLogicService) GetLpName() (apiKey string, err error) {
+	v := struct {
+		Id   primitive.ObjectID `bson:"_id"`
+		Name string             `bson:"name"`
+	}{}
+	err = database.FindOne("main", "relayAccounts", bson.M{}, &v)
+	if err != nil {
+		return
+	}
+	if v.Name == "" {
+		err = errors.New("cannot find relay account name")
+		return
+	}
+	apiKey = v.Name
 	return
 }

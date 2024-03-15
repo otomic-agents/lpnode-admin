@@ -120,7 +120,7 @@ func (cps *CtrlPanelLogicService) GetInstallRow(installType string, name string)
 	var ir types.InstallRow
 	database.FindOne("main", "install", filter, &ir)
 	if ir.ID.Hex() == types.MongoEmptyIdHex {
-		return nil, errors.New("没有找到安装记录")
+		return nil, errors.New("cannot find install record")
 	}
 	return &ir, nil
 }

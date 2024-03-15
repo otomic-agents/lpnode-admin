@@ -14,29 +14,30 @@ import (
 // BridgeCreateRequestBody is the type of the "bridgeConfig" service
 // "bridgeCreate" endpoint HTTP request body.
 type BridgeCreateRequestBody struct {
-	// bridge的Name ****
+	// bridge name ****
 	BridgeName string `form:"bridgeName" json:"bridgeName" xml:"bridgeName"`
-	// mongodb的主键,baseData中获取
+	// mongodb primary key, from basedata
 	SrcChainID string `form:"srcChainId" json:"srcChainId" xml:"srcChainId"`
-	// mongodb的主键,baseData中获取
+	// mongodb primary key, from basedata
 	DstChainID string `form:"dstChainId" json:"dstChainId" xml:"dstChainId"`
-	// mongodb的主键,tokenList中获取
+	// mongodb primary key, from tokenlist
 	SrcTokenID string `form:"srcTokenId" json:"srcTokenId" xml:"srcTokenId"`
-	// mongodb的主键,tokenList中获取
+	// mongodb primary key, from tokenlist
 	DstTokenID string `form:"dstTokenId" json:"dstTokenId" xml:"dstTokenId"`
-	// mongodb的主键,walletList 中获取
+	// mongodb primary key, from walletlist
 	WalletID string `form:"walletId" json:"walletId" xml:"walletId"`
-	// mongodb的主键,walletList 中获取
+	// mongodb primary key, from walletlist
 	SrcWalletID string `form:"srcWalletId" json:"srcWalletId" xml:"srcWalletId"`
-	// amm安装时候的name
-	AmmName     string `form:"ammName" json:"ammName" xml:"ammName"`
-	EnableHedge bool   `form:"enableHedge" json:"enableHedge" xml:"enableHedge"`
+	// amm name at install
+	AmmName       string `form:"ammName" json:"ammName" xml:"ammName"`
+	EnableHedge   bool   `form:"enableHedge" json:"enableHedge" xml:"enableHedge"`
+	EnableLimiter bool   `form:"enableLimiter" json:"enableLimiter" xml:"enableLimiter"`
 }
 
 // BridgeDeleteRequestBody is the type of the "bridgeConfig" service
 // "bridgeDelete" endpoint HTTP request body.
 type BridgeDeleteRequestBody struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID string `form:"id" json:"id" xml:"id"`
 }
 
@@ -50,7 +51,7 @@ type BridgeTestRequestBody struct {
 // "bridgeCreate" endpoint HTTP response body.
 type BridgeCreateResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否成功
+	// result
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -59,7 +60,7 @@ type BridgeCreateResponseBody struct {
 // "bridgeList" endpoint HTTP response body.
 type BridgeListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 链的列表
+	// chain list
 	Result  []*ListBridgeItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                       `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -68,7 +69,7 @@ type BridgeListResponseBody struct {
 // "bridgeDelete" endpoint HTTP response body.
 type BridgeDeleteResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否删除成功
+	// result
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -104,20 +105,27 @@ type ListBridgeItemResponseBody struct {
 // the "bridgeCreate" endpoint of the "bridgeConfig" service.
 func NewBridgeCreateRequestBody(p *bridgeconfig.BridgeItem) *BridgeCreateRequestBody {
 	body := &BridgeCreateRequestBody{
-		BridgeName:  p.BridgeName,
-		SrcChainID:  p.SrcChainID,
-		DstChainID:  p.DstChainID,
-		SrcTokenID:  p.SrcTokenID,
-		DstTokenID:  p.DstTokenID,
-		WalletID:    p.WalletID,
-		SrcWalletID: p.SrcWalletID,
-		AmmName:     p.AmmName,
-		EnableHedge: p.EnableHedge,
+		BridgeName:    p.BridgeName,
+		SrcChainID:    p.SrcChainID,
+		DstChainID:    p.DstChainID,
+		SrcTokenID:    p.SrcTokenID,
+		DstTokenID:    p.DstTokenID,
+		WalletID:      p.WalletID,
+		SrcWalletID:   p.SrcWalletID,
+		AmmName:       p.AmmName,
+		EnableHedge:   p.EnableHedge,
+		EnableLimiter: p.EnableLimiter,
 	}
 	{
 		var zero bool
 		if body.EnableHedge == zero {
 			body.EnableHedge = true
+		}
+	}
+	{
+		var zero bool
+		if body.EnableLimiter == zero {
+			body.EnableLimiter = true
 		}
 	}
 	return body

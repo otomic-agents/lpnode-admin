@@ -33,6 +33,10 @@ type Client struct {
 	// endpoint.
 	VaultListDoer goahttp.Doer
 
+	// UpdateLpWallet Doer is the HTTP client used to make requests to the
+	// updateLpWallet endpoint.
+	UpdateLpWalletDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -57,6 +61,7 @@ func NewClient(
 		CreateDexWalletDoer: doer,
 		DeleteDexWalletDoer: doer,
 		VaultListDoer:       doer,
+		UpdateLpWalletDoer:  doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -146,6 +151,25 @@ func (c *Client) VaultList() goa.Endpoint {
 		resp, err := c.VaultListDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("dexWallet", "vaultList", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// UpdateLpWallet returns an endpoint that makes HTTP requests to the dexWallet
+// service updateLpWallet server.
+func (c *Client) UpdateLpWallet() goa.Endpoint {
+	var (
+		decodeResponse = DecodeUpdateLpWalletResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildUpdateLpWalletRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.UpdateLpWalletDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("dexWallet", "updateLpWallet", err)
 		}
 		return decodeResponse(resp)
 	}

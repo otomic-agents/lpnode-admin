@@ -6,6 +6,7 @@ import (
 	database "admin-panel/mongo_database"
 	"admin-panel/service"
 	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -31,10 +32,10 @@ func init() {
 			logger.System.Info("Link")
 			nowTime := time.Now().UnixNano() / 1e6
 			if nowTime-startTime > 1000*120 {
-				logger.System.Error("超过一定的时间没有连接上数据库，程序退出.")
+				logger.System.Error("exit if db not connected after timeout")
 				os.Exit(5)
 			}
-			logger.System.Debug("准备链接数据库 [lp_store]...")
+			logger.System.Debug("preparing db connection [lp_store]...")
 			err := database.InitConnect("main", nil)
 			if err == nil {
 				waitGroup.Done()
@@ -50,10 +51,10 @@ func init() {
 			logger.System.Info("Link")
 			nowTime := time.Now().UnixNano() / 1e6
 			if nowTime-startTime > 1000*120 {
-				logger.System.Error("超过一定的时间没有连接上数据库，程序退出.")
+				logger.System.Error("exit if db not connected after timeout")
 				os.Exit(5)
 			}
-			logger.System.Debug("准备链接数据库 [businessHistory]...")
+			logger.System.Debug("preparing db connection [businessHistory]...")
 			err := database.InitConnect("businessHistory", nil)
 			if err == nil {
 				waitGroup.Done()
@@ -65,39 +66,41 @@ func init() {
 
 	}()
 	waitGroup.Wait()
-	logger.System.Debug("数据库连接完成...")
+	logger.System.Debug("database connection completed...")
 
 	initDbData()
 	err := initIndex()
 	if err != nil {
-		log.Println("创建索引错误", err)
+		log.Println("index creation error", err)
 	}
 	err = initTokenIndex()
 	if err != nil {
-		log.Println("创建索引错误", err)
+		log.Println("index creation error", err)
 	}
 	err = indexWallet()
 	if err != nil {
-		log.Println("创建索引错误", err)
+		log.Println("index creation error", err)
 	}
 	if err != nil {
-		log.Println("基础数据错误", err)
+		log.Println("base data error", err)
 	}
 	err = InitMonitor()
 	if err != nil {
-		log.Println("初始化Monitor失败", err)
+		log.Println("init Monitor failed", err)
 	}
+	InitInstall()
+
 }
 func initDbData() {
 	initData, err := ioutil.ReadFile("./init_data/init_data.js")
 	if err != nil {
-		log.Fatalln("读取初始化数据失败")
+		log.Fatalln("failed reading init data")
 	}
 	vm := otto.New()
 	vm.Run(string(initData))
 	value, err := vm.Get("json_init_data")
 	if err != nil {
-		log.Fatalln("从初始数据中获取变量失败")
+		log.Fatalln("get var from init data failed")
 	}
 	for _, v := range gjson.Get(value.String(), "data").Array() {
 		collectionName := v.Get("collectionName").String()
@@ -105,7 +108,7 @@ func initDbData() {
 		if len(listData) > 0 {
 			filters := v.Get("filter").Array()
 			sets := v.Get("set").Array()
-			for _, rowData := range listData { // 循环处理集合中的数据
+			for _, rowData := range listData { // loop through collection data
 				filter := bson.M{}
 				set := bson.M{}
 				for _, filterItem := range filters {
@@ -123,8 +126,20 @@ func initDbData() {
 						if setItem.Get("type").String() == "int" {
 							set[setItem.Get("name").String()] = rowData.Get(setItem.Get("name").String()).Int()
 						}
+						if setItem.Get("type").String() == "array" {
+							tobeSet := bson.A{}
+							for _, v := range rowData.Get(setItem.Get("name").String()).Array() {
+								tobeSetItem := bson.M{}
+								for k, sv := range v.Map() {
+									tobeSetItem[k] = sv.String()
+								}
+								tobeSet = append(tobeSet, tobeSetItem)
+							}
+							set[setItem.Get("name").String()] = tobeSet
+						}
 					}
 				}
+				fmt.Println("fish.......", set)
 				database.FindOneAndUpdate("main", collectionName, filter, bson.M{"$set": set})
 			}
 		}
@@ -135,7 +150,7 @@ func initDbData() {
 func initIndex() (err error) {
 	session, err := database.GetSession("main")
 	if err != nil {
-		log.Println("没有获得有效的Db链接")
+		log.Println("no valid db connection obtained")
 		return
 	}
 
@@ -159,7 +174,7 @@ func initIndex() (err error) {
 	if err != nil {
 		return
 	}
-	log.Println("创建结果是:")
+	log.Println("create result is:")
 	strings.Join(messages, "\r\n")
 
 	//bridges
@@ -192,7 +207,7 @@ func initIndex() (err error) {
 	if err != nil {
 		return
 	}
-	log.Println("创建结果是:")
+	log.Println("create result is:")
 	strings.Join(bridgesMessages, "\r\n")
 
 	return
@@ -201,7 +216,7 @@ func initIndex() (err error) {
 func initTokenIndex() (err error) {
 	session, err := database.GetSession("main")
 	if err != nil {
-		log.Println("没有获得有效的Db链接")
+		log.Println("no valid db connection obtained")
 		return
 	}
 
@@ -225,7 +240,7 @@ func initTokenIndex() (err error) {
 	if err != nil {
 		return
 	}
-	log.Println("创建结果是[Token]:")
+	log.Println("creation result is [Token]:")
 	strings.Join(messages, "\r\n")
 	return
 }
@@ -233,7 +248,7 @@ func initTokenIndex() (err error) {
 func indexWallet() (err error) {
 	session, err := database.GetSession("main")
 	if err != nil {
-		log.Println("没有获得有效的Db链接")
+		log.Println("no valid db connection obtained")
 		return
 	}
 
@@ -262,7 +277,7 @@ func indexWallet() (err error) {
 	if err != nil {
 		return
 	}
-	log.Println("创建结果是[wallet]:")
+	log.Println("creation result is [wallet]:")
 	strings.Join(messages, "\r\n")
 	return
 }

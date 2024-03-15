@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 对冲的基本配置
+// hedge basic configuration
 type Service interface {
 	// List implements list.
 	List(context.Context) (res *ListResult, err error)
@@ -33,14 +33,14 @@ var MethodNames = [3]string{"list", "edit", "del"}
 
 // DelPayload is the payload type of the hedge service del method.
 type DelPayload struct {
-	// 删除的主键Id
+	// primary key
 	ID *string
 }
 
 // DelResult is the result type of the hedge service del method.
 type DelResult struct {
 	Code *int64
-	// 是否成功删除
+	// result
 	Data    *int64
 	Message *string
 }
@@ -53,7 +53,7 @@ type EditPayload struct {
 // EditResult is the result type of the hedge service edit method.
 type EditResult struct {
 	Code *int64
-	// 添加成功的链
+	// result
 	Data    *int64
 	Message *string
 }
@@ -66,7 +66,7 @@ type HedgeItem struct {
 // ListResult is the result type of the hedge service list method.
 type ListResult struct {
 	Code *int64
-	// 添加成功的链
+	// list
 	Data    []*HedgeItem
 	Message *string
 }

@@ -2,7 +2,6 @@ package types
 
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
-// 用于存储链行信息的数据库结构
 type MongoChainListRow struct {
 	ID        primitive.ObjectID `bson:"_id"`
 	ChainId   int64              `bson:"chainId" json:"chainId"`

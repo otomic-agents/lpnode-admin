@@ -28,7 +28,7 @@ func (bds *BaseDataLogicService) GetChainRowByName(chainName string) (retRow typ
 		return
 	}
 	if retRow.ID.Hex() == types.MongoEmptyIdHex {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "查询Chain失败,没有找到对应的Chain")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "chain not found")
 		return
 	}
 	return

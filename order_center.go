@@ -53,7 +53,6 @@ func (s *orderCentersrvc) List(ctx context.Context, p *ordercenter.ListPayload) 
 			return
 		}
 	}
-	log.Println(pageCount, "🦕🦕🦕🦕🦕🦕")
 	for _, v := range orderList {
 		res.Result.List = append(res.Result.List, v)
 	}

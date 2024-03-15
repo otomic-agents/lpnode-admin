@@ -18,7 +18,7 @@ var MongoDataBaseConfigIns = make(map[string]MongoDbConnectInfoItem)
 func InitMongoConfig() {
 	prodMongoHost := os.Getenv("MONGODB_HOST")
 	if prodMongoHost != "" {
-		log.Println("使用环境变量中的Mongodb配置")
+		log.Println("use mongodb config from env vars")
 		prodMongoName := os.Getenv("MONGODB_USER")
 		prodMongoPass := os.Getenv("MONGODBPASS")
 		prodMongoHost := os.Getenv("MONGODB_HOST")
@@ -26,7 +26,7 @@ func InitMongoConfig() {
 		prodMongoDBNameStore := os.Getenv("MONGODB_DBNAME_LP_STORE")
 		prodMongoDBNameHistory := os.Getenv("MONGODB_DBNAME_BUSINESS_HISTORY")
 
-		url := fmt.Sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s",prodMongoName, prodMongoPass, prodMongoHost, prodMongoPort, prodMongoDBNameStore, prodMongoDBNameStore)
+		url := fmt.Sprintf("mongodb://%s:%s@%s:%s/%s?authSource=%s", prodMongoName, prodMongoPass, prodMongoHost, prodMongoPort, prodMongoDBNameStore, prodMongoDBNameStore)
 		item := MongoDbConnectInfoItem{Url: url, Database: prodMongoDBNameStore}
 
 		MongoDataBaseConfigIns["main"] = item

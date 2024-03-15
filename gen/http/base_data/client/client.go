@@ -21,6 +21,10 @@ type Client struct {
 	// chainDataList endpoint.
 	ChainDataListDoer goahttp.Doer
 
+	// RunTimeEnv Doer is the HTTP client used to make requests to the runTimeEnv
+	// endpoint.
+	RunTimeEnvDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -42,6 +46,7 @@ func NewClient(
 ) *Client {
 	return &Client{
 		ChainDataListDoer:   doer,
+		RunTimeEnvDoer:      doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -64,6 +69,25 @@ func (c *Client) ChainDataList() goa.Endpoint {
 		resp, err := c.ChainDataListDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("baseData", "chainDataList", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// RunTimeEnv returns an endpoint that makes HTTP requests to the baseData
+// service runTimeEnv server.
+func (c *Client) RunTimeEnv() goa.Endpoint {
+	var (
+		decodeResponse = DecodeRunTimeEnvResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildRunTimeEnvRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.RunTimeEnvDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("baseData", "runTimeEnv", err)
 		}
 		return decodeResponse(resp)
 	}

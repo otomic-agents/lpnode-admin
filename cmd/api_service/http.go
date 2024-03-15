@@ -4,6 +4,7 @@ import (
 	accountcex "admin-panel/gen/account_cex"
 	accountdex "admin-panel/gen/account_dex"
 	ammordercenter "admin-panel/gen/amm_order_center"
+	authenticationlimiter "admin-panel/gen/authentication_limiter"
 	basedata "admin-panel/gen/base_data"
 	bridgeconfig "admin-panel/gen/bridge_config"
 	chainconfig "admin-panel/gen/chain_config"
@@ -13,6 +14,7 @@ import (
 	accountcexsvr "admin-panel/gen/http/account_cex/server"
 	accountdexsvr "admin-panel/gen/http/account_dex/server"
 	ammordercentersvr "admin-panel/gen/http/amm_order_center/server"
+	authenticationlimitersvr "admin-panel/gen/http/authentication_limiter/server"
 	basedatasvr "admin-panel/gen/http/base_data/server"
 	bridgeconfigsvr "admin-panel/gen/http/bridge_config/server"
 	chainconfigsvr "admin-panel/gen/http/chain_config/server"
@@ -52,7 +54,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainlogic.Endpoints, accountCexEndpoints *accountcex.Endpoints, accountDexEndpoints *accountdex.Endpoints, ammOrderCenterEndpoints *ammordercenter.Endpoints, baseDataEndpoints *basedata.Endpoints, bridgeConfigEndpoints *bridgeconfig.Endpoints, chainConfigEndpoints *chainconfig.Endpoints, configResourceEndpoints *configresource.Endpoints, installCtrlPanelEndpoints *installctrlpanel.Endpoints, dexWalletEndpoints *dexwallet.Endpoints, hedgeEndpoints *hedge.Endpoints, lpmonitEndpoints *lpmonit.Endpoints, orderCenterEndpoints *ordercenter.Endpoints, lpRegisterEndpoints *lpregister.Endpoints, relayAccountEndpoints *relayaccount.Endpoints, statusListEndpoints *statuslist.Endpoints, taskManagerEndpoints *taskmanager.Endpoints, tokenManagerEndpoints *tokenmanager.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainlogic.Endpoints, accountCexEndpoints *accountcex.Endpoints, accountDexEndpoints *accountdex.Endpoints, ammOrderCenterEndpoints *ammordercenter.Endpoints, authenticationLimiterEndpoints *authenticationlimiter.Endpoints, baseDataEndpoints *basedata.Endpoints, bridgeConfigEndpoints *bridgeconfig.Endpoints, chainConfigEndpoints *chainconfig.Endpoints, configResourceEndpoints *configresource.Endpoints, dexWalletEndpoints *dexwallet.Endpoints, hedgeEndpoints *hedge.Endpoints, installCtrlPanelEndpoints *installctrlpanel.Endpoints, lpmonitEndpoints *lpmonit.Endpoints, orderCenterEndpoints *ordercenter.Endpoints, lpRegisterEndpoints *lpregister.Endpoints, relayAccountEndpoints *relayaccount.Endpoints, statusListEndpoints *statuslist.Endpoints, taskManagerEndpoints *taskmanager.Endpoints, tokenManagerEndpoints *tokenmanager.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -83,24 +85,25 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		mainLogicServer        *mainlogicsvr.Server
-		accountCexServer       *accountcexsvr.Server
-		accountDexServer       *accountdexsvr.Server
-		ammOrderCenterServer   *ammordercentersvr.Server
-		baseDataServer         *basedatasvr.Server
-		bridgeConfigServer     *bridgeconfigsvr.Server
-		chainConfigServer      *chainconfigsvr.Server
-		configResourceServer   *configresourcesvr.Server
-		installCtrlPanelServer *installctrlpanelsvr.Server
-		dexWalletServer        *dexwalletsvr.Server
-		hedgeServer            *hedgesvr.Server
-		lpmonitServer          *lpmonitsvr.Server
-		orderCenterServer      *ordercentersvr.Server
-		lpRegisterServer       *lpregistersvr.Server
-		relayAccountServer     *relayaccountsvr.Server
-		statusListServer       *statuslistsvr.Server
-		taskManagerServer      *taskmanagersvr.Server
-		tokenManagerServer     *tokenmanagersvr.Server
+		mainLogicServer             *mainlogicsvr.Server
+		accountCexServer            *accountcexsvr.Server
+		accountDexServer            *accountdexsvr.Server
+		ammOrderCenterServer        *ammordercentersvr.Server
+		authenticationLimiterServer *authenticationlimitersvr.Server
+		baseDataServer              *basedatasvr.Server
+		bridgeConfigServer          *bridgeconfigsvr.Server
+		chainConfigServer           *chainconfigsvr.Server
+		configResourceServer        *configresourcesvr.Server
+		dexWalletServer             *dexwalletsvr.Server
+		hedgeServer                 *hedgesvr.Server
+		installCtrlPanelServer      *installctrlpanelsvr.Server
+		lpmonitServer               *lpmonitsvr.Server
+		orderCenterServer           *ordercentersvr.Server
+		lpRegisterServer            *lpregistersvr.Server
+		relayAccountServer          *relayaccountsvr.Server
+		statusListServer            *statuslistsvr.Server
+		taskManagerServer           *taskmanagersvr.Server
+		tokenManagerServer          *tokenmanagersvr.Server
 	)
 	{
 		eh := errorHandler(logger)
@@ -108,13 +111,14 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 		accountCexServer = accountcexsvr.New(accountCexEndpoints, mux, dec, enc, eh, nil)
 		accountDexServer = accountdexsvr.New(accountDexEndpoints, mux, dec, enc, eh, nil)
 		ammOrderCenterServer = ammordercentersvr.New(ammOrderCenterEndpoints, mux, dec, enc, eh, nil)
+		authenticationLimiterServer = authenticationlimitersvr.New(authenticationLimiterEndpoints, mux, dec, enc, eh, nil)
 		baseDataServer = basedatasvr.New(baseDataEndpoints, mux, dec, enc, eh, nil)
 		bridgeConfigServer = bridgeconfigsvr.New(bridgeConfigEndpoints, mux, dec, enc, eh, nil)
 		chainConfigServer = chainconfigsvr.New(chainConfigEndpoints, mux, dec, enc, eh, nil)
 		configResourceServer = configresourcesvr.New(configResourceEndpoints, mux, dec, enc, eh, nil)
-		installCtrlPanelServer = installctrlpanelsvr.New(installCtrlPanelEndpoints, mux, dec, enc, eh, nil)
 		dexWalletServer = dexwalletsvr.New(dexWalletEndpoints, mux, dec, enc, eh, nil)
 		hedgeServer = hedgesvr.New(hedgeEndpoints, mux, dec, enc, eh, nil)
+		installCtrlPanelServer = installctrlpanelsvr.New(installCtrlPanelEndpoints, mux, dec, enc, eh, nil)
 		lpmonitServer = lpmonitsvr.New(lpmonitEndpoints, mux, dec, enc, eh, nil)
 		orderCenterServer = ordercentersvr.New(orderCenterEndpoints, mux, dec, enc, eh, nil)
 		lpRegisterServer = lpregistersvr.New(lpRegisterEndpoints, mux, dec, enc, eh, nil)
@@ -128,13 +132,14 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 				accountCexServer,
 				accountDexServer,
 				ammOrderCenterServer,
+				authenticationLimiterServer,
 				baseDataServer,
 				bridgeConfigServer,
 				chainConfigServer,
 				configResourceServer,
-				installCtrlPanelServer,
 				dexWalletServer,
 				hedgeServer,
+				installCtrlPanelServer,
 				lpmonitServer,
 				orderCenterServer,
 				lpRegisterServer,
@@ -151,13 +156,14 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 	accountcexsvr.Mount(mux, accountCexServer)
 	accountdexsvr.Mount(mux, accountDexServer)
 	ammordercentersvr.Mount(mux, ammOrderCenterServer)
+	authenticationlimitersvr.Mount(mux, authenticationLimiterServer)
 	basedatasvr.Mount(mux, baseDataServer)
 	bridgeconfigsvr.Mount(mux, bridgeConfigServer)
 	chainconfigsvr.Mount(mux, chainConfigServer)
 	configresourcesvr.Mount(mux, configResourceServer)
-	installctrlpanelsvr.Mount(mux, installCtrlPanelServer)
 	dexwalletsvr.Mount(mux, dexWalletServer)
 	hedgesvr.Mount(mux, hedgeServer)
+	installctrlpanelsvr.Mount(mux, installCtrlPanelServer)
 	lpmonitsvr.Mount(mux, lpmonitServer)
 	ordercentersvr.Mount(mux, orderCenterServer)
 	lpregistersvr.Mount(mux, lpRegisterServer)
@@ -189,6 +195,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 	for _, m := range ammOrderCenterServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
+	for _, m := range authenticationLimiterServer.Mounts {
+		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
 	for _, m := range baseDataServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
@@ -201,13 +210,13 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 	for _, m := range configResourceServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
-	for _, m := range installCtrlPanelServer.Mounts {
-		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
-	}
 	for _, m := range dexWalletServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 	for _, m := range hedgeServer.Mounts {
+		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
+	for _, m := range installCtrlPanelServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 	for _, m := range lpmonitServer.Mounts {

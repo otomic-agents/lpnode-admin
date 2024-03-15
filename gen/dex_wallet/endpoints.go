@@ -19,6 +19,7 @@ type Endpoints struct {
 	CreateDexWallet goa.Endpoint
 	DeleteDexWallet goa.Endpoint
 	VaultList       goa.Endpoint
+	UpdateLpWallet  goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "dexWallet" service with endpoints.
@@ -28,6 +29,7 @@ func NewEndpoints(s Service) *Endpoints {
 		CreateDexWallet: NewCreateDexWalletEndpoint(s),
 		DeleteDexWallet: NewDeleteDexWalletEndpoint(s),
 		VaultList:       NewVaultListEndpoint(s),
+		UpdateLpWallet:  NewUpdateLpWalletEndpoint(s),
 	}
 }
 
@@ -37,6 +39,7 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.CreateDexWallet = m(e.CreateDexWallet)
 	e.DeleteDexWallet = m(e.DeleteDexWallet)
 	e.VaultList = m(e.VaultList)
+	e.UpdateLpWallet = m(e.UpdateLpWallet)
 }
 
 // NewListDexWalletEndpoint returns an endpoint function that calls the method
@@ -70,5 +73,13 @@ func NewDeleteDexWalletEndpoint(s Service) goa.Endpoint {
 func NewVaultListEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.VaultList(ctx)
+	}
+}
+
+// NewUpdateLpWalletEndpoint returns an endpoint function that calls the method
+// "updateLpWallet" of service "dexWallet".
+func NewUpdateLpWalletEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.UpdateLpWallet(ctx)
 	}
 }

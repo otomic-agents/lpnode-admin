@@ -15,11 +15,11 @@ var accountDex_DexAccountBalance = Type("DexAccountBalance", func() {
 var _ = Service("accountDex", func() {
 	Method("walletInfo", func() {
 		Payload(func() {
-			Attribute("chainId", Int64, "链的Id")
+			Attribute("chainId", Int64, "chain Id")
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("data", ArrayOf(accountDex_DexAccountBalance), "是否成功")
+			Attribute("data", ArrayOf(accountDex_DexAccountBalance), "result")
 			Attribute("message", String)
 		})
 

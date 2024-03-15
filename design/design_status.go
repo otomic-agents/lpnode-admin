@@ -12,7 +12,7 @@ var statusList_ListItem = Type("StatusListItem", func() {
 	Attribute("errMessage", String)
 })
 var _ = Service("statusList", func() {
-	Description("用于管理Lp到Client的注册")
+	Description("used to manage install status")
 	Method("statList", func() {
 		Payload(func() {})
 		Result(func() {

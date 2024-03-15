@@ -5,18 +5,18 @@ import (
 )
 
 var Ctrl_DeploayItem = Type("ctrlDeploayItem", func() {
-	Attribute("installType", String, "安装的类型 Client Amm Market等等...")
-	Attribute("name", String, "具体的服务名称，如bsc avax ")
-	Attribute("status", Int64, "服务当前的安装状态")
-	Attribute("installContext", String, "之前安装的上下文")
-	Attribute("yaml", String, "安装模版的原始内容")
+	Attribute("installType", String, "install type")
+	Attribute("name", String, "name")
+	Attribute("status", Int64, "install status")
+	Attribute("installContext", String, "install context")
+	Attribute("yaml", String, "yaml")
 })
 var Ctrl_Amm_Client_SetupConfig = Type("ammClientSetupConfig", func() {
 	Attribute("customEnv", ArrayOf(Deployment_SetupConfig_Env_Item))
-	Attribute("imageRepository", String, "需要安装的镜像地址")
-	Attribute("serviceName", String, "需要安装的ServiceName")
-	Attribute("deploymentName", String, "需要安装的deploymentName")
-	Attribute("type", String, "安装的类型") // avax bsc near xrp
+	Attribute("imageRepository", String, "imageRepository")
+	Attribute("serviceName", String, "serviceName")
+	Attribute("deploymentName", String, "deploymentName")
+	Attribute("type", String, "type") // avax bsc near xrp
 	Attribute("startBlock", String, "")
 	Attribute("rpcUrl", String, "")
 	Attribute("connectionNodeurl", String, "")
@@ -26,30 +26,30 @@ var Ctrl_Amm_Client_SetupConfig = Type("ammClientSetupConfig", func() {
 	Attribute("awsAccessKeyId", String, "")
 	Attribute("containerPort", String)
 	Attribute("awsSecretAccessKey", String, "")
-	Attribute("install", Boolean, "是否直接安装")
+	Attribute("install", Boolean, "")
 	Required("imageRepository", "type", "install")
 })
 var Ctrl_Amm_Client_UnSetupConfig = Type("ammClientUnSetupConfig", func() {
-	Attribute("type", String, "安装的类型") // avax bsc near xrp
-	Attribute("uninstall", Boolean, "是否直接操作")
+	Attribute("type", String, "") // avax bsc near xrp
+	Attribute("uninstall", Boolean, "")
 })
 var Deployment_SetupConfig_Env_Item = Type("DeploymentSetupConfigEnvItem", func() {
 	Attribute("key", String)
 	Attribute("value", String)
 })
 var Ctrl_Deployment_SetupConfig = Type("DeploymentSetupConfig", func() {
-	Attribute("imageRepository", String, "需要安装的镜像地址")
-	Attribute("containerPort", String, "容器的端口 可选")
-	Attribute("install", Boolean, "是否直接安装")
+	Attribute("imageRepository", String, "")
+	Attribute("containerPort", String, "")
+	Attribute("install", Boolean, "")
 	Attribute("installType", String, func() {
 		Enum("ammClient", "market", "amm", "userApp")
 	})
-	Attribute("name", String, "这个服务叫什么名字")
-	Attribute("customEnv", ArrayOf(Deployment_SetupConfig_Env_Item), "Env配置列表")
+	Attribute("name", String, "")
+	Attribute("customEnv", ArrayOf(Deployment_SetupConfig_Env_Item), "env list")
 	Required("installType", "install", "imageRepository", "name")
 })
 var Ctrl_UnDeployment_SetupConfig = Type("UnDeploymentSetupConfig", func() {
-	Attribute("uninstall", Boolean, "是否直接卸载")
+	Attribute("uninstall", Boolean, "")
 	Attribute("installType", String)
 	Attribute("name", String)
 	Required("installType", "uninstall", "name")
@@ -58,7 +58,7 @@ var Ctrl_UpdateDeploymentConfig = Type("updateDeploymentConfig", func() {
 	Attribute("installType", String)
 	Attribute("name", String)
 	Attribute("installContext", String)
-	Attribute("update", Boolean) // 是否直接更新
+	Attribute("update", Boolean)
 	Required("name", "installType", "update")
 })
 var Ctrl_InstallDeploymentDataResult = Type("installDeploymentDataResult", func() {
@@ -72,16 +72,15 @@ var Ctrl_UnInstallDeploymentDataResult = Type("unInstallDeploymentDataResult", f
 	Attribute("Template", String)
 })
 var _ = Service("installCtrlPanel", func() {
-	Description("用于控制各个节点的安装和启动")
+	Description("used to control install and startup of nodes")
 	Method("listInstall", func() {
-		Description("列出已经安装的服务和状态,每一项针对多个服务，针对一个配置文件")
 		Payload(func() {
-			Attribute("installType", String, "安装的服务类型")
+			Attribute("installType", String, "type of service installed")
 			Required("installType")
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", ArrayOf(Ctrl_DeploayItem), "已经安装的列表")
+			Attribute("result", ArrayOf(Ctrl_DeploayItem), "list of installed services")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -97,7 +96,7 @@ var _ = Service("installCtrlPanel", func() {
 		Result(func() {
 			Attribute("code", Int64, "")
 			Attribute("result", func() {
-				Attribute("Template", String, "渲染后的模版内容")
+				Attribute("Template", String, "rendered template content")
 				Attribute("CmdStdout", String, "")
 				Attribute("CmdStderr", String, "")
 			})
@@ -117,7 +116,7 @@ var _ = Service("installCtrlPanel", func() {
 		Result(func() {
 			Attribute("code", Int64, "")
 			Attribute("result", func() {
-				Attribute("Template", String, "渲染后的模版内容")
+				Attribute("Template", String, "rendered template content")
 				Attribute("CmdStdout", String, "")
 				Attribute("CmdStderr", String, "")
 			})
@@ -135,7 +134,7 @@ var _ = Service("installCtrlPanel", func() {
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Ctrl_InstallDeploymentDataResult, "安装完成的结果")
+			Attribute("result", Ctrl_InstallDeploymentDataResult, "install result")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -166,7 +165,7 @@ var _ = Service("installCtrlPanel", func() {
 			Attribute("result", func() {
 				Attribute("CmdStdout", String, "")
 				Attribute("CmdStderr", String, "")
-				Attribute("Template", String, "渲染后的模版内容")
+				Attribute("Template", String, "rendered template content")
 			})
 			Attribute("message", String)
 		})

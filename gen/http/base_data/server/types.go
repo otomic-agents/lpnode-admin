@@ -15,22 +15,31 @@ import (
 // "chainDataList" endpoint HTTP response body.
 type ChainDataListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 列表
+	// list
 	Result  []*ChainDataItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                      `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
+// RunTimeEnvResponseBody is the type of the "baseData" service "runTimeEnv"
+// endpoint HTTP response body.
+type RunTimeEnvResponseBody struct {
+	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	// list
+	Result  *string `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
 // ChainDataItemResponseBody is used to define fields on response body types.
 type ChainDataItemResponseBody struct {
-	// 链在数据库中的id
+	// chain id in the database
 	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	// 链的Id
+	// chain Id
 	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
-	// 链名称
+	// chain name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	// 链全称
+	// full chain name
 	ChainName *string `form:"chainName,omitempty" json:"chainName,omitempty" xml:"chainName,omitempty"`
-	// Token币的名称
+	// token name
 	TokenName *string `form:"tokenName,omitempty" json:"tokenName,omitempty" xml:"tokenName,omitempty"`
 }
 
@@ -46,6 +55,17 @@ func NewChainDataListResponseBody(res *basedata.ChainDataListResult) *ChainDataL
 		for i, val := range res.Result {
 			body.Result[i] = marshalBasedataChainDataItemToChainDataItemResponseBody(val)
 		}
+	}
+	return body
+}
+
+// NewRunTimeEnvResponseBody builds the HTTP response body from the result of
+// the "runTimeEnv" endpoint of the "baseData" service.
+func NewRunTimeEnvResponseBody(res *basedata.RunTimeEnvResult) *RunTimeEnvResponseBody {
+	body := &RunTimeEnvResponseBody{
+		Code:    res.Code,
+		Result:  res.Result,
+		Message: res.Message,
 	}
 	return body
 }

@@ -11,10 +11,12 @@ import (
 	"context"
 )
 
-// 用于管理基础数据
+// used to manage basic data
 type Service interface {
-	// 用于返回最基础的链的数据
+	// used to return basic chain data
 	ChainDataList(context.Context) (res *ChainDataListResult, err error)
+	// used to return runtime environment
+	RunTimeEnv(context.Context) (res *RunTimeEnvResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -25,18 +27,18 @@ const ServiceName = "baseData"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"chainDataList"}
+var MethodNames = [2]string{"chainDataList", "runTimeEnv"}
 
 type ChainDataItem struct {
-	// 链在数据库中的id
+	// chain id in the database
 	ID *string
-	// 链的Id
+	// chain Id
 	ChainID *int64
-	// 链名称
+	// chain name
 	Name *string
-	// 链全称
+	// full chain name
 	ChainName *string
-	// Token币的名称
+	// token name
 	TokenName *string
 }
 
@@ -44,7 +46,16 @@ type ChainDataItem struct {
 // method.
 type ChainDataListResult struct {
 	Code *int64
-	// 列表
+	// list
 	Result  []*ChainDataItem
+	Message *string
+}
+
+// RunTimeEnvResult is the result type of the baseData service runTimeEnv
+// method.
+type RunTimeEnvResult struct {
+	Code *int64
+	// list
+	Result  *string
 	Message *string
 }

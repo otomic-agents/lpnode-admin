@@ -58,3 +58,54 @@ func DecodeMainLogicResponse(decoder func(*http.Response) goahttp.Decoder, resto
 		}
 	}
 }
+
+// BuildMainLogicLinkRequest instantiates a HTTP request object with method and
+// path set to call the "mainLogic" service "mainLogicLink" endpoint
+func (c *Client) BuildMainLogicLinkRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: MainLogicLinkMainLogicPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("mainLogic", "mainLogicLink", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeMainLogicLinkResponse returns a decoder for responses returned by the
+// mainLogic mainLogicLink endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+func DecodeMainLogicLinkResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body MainLogicLinkResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("mainLogic", "mainLogicLink", err)
+			}
+			res := NewMainLogicLinkResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("mainLogic", "mainLogicLink", resp.StatusCode, string(body))
+		}
+	}
+}

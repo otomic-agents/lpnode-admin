@@ -11,3 +11,8 @@ package client
 func MainLogicMainLogicPath() string {
 	return "/"
 }
+
+// MainLogicLinkMainLogicPath returns the URL path to the mainLogic service mainLogicLink HTTP endpoint.
+func MainLogicLinkMainLogicPath() string {
+	return "/link"
+}

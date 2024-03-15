@@ -115,6 +115,18 @@ func EncodeVaultListResponse(encoder func(context.Context, http.ResponseWriter) 
 	}
 }
 
+// EncodeUpdateLpWalletResponse returns an encoder for responses returned by
+// the dexWallet updateLpWallet endpoint.
+func EncodeUpdateLpWalletResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*dexwallet.UpdateLpWalletResult)
+		enc := encoder(ctx, w)
+		body := NewUpdateLpWalletResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
 // marshalDexwalletWalletRowToWalletRowResponseBody builds a value of type
 // *WalletRowResponseBody from a value of type *dexwallet.WalletRow.
 func marshalDexwalletWalletRowToWalletRowResponseBody(v *dexwallet.WalletRow) *WalletRowResponseBody {

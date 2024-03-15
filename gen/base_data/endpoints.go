@@ -16,18 +16,21 @@ import (
 // Endpoints wraps the "baseData" service endpoints.
 type Endpoints struct {
 	ChainDataList goa.Endpoint
+	RunTimeEnv    goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "baseData" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
 		ChainDataList: NewChainDataListEndpoint(s),
+		RunTimeEnv:    NewRunTimeEnvEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "baseData" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.ChainDataList = m(e.ChainDataList)
+	e.RunTimeEnv = m(e.RunTimeEnv)
 }
 
 // NewChainDataListEndpoint returns an endpoint function that calls the method
@@ -35,5 +38,13 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 func NewChainDataListEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.ChainDataList(ctx)
+	}
+}
+
+// NewRunTimeEnvEndpoint returns an endpoint function that calls the method
+// "runTimeEnv" of service "baseData".
+func NewRunTimeEnvEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.RunTimeEnv(ctx)
 	}
 }

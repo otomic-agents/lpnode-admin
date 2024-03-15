@@ -10,7 +10,7 @@ var orderCenterRetResult = Type("orderCenterRetResult", func() {
 	Attribute("pageCount", Int64)
 })
 var _ = Service("orderCenter", func() {
-	Description("用于管理orderCenter")
+	Description("used to manage order")
 	Method("list", func() {
 		Payload(func() {
 			Attribute("status", Int64)

@@ -18,13 +18,13 @@ import (
 type TokenCreateRequestBody struct {
 	ID      *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
 	TokenID *string `form:"tokenId,omitempty" json:"tokenId,omitempty" xml:"tokenId,omitempty"`
-	// 链Id
+	// chain id
 	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
 	// token address
 	Address *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
-	// token 合约中的名称
+	// name in token contract
 	TokenName *string `form:"tokenName,omitempty" json:"tokenName,omitempty" xml:"tokenName,omitempty"`
-	// Cex中所对应的名称
+	// corresponding name in cex
 	MarketName *string `form:"marketName,omitempty" json:"marketName,omitempty" xml:"marketName,omitempty"`
 	Precision  *int64  `form:"precision,omitempty" json:"precision,omitempty" xml:"precision,omitempty"`
 	ChainType  *string `form:"chainType,omitempty" json:"chainType,omitempty" xml:"chainType,omitempty"`
@@ -34,7 +34,7 @@ type TokenCreateRequestBody struct {
 // TokenDeleteRequestBody is the type of the "tokenManager" service
 // "tokenDelete" endpoint HTTP request body.
 type TokenDeleteRequestBody struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
 }
 
@@ -42,7 +42,7 @@ type TokenDeleteRequestBody struct {
 // endpoint HTTP response body.
 type TokenListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 添加成功的链
+	// list
 	Result  []*TokenItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                  `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -50,8 +50,7 @@ type TokenListResponseBody struct {
 // TokenCreateResponseBody is the type of the "tokenManager" service
 // "tokenCreate" endpoint HTTP response body.
 type TokenCreateResponseBody struct {
-	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 创建影响的行数
+	Code    *int64  `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -59,8 +58,7 @@ type TokenCreateResponseBody struct {
 // TokenDeleteResponseBody is the type of the "tokenManager" service
 // "tokenDelete" endpoint HTTP response body.
 type TokenDeleteResponseBody struct {
-	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否删除成功
+	Code    *int64  `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -69,13 +67,13 @@ type TokenDeleteResponseBody struct {
 type TokenItemResponseBody struct {
 	ID      *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
 	TokenID *string `form:"tokenId,omitempty" json:"tokenId,omitempty" xml:"tokenId,omitempty"`
-	// 链Id
+	// chain id
 	ChainID int64 `form:"chainId" json:"chainId" xml:"chainId"`
 	// token address
 	Address string `form:"address" json:"address" xml:"address"`
-	// token 合约中的名称
+	// name in token contract
 	TokenName *string `form:"tokenName,omitempty" json:"tokenName,omitempty" xml:"tokenName,omitempty"`
-	// Cex中所对应的名称
+	// corresponding name in cex
 	MarketName string  `form:"marketName" json:"marketName" xml:"marketName"`
 	Precision  int64   `form:"precision" json:"precision" xml:"precision"`
 	ChainType  *string `form:"chainType,omitempty" json:"chainType,omitempty" xml:"chainType,omitempty"`

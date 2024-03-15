@@ -29,7 +29,7 @@ func (rb *RedisBus) PublishEvent(channel string, val string) {
 	go func() {
 		event := gjson.Get(val, "type").String()
 		payload := gjson.Get(val, "payload").Raw
-		log.Println("发布订阅事件", channel, event, payload)
+		log.Println("publish event", channel, event, payload)
 		rb.redisDB.Publish(channel, val)
 	}()
 }

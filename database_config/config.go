@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-// RedisDbConnectInfoItem Redis db的主要配置文件
+// RedisDbConnectInfoItem Redis
 type RedisDbConnectInfoItem struct {
 	DbIndex  int
 	RedisUrl string
@@ -21,11 +21,11 @@ func Init() {
 	InitRedisConfig()
 }
 
-// InitRedisConfig 初始化redis需要的配置
+// InitRedisConfig init redis config required
 func InitRedisConfig() {
 	prodRedisHost := os.Getenv("REDIS_HOST")
 	if prodRedisHost != "" {
-		log.Println("使用环境变量中的Redis配置")
+		log.Println("use redis config from env vars")
 		prodRedisPort := os.Getenv("REDIS_PORT")
 		prodRedisPass := os.Getenv("REDIS_PASS")
 		RedisDataDataBaseConfigIns["main"] = RedisDbConnectInfoItem{

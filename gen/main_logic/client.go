@@ -15,13 +15,15 @@ import (
 
 // Client is the "mainLogic" service client.
 type Client struct {
-	MainLogicEndpoint goa.Endpoint
+	MainLogicEndpoint     goa.Endpoint
+	MainLogicLinkEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "mainLogic" service client given the endpoints.
-func NewClient(mainLogic goa.Endpoint) *Client {
+func NewClient(mainLogic, mainLogicLink goa.Endpoint) *Client {
 	return &Client{
-		MainLogicEndpoint: mainLogic,
+		MainLogicEndpoint:     mainLogic,
+		MainLogicLinkEndpoint: mainLogicLink,
 	}
 }
 
@@ -29,4 +31,14 @@ func NewClient(mainLogic goa.Endpoint) *Client {
 func (c *Client) MainLogic(ctx context.Context) (err error) {
 	_, err = c.MainLogicEndpoint(ctx, nil)
 	return
+}
+
+// MainLogicLink calls the "mainLogicLink" endpoint of the "mainLogic" service.
+func (c *Client) MainLogicLink(ctx context.Context) (res *MainLogicLinkResult, err error) {
+	var ires interface{}
+	ires, err = c.MainLogicLinkEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.(*MainLogicLinkResult), nil
 }

@@ -11,7 +11,7 @@ func GetAddressFromPrivateKeyStr(privateKeyStr string) (address string) {
 	address = ""
 	privkeyECDSA, err := crypto.HexToECDSA(privateKeyStr)
 	if err != nil {
-		log.Println("生成私钥发生了错误...")
+		log.Println("error generating private key")
 	}
 
 	publicKey := privkeyECDSA.Public()

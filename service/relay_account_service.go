@@ -23,11 +23,11 @@ func (*RelayAccountLogicService) GetRelayApiKey() (apiKey string, err error) {
 	}{}
 	err = database.FindOne("main", "relayAccounts", bson.M{}, &val)
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库发生了错误")
+		err = errors.WithMessage(err, "query database error occur")
 		return
 	}
 	if val.ID.Hex() == types.MongoEmptyIdHex {
-		err = errors.New("没有找到任何一个relay账号")
+		err = errors.New("relay account not found")
 		return
 	}
 	apiKey = val.RelayApiKey

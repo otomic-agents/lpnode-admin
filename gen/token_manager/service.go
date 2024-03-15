@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 用于管理所有的token
+// used to manage all tokens
 type Service interface {
 	// TokenList implements tokenList.
 	TokenList(context.Context) (res *TokenListResult, err error)
@@ -34,15 +34,14 @@ var MethodNames = [3]string{"tokenList", "tokenCreate", "tokenDelete"}
 // DeleteTokenFilter is the payload type of the tokenManager service
 // tokenDelete method.
 type DeleteTokenFilter struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID string
 }
 
 // TokenCreateResult is the result type of the tokenManager service tokenCreate
 // method.
 type TokenCreateResult struct {
-	Code *int64
-	// 创建影响的行数
+	Code    *int64
 	Result  *int64
 	Message *string
 }
@@ -50,8 +49,7 @@ type TokenCreateResult struct {
 // TokenDeleteResult is the result type of the tokenManager service tokenDelete
 // method.
 type TokenDeleteResult struct {
-	Code *int64
-	// 是否删除成功
+	Code    *int64
 	Result  *int64
 	Message *string
 }
@@ -60,13 +58,13 @@ type TokenDeleteResult struct {
 type TokenItem struct {
 	ID      *string
 	TokenID *string
-	// 链Id
+	// chain id
 	ChainID int64
 	// token address
 	Address string
-	// token 合约中的名称
+	// name in token contract
 	TokenName *string
-	// Cex中所对应的名称
+	// corresponding name in cex
 	MarketName string
 	Precision  int64
 	ChainType  *string
@@ -77,7 +75,7 @@ type TokenItem struct {
 // method.
 type TokenListResult struct {
 	Code *int64
-	// 添加成功的链
+	// list
 	Result  []*TokenItem
 	Message *string
 }

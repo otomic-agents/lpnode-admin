@@ -7,6 +7,7 @@ import (
 	"admin-panel/service"
 	"admin-panel/types"
 	"admin-panel/utils"
+	"fmt"
 
 	"context"
 	"log"
@@ -29,17 +30,17 @@ func NewBridgeConfig(logger *log.Logger) bridgeconfig.Service {
 	return &bridgeConfigsrvc{logger}
 }
 
-// 用于创建跨链配置
+// create bridge config
 func (s *bridgeConfigsrvc) BridgeCreate(ctx context.Context, p *bridgeconfig.BridgeItem) (res *bridgeconfig.BridgeCreateResult, err error) {
 	res = &bridgeconfig.BridgeCreateResult{}
 
 	idMap, err := s.GetIdList(p)
 	if err != nil {
-		err = errors.WithMessage(err, "获取Id列表发生了错误:")
+		err = errors.WithMessage(err, "getting id list occur error:")
 		return
 	}
 	bcls := service.NewBridgeConfigLogicService()
-	commit, _id, err := bcls.CreateBridge(p, idMap) //创建bridge
+	commit, _id, err := bcls.CreateBridge(p, idMap) //create bridge
 	if err != nil {
 		return
 	}
@@ -48,26 +49,26 @@ onReturn:
 		commit(false)
 		return
 	}
-	configResult, err := bcls.ConfigLp() // 根据最新的List ConfigLp
+	configResult, err := bcls.ConfigLp() // according to the latest list configlp
 	if err != nil {
 		goto onReturn
 	}
 	if !configResult {
-		err = errors.Errorf("configLp失败")
+		err = errors.Errorf("configLp failed")
 		goto onReturn
 	}
-	configClient, err := bcls.ConfigClient() // 根据bridge信息 config all client
+	configClient, err := bcls.ConfigClient() // config all client according to bridge info
 	if err != nil {
-		err = errors.WithMessage(err, "配置Client发生了错误")
+		err = errors.WithMessage(err, "configuring client occur error")
 		goto onReturn
 	}
 	if !configClient {
-		err = errors.New("配置client发生了错误")
+		err = errors.New("configuring client occur error")
 		goto onReturn
 	}
 	res.Code = ptr.Int64(0)
 	res.Result = ptr.Int64(0)
-	log.Println("创建bridge成功🧂🧂🧂🧂🧂🧂", _id)
+	log.Println("creating bridge successfully", _id)
 	res.Message = ptr.String(_id)
 	redisbus.GetRedisBus().PublishEvent("LP_SYSTEM_Notice", `{"type":"bridgeUpdate","payload":"{}"}`)
 	s.logger.Print("bridgeConfig.bridgeCreate", _id)
@@ -77,31 +78,32 @@ func (s *bridgeConfigsrvc) GetIdList(bridgeItem *bridgeconfig.BridgeItem) (res m
 	res = make(map[string]primitive.ObjectID, 0)
 	srcChainId, err := primitive.ObjectIDFromHex(bridgeItem.SrcChainID)
 	if err != nil {
-		err = errors.WithMessage(err, "srcChainId不正确:")
+		err = errors.WithMessage(err, "srcChainId incorrect:")
 		return
 	}
 	dstChainId, err := primitive.ObjectIDFromHex(bridgeItem.DstChainID)
 	if err != nil {
-		err = errors.WithMessage(err, "dstChainId不正确:")
+		err = errors.WithMessage(err, "dstChainId incorrect:")
 		return
 	}
 	srcTokenId, err := primitive.ObjectIDFromHex(bridgeItem.SrcTokenID)
 	if err != nil {
-		err = errors.WithMessage(err, "srcTokenId不正确:")
+		err = errors.WithMessage(err, "srcTokenId incorrect:")
 		return
 	}
 	dstTokenId, err := primitive.ObjectIDFromHex(bridgeItem.DstTokenID)
 	if err != nil {
-		err = errors.WithMessage(err, "dstTokenId不正确:")
+		err = errors.WithMessage(err, "dstTokenId incorrect:")
 		return
 	}
 	walletId, err := primitive.ObjectIDFromHex(bridgeItem.WalletID)
 	if err != nil {
-		err = errors.WithMessage(err, "walletId不正确:")
+		err = errors.WithMessage(err, "walletId incorrect:")
+		return
 	}
 	srcWalletId, err := primitive.ObjectIDFromHex(bridgeItem.SrcWalletID)
 	if err != nil {
-		err = errors.WithMessage(err, "收款钱包id不正确:")
+		err = errors.WithMessage(err, "receiving wallet id incorrect:")
 	}
 	res["srcChainId"] = srcChainId
 	res["dstChainId"] = dstChainId
@@ -155,7 +157,7 @@ func (s *bridgeConfigsrvc) BridgeDelete(ctx context.Context, p *bridgeconfig.Del
 	res = &bridgeconfig.BridgeDeleteResult{}
 	objId, err := primitive.ObjectIDFromHex(p.ID)
 	if err != nil {
-		err = errors.WithMessage(err, "id格式不正确无法转为Mongoid")
+		err = errors.WithMessage(err, "id format incorrect, unable to convert to mongoid")
 		return
 	}
 	var v struct {
@@ -165,11 +167,11 @@ func (s *bridgeConfigsrvc) BridgeDelete(ctx context.Context, p *bridgeconfig.Del
 	}{}
 	err = database.FindOne("main", "bridges", bson.M{"_id": objId}, &v)
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库错误")
+		err = errors.WithMessage(err, "query database error")
 		return
 	}
 	if v.Id.Hex() == types.MongoEmptyIdHex {
-		err = errors.New("没有找到对应的Bridge")
+		err = errors.New("did not find corresponding bridge")
 		return
 	}
 	delCount, err := database.DeleteOne("main", "bridges", bson.M{"_id": objId})
@@ -177,15 +179,14 @@ func (s *bridgeConfigsrvc) BridgeDelete(ctx context.Context, p *bridgeconfig.Del
 		return
 	}
 	bcls := service.NewBridgeConfigLogicService()
-	configLpResult, err := bcls.ConfigLp() // 通过数据库记录重新config Lp
+	configLpResult, err := bcls.ConfigLp() // reconfig lp through database record
 	if err != nil || !configLpResult {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "重新配置Lp发生了错误")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "reconfiguring lp occur error")
 		return
 	}
-	//configResult, err := bcls.ConfigAllClient() // 根据 amm install 记录重新config Client
-	configResult, err := bcls.ConfigClient() // 根据数据库刷新client 配置，至于删掉多出来的Client配置，暂时无需处理，如最后一项bsc 设置
+	configResult, err := bcls.ConfigClient() // refresh client config according to database, as for deleting redundant client config, no need to handle for now, like the last bsc item
 	if err != nil || !configResult {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "配置Client 发生了错误")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "configuring client occur error")
 		return
 	}
 
@@ -204,7 +205,8 @@ func (s *bridgeConfigsrvc) BridgeTest(ctx context.Context, p *bridgeconfig.Bridg
 	//bcls.GetConfigClientStruct()
 	//bcls.GetConfigJsonData()
 	// return
-	// flag, err := bcls.ConfigLp()
+	flag, err := bcls.ConfigLp()
+	fmt.Println(flag)
 	bcls.ConfigClient()
 	//bcls.ConfigClient()
 

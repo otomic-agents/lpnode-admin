@@ -10,7 +10,7 @@ var ammOrderCenterRetResult = Type("ammOrderCenterRetResult", func() {
 	Attribute("pageCount", Int64)
 })
 var _ = Service("ammOrderCenter", func() {
-	Description("用于管理orderCenter")
+	Description("used to manage amm order")
 	Method("list", func() {
 		Payload(func() {
 			Attribute("status", Int64)

@@ -37,15 +37,15 @@ func (s *lpmonitsrvc) AddScript(ctx context.Context, p *lpmonit.AddScriptPayload
 	s.logger.Println(ptr.ToString(p.ScriptBody))
 	errList := utils.IsDNS1123Subdomain(ptr.ToString(p.Name))
 	if len(errList) != 0 {
-		err = errors.WithMessage(errors.New("name格式不正确"), "00:")
+		err = errors.WithMessage(errors.New("name format incorrect"), "00:")
 		return
 	}
 	res = &lpmonit.AddScriptResult{}
 	baseScriptName := fmt.Sprintf("user_script_%d.js", time.Now().UnixNano())
-	userScriptFile := fmt.Sprintf("/user-script/%s", baseScriptName)
+	userScriptFile := fmt.Sprintf("/user-script/run-script/%s", baseScriptName)
 	rawDecodedText, err := base64.StdEncoding.DecodeString(ptr.ToString(p.ScriptBody))
 	if err != nil {
-		err = errors.WithMessage(err, "解码base64发生了错误")
+		err = errors.WithMessage(err, "decode base64 error occur")
 		return
 	}
 	var v = struct {
@@ -53,16 +53,16 @@ func (s *lpmonitsrvc) AddScript(ctx context.Context, p *lpmonit.AddScriptPayload
 	}{}
 	err = database.FindOne("main", "monitor_list", bson.M{"name": p.Name}, &v)
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库发生了错误")
+		err = errors.WithMessage(err, "query database error occur")
 		return
 	}
 	if v.Id.Hex() != types.MongoEmptyIdHex {
-		err = errors.WithMessage(errors.New("exist"), "已经存在的任务")
+		err = errors.WithMessage(errors.New("exist"), "task already exist")
 		return
 	}
 	err = os.WriteFile(userScriptFile, []byte(rawDecodedText), 0644)
 	if err != nil {
-		err = errors.WithMessage(err, "无法写入脚本文件")
+		err = errors.WithMessage(err, "cannot write script file")
 		return
 	}
 
@@ -83,7 +83,7 @@ func (s *lpmonitsrvc) AddScript(ctx context.Context, p *lpmonit.AddScriptPayload
 		res.TaskID = ptr.String(v.Hex())
 		res.Result = ptr.String(v.Hex())
 	} else {
-		res.TaskID = ptr.String("错误的格式")
+		res.TaskID = ptr.String("incorrect format")
 	}
 
 	res.Code = ptr.Int64(0)
@@ -95,7 +95,7 @@ func (s *lpmonitsrvc) AddScript(ctx context.Context, p *lpmonit.AddScriptPayload
 	}
 	err = service.NewLpMonitService().DeployMonitor(taskRow)
 	if err != nil {
-		err = errors.WithMessage(err, "An error occurred when deploying to k8s")
+		err = errors.WithMessage(err, "an error occurred when deploying to k8s")
 		return
 	}
 	s.logger.Print("lpmonit.add_script")
@@ -140,7 +140,7 @@ func (s *lpmonitsrvc) DeleteScript(ctx context.Context, p *lpmonit.DeleteScriptP
 	log.Println("DeleteScript")
 	objectId, err := primitive.ObjectIDFromHex(p.ID)
 	if err != nil {
-		err = errors.WithMessage(err, "生成MongodbId错误")
+		err = errors.WithMessage(err, "generate mongodbId error")
 		return
 	}
 	dbr := types.DBMonitorListRow{}
@@ -148,7 +148,7 @@ func (s *lpmonitsrvc) DeleteScript(ctx context.Context, p *lpmonit.DeleteScriptP
 		"_id": objectId,
 	}, &dbr)
 	if err != nil {
-		err = errors.WithMessage(err, "没有找到要删除的task")
+		err = errors.WithMessage(err, "cannot find task to delete")
 		return
 	}
 	err = service.NewLpMonitService().UnDeployMonitor(dbr)
@@ -159,7 +159,7 @@ func (s *lpmonitsrvc) DeleteScript(ctx context.Context, p *lpmonit.DeleteScriptP
 		err = nil
 	}
 	if err != nil {
-		err = errors.WithMessage(err, "查询Tasklist 发生了错误")
+		err = errors.WithMessage(err, "query tasklist error")
 		return
 	}
 
@@ -167,7 +167,7 @@ func (s *lpmonitsrvc) DeleteScript(ctx context.Context, p *lpmonit.DeleteScriptP
 		"_id": objectId,
 	})
 	if delCount <= 0 {
-		err = errors.New("没有找到删除的记录，无操作.")
+		err = errors.New("cannot find record to delete, no operation")
 		return
 	}
 	res.Result = ptr.Int64(delCount)
@@ -185,7 +185,7 @@ func (s *lpmonitsrvc) RunScript(ctx context.Context, p *lpmonit.RunScriptPayload
 
 	rawDecodedText, err := base64.StdEncoding.DecodeString(ptr.ToString(p.ScriptContent))
 	if err != nil {
-		err = errors.WithMessage(err, "无法解码base64,请检查格式")
+		err = errors.WithMessage(err, "cannot decode base64, please check format")
 		return
 	}
 	// fmt.Printf("Decoded text: %s\n", rawDecodedText)
@@ -214,7 +214,7 @@ func (s *lpmonitsrvc) RunResult(ctx context.Context, p *lpmonit.RunResultPayload
 	}, &v)
 	log.Println(v)
 	if err != nil {
-		err = errors.WithMessage(err, "读取历史发生了错误")
+		err = errors.WithMessage(err, "read history error occur")
 		return
 	}
 	if v.Id.Hex() == types.MongoEmptyIdHex {
@@ -225,7 +225,7 @@ func (s *lpmonitsrvc) RunResult(ctx context.Context, p *lpmonit.RunResultPayload
 	}
 	json_bytes, err := json.Marshal(v)
 	if err != nil {
-		err = errors.WithMessage(err, "序列化执行结果集发生了错误")
+		err = errors.WithMessage(err, "serialize result set error occur")
 		return
 	}
 	log.Println(v.Id.Hex())

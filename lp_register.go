@@ -30,20 +30,26 @@ func (s *lpRegistersrvc) RegisterAll(ctx context.Context) (res *lpregister.Regis
 	if err != nil {
 		return
 	}
-	log.Println("当前有N个Client 需要去注册", len(ret), "👁️👁️👁️👁️👁️")
-	for _, item := range ret {
-		if item.RegisterClientStatus == 0 {
-			register, regErr := lprls.RegisterItem(item.ID.Hex(), item.ServiceName, item.Name, item.ChainType, item.ChainId, item.Namespace)
-			if regErr != nil {
-				err = regErr
-				return
-			}
-			if !register {
-				err = fmt.Errorf("注册失败,Id:%s", item.ID.Hex())
-				return
+	log.Println("currently there are n clients that need to be registered", len(ret))
+	go func() {
+		for _, item := range ret {
+			if item.RegisterClientStatus == 0 {
+				register, regErr := lprls.RegisterItem(item.ID.Hex(), item.ServiceName, item.Name, item.ChainType, item.ChainId, item.Namespace)
+				if regErr != nil {
+					log.Println("register failed", regErr)
+					// err = regErr
+					continue
+					// return
+				}
+				if !register {
+					log.Println(fmt.Errorf("registration failed, id:%s", item.ID.Hex()))
+					continue
+					// return
+				}
 			}
 		}
-	}
+	}()
+
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
 	return

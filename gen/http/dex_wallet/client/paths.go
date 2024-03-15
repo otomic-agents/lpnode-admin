@@ -26,3 +26,8 @@ func DeleteDexWalletDexWalletPath() string {
 func VaultListDexWalletPath() string {
 	return "/lpnode/lpnode_admin_panel/dexWallet/vaultList"
 }
+
+// UpdateLpWalletDexWalletPath returns the URL path to the dexWallet service updateLpWallet HTTP endpoint.
+func UpdateLpWalletDexWalletPath() string {
+	return "/lpnode/lpnode_admin_panel/dexWallet/updateLpWallet"
+}

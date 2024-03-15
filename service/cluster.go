@@ -47,7 +47,7 @@ const (
 
 func NewLpCluster() *LpCluster {
 	ClusterOnce.Do(func() {
-		log.Println("初始化LpCluster🟥🟥🟥🟥🟥🟥🟥🟥🟥")
+		log.Println("init LpCluster🟥")
 		lpCluster := &LpCluster{}
 		lpCluster.InitClient()
 		LpClusterInstance = lpCluster
@@ -66,13 +66,13 @@ func (lpc *LpCluster) InitClient() error {
 		// creates the in-cluster config
 		config, err := rest.InClusterConfig()
 		if err != nil {
-			log.Println("初始化集群失败", "🦠🦠🦠🦠🦠🦠🦠🦠🦠🦠0")
+			log.Println("init cluster failed", "🦠")
 			return err
 		}
 		// creates the clientset
 		clientset, err = kubernetes.NewForConfig(config)
 		if err != nil {
-			log.Println("初始化集群失败", "🦠🦠🦠🦠🦠🦠🦠🦠🦠🦠1")
+			log.Println("init cluster failed", "🦠")
 			return err
 		}
 	} else {
@@ -86,18 +86,18 @@ func (lpc *LpCluster) InitClient() error {
 
 		config, err := clientcmd.BuildConfigFromFlags("", *kubeconfig)
 		if err != nil {
-			return errors.New("无法正确初始化ClientCmd")
+			return errors.New("cannot init ClientCmd correctly")
 		}
 		clientset, err = kubernetes.NewForConfig(config)
 		if err != nil {
-			return errors.New("无法正确初始化clientset")
+			return errors.New("cannot init clientset correctly")
 		}
 	}
 	lpc.ClientSet = clientset
 	return nil
 }
 
-// 列出所有的Client
+// list all client
 func (lpc *LpCluster) ListClientList(namespace string) (retList []*clustertype.LpClientPodItem, err error) {
 	retList = make([]*clustertype.LpClientPodItem, 0)
 	useNamespace := apiv1.NamespaceDefault
@@ -123,7 +123,7 @@ func (lpc *LpCluster) ListClientList(namespace string) (retList []*clustertype.L
 	return
 }
 
-// 列出所有的Client
+// list all client
 func (lpc *LpCluster) ListClientServiceList(namespace string) (retList []*clustertype.LpClientServiceItem, err error) {
 	retList = make([]*clustertype.LpClientServiceItem, 0)
 	useNamespace := apiv1.NamespaceDefault
@@ -161,12 +161,12 @@ func (lpc *LpCluster) ListClientServiceList(namespace string) (retList []*cluste
 }
 func (lpc *LpCluster) RestartPod(namespace string, findName string, name string) (err error) {
 	if lpc.ClientSet == nil {
-		err = errors.New("集群链接没有正确初始化")
+		err = errors.New("cluster link not init correctly")
 		return
 	}
-	log.Println("准备重启pod,并等待就绪", namespace, findName, name)
+	log.Println("prepare restart pod, and wait ready", namespace, findName, name)
 	if namespace == "" {
-		logger.Cluster.Warnf("使用了默认的Namespace:%s", apiv1.NamespaceDefault)
+		logger.Cluster.Warnf("used default namespace :%s", apiv1.NamespaceDefault)
 		namespace = apiv1.NamespaceDefault
 	}
 	podsClient := lpc.ClientSet.CoreV1().Pods(namespace)
@@ -176,7 +176,7 @@ func (lpc *LpCluster) RestartPod(namespace string, findName string, name string)
 		return
 	}
 	if len(list.Items) <= 0 {
-		errors.WithMessage(utils.GetNoEmptyError(err), "没有找到需要重启的Pod")
+		errors.WithMessage(utils.GetNoEmptyError(err), "cannot find pod to restart")
 		return
 	}
 	beDelPodLit := []string{}
@@ -188,17 +188,16 @@ func (lpc *LpCluster) RestartPod(namespace string, findName string, name string)
 	for _, podName := range beDelPodLit {
 		delpodErr := podsClient.Delete(context.TODO(), podName, metav1.DeleteOptions{})
 		if delpodErr != nil {
-			log.Println(fmt.Sprintf("删除Pod:%s发生了错误", podName), delpodErr)
+			log.Println(fmt.Sprintf("delete pod %s error", podName), delpodErr)
 		}
 	}
-	log.Println("删除的Pod是", beDelPodLit)
-	// time.Sleep(time.Second * 5) // 删除完成Pod后，硬性等待5 Sec 再判定可用状态
+	log.Println("deleting pod is", beDelPodLit)
 	err = lpc.WaitDeploymentAvailable(namespace, findName, name, beDelPodLit)
 	if err != nil {
-		log.Println("服务无法在规定时间内等待就绪", err)
+		log.Println("service cannot wait ready in limit time", err)
 		return
 	}
-	log.Println("服务已经就绪")
+	log.Println("service already ready")
 	return
 }
 func (lpc *LpCluster) WaitDeploymentAvailable(namespace string, findName string, name string, delList []string) error {
@@ -207,7 +206,7 @@ func (lpc *LpCluster) WaitDeploymentAvailable(namespace string, findName string,
 		delSet[item] = true
 	}
 	if lpc.ClientSet == nil {
-		err := errors.New("集群链接没有正确初始化")
+		err := errors.New("cluster link not init correctly")
 		return err
 	}
 	podsClient := lpc.ClientSet.CoreV1().Pods(namespace)
@@ -243,7 +242,7 @@ func (lpc *LpCluster) WaitDeploymentAvailable(namespace string, findName string,
 		if ready {
 			return nil
 		}
-		return errors.New("暂时未就绪")
+		return errors.New("not ready temporary")
 	})
 	if err != nil {
 		return err

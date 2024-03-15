@@ -5,7 +5,7 @@ import (
 )
 
 var _ = Service("lpRegister", func() {
-	Description("用于管理Lp到Client的注册")
+	Description("used to manage lp to client registration")
 
 	Method("registerAll", func() {
 		Payload(func() {})

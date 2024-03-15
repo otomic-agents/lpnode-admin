@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 用于管理Lp到Client的注册
+// used to manage install status
 type Service interface {
 	// StatList implements statList.
 	StatList(context.Context) (res *StatListResult, err error)

@@ -27,6 +27,18 @@ func EncodeChainDataListResponse(encoder func(context.Context, http.ResponseWrit
 	}
 }
 
+// EncodeRunTimeEnvResponse returns an encoder for responses returned by the
+// baseData runTimeEnv endpoint.
+func EncodeRunTimeEnvResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*basedata.RunTimeEnvResult)
+		enc := encoder(ctx, w)
+		body := NewRunTimeEnvResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
 // marshalBasedataChainDataItemToChainDataItemResponseBody builds a value of
 // type *ChainDataItemResponseBody from a value of type *basedata.ChainDataItem.
 func marshalBasedataChainDataItemToChainDataItemResponseBody(v *basedata.ChainDataItem) *ChainDataItemResponseBody {

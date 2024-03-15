@@ -40,7 +40,7 @@ func init() {
 		Formatter: nested.Formatter{
 			TimestampFormat: "2006-01-02 15:04:05",
 			//HideKeys: true,
-			FieldsOrder: []string{"模块", "category"},
+			FieldsOrder: []string{"module", "category"},
 		},
 	}
 	l := logrus.New()

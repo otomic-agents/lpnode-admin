@@ -6,12 +6,12 @@ import (
 
 var Task_TaskItem = Type("TaskItem", func() {
 	Attribute("_id", String)
-	Attribute("schedule", String) // 定时的规则
+	Attribute("schedule", String)
 	Attribute("taskType", String, func() {
 		Enum("build-in")
 		Enum("customize")
 	})
-	Attribute("deployed", Boolean) //  是否已经部署
+	Attribute("deployed", Boolean)
 	Attribute("deployMessage", String)
 	Attribute("scriptPath", String)
 	Attribute("scriptBody", String)
@@ -20,7 +20,6 @@ var Task_Deploy_CMD = Type("Task_Deploy", func() {
 	Attribute("_id", String)
 })
 var _ = Service("taskManager", func() {
-	Description("用于列表tasklist")
 	Method("taskList", func() {
 		Payload(func() {})
 		Result(func() {
@@ -36,7 +35,7 @@ var _ = Service("taskManager", func() {
 		Payload(Task_Deploy_CMD)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "创建影响的行数")
+			Attribute("result", Int64, "rows affected on creation")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -47,7 +46,7 @@ var _ = Service("taskManager", func() {
 		Payload(Task_Deploy_CMD)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "创建影响的行数")
+			Attribute("result", Int64, "rows affected on creation")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -58,7 +57,7 @@ var _ = Service("taskManager", func() {
 		Payload(Task_TaskItem)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "创建影响的行数")
+			Attribute("result", Int64, "rows affected on creation")
 			Attribute("message", String)
 		})
 		HTTP(func() {

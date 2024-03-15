@@ -56,10 +56,6 @@ func DecodeRegisterAccountRequest(mux goahttp.Muxer, decoder func(*http.Request)
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
-		err = ValidateRegisterAccountRequestBody(&body)
-		if err != nil {
-			return nil, err
-		}
 		payload := NewRegisterAccountPayload(&body)
 
 		return payload, nil

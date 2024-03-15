@@ -38,10 +38,21 @@ func (*LpMonitService) DeployMonitor(task types.DBMonitorListRow) (err error) {
 	}
 	tmpWriter := &types.TemplateWriter{}
 	setupSet := types.MonitorSetupConfig{
-		Namespace:  os.Getenv("POD_NAMESPACE"),
-		Name:       v.Name,
-		Cron:       v.Cron,
-		ScriptPath: v.ScriptPath,
+		Namespace:       os.Getenv("POD_NAMESPACE"),
+		Name:            v.Name,
+		Cron:            v.Cron,
+		ScriptPath:      v.ScriptPath,
+		MongoDbHost:     os.Getenv("MONGODB_HOST"),
+		MongoDbPort:     os.Getenv("MONGODB_PORT"),
+		MongoDbUser:     os.Getenv("MONGODB_USER"),
+		MongoDbPass:     os.Getenv("MONGODBPASS"),
+		MongoDbLpStore:  os.Getenv("MONGODB_DBNAME_LP_STORE"),
+		MongoDbBusiness: os.Getenv("MONGODB_DBNAME_BUSINESS_HISTORY"),
+		RedisHost:       os.Getenv("REDIS_HOST"),
+		RedisPort:       os.Getenv("REDIS_PORT"),
+		RedisPass:       os.Getenv("REDIS_PASS"),
+		RedisDb:         0,
+		UserSpacePath:   os.Getenv("USERSPACE_DATA_PATH"),
 	}
 	err = tmpl.Execute(tmpWriter, setupSet)
 	if err != nil {
@@ -92,13 +103,35 @@ func (*LpMonitService) DeployMonitorRun(scriptName string) (err error) {
 	filesuffix := path.Ext(scriptName)
 	fileprefix := filenameall[0 : len(filenameall)-len(filesuffix)]
 	v := struct {
-		Namespace  string
-		ScriptName string
-		JobName    string
+		Namespace       string
+		ScriptName      string
+		JobName         string
+		MongoDbHost     string
+		MongoDbPort     string
+		MongoDbUser     string
+		MongoDbPass     string
+		MongoDbLpStore  string
+		MongoDbBusiness string
+		RedisHost       string
+		RedisPort       string
+		RedisPass       string
+		RedisDb         int
+		UserSpacePath   string
 	}{
-		Namespace:  os.Getenv("POD_NAMESPACE"),
-		ScriptName: scriptName,
-		JobName:    fileprefix,
+		Namespace:       os.Getenv("POD_NAMESPACE"),
+		ScriptName:      scriptName,
+		JobName:         fileprefix,
+		MongoDbHost:     os.Getenv("MONGODB_HOST"),
+		MongoDbPort:     os.Getenv("MONGODB_PORT"),
+		MongoDbUser:     os.Getenv("MONGODB_USER"),
+		MongoDbPass:     os.Getenv("MONGODBPASS"),
+		MongoDbLpStore:  os.Getenv("MONGODB_DBNAME_LP_STORE"),
+		MongoDbBusiness: os.Getenv("MONGODB_DBNAME_BUSINESS_HISTORY"),
+		RedisHost:       os.Getenv("REDIS_HOST"),
+		RedisPort:       os.Getenv("REDIS_PORT"),
+		RedisPass:       os.Getenv("REDIS_PASS"),
+		RedisDb:         0,
+		UserSpacePath:   os.Getenv("USERSPACE_DATA_PATH"),
 	}
 
 	err = tmpl.Execute(tmpWriter, v)

@@ -43,7 +43,7 @@ func (s *installCtrlPanelsrvc) InstallLpClient(ctx context.Context, p *installct
 	bds := service.NewBaseDataLogicService()
 	installed := cps.Installed("ammClient", p.SetupConfig.Type)
 	if installed {
-		err = errors.New("已经安装过了，不能再次重复安装....")
+		err = errors.New("install client already exist")
 		return
 	}
 	// return
@@ -61,24 +61,24 @@ func (s *installCtrlPanelsrvc) InstallLpClient(ctx context.Context, p *installct
 			customEnv = append(customEnv, types.AmmSetupConfigDeploymentCustomEnv{Key: ptr.ToString(v.Key), Value: ptr.ToString(v.Value)})
 		}
 	}
-	// 模板合并输出
+	// template merge output
 	setupConfig := types.SetupConfig{
 		Service: types.ClientSetupConfigService{},
 		Deployment: types.ClientSetupConfigDeployment{
 			Name:                  p.SetupConfig.Type,
-			RunEnv:                globalvar.SystemEnv, // 运行时环境变量
+			RunEnv:                globalvar.SystemEnv, // runEnv
 			CustomEnv:             customEnv,
 			Namespace:             os.Getenv("POD_NAMESPACE"),
 			OsSystemServer:        os.Getenv("OS_SYSTEM_SERVER"),
 			OsApiSecret:           os.Getenv("OS_API_SECRET"),
 			OsApiKey:              os.Getenv("OS_API_KEY"),
 			RedisHost:             os.Getenv("REDIS_HOST"),
-			MongodbHost:           os.Getenv("MONGODB_HOST"),
-			MongodbPass:           os.Getenv("MONGODBPASS"),
-			RedisPass:             os.Getenv("REDIS_PASS"),
 			RedisPort:             os.Getenv("REDIS_PORT"),
+			RedisPass:             os.Getenv("REDIS_PASS"),
+			MongodbHost:           os.Getenv("MONGODB_HOST"),
 			MongodbPort:           os.Getenv("MONGODB_PORT"),
-			MongodbAccount: 	   os.Getenv("MONGODB_USER"),
+			MongodbAccount:        os.Getenv("MONGODB_USER"),
+			MongodbPass:           os.Getenv("MONGODBPASS"),
 			MongodbDbnameLpStore:  os.Getenv("MONGODB_DBNAME_LP_STORE"),
 			MongodbDbnameHistory:  os.Getenv("MONGODB_DBNAME_BUSINESS_HISTORY"),
 			Image:                 p.SetupConfig.ImageRepository,
@@ -104,32 +104,32 @@ func (s *installCtrlPanelsrvc) InstallLpClient(ctx context.Context, p *installct
 	res.Message = ptr.String("")
 	res.Result.Template = ptr.String(string(tmpWriter.ByteBuffer))
 
-	log.Println("当前的Install flag", p.SetupConfig.Install)
+	log.Println("current install flag", p.SetupConfig.Install)
 	baseChainRow, err := bds.GetChainRowByName(p.SetupConfig.Type)
 	if err != nil {
-		err = errors.New("没有查询到正确的Chain数据")
+		err = errors.New("no chain row")
 		return
 	}
 	chainId := baseChainRow.ChainId
-	// 之后进入安装动作
-	if !p.SetupConfig.Install { //无需安装的时候
+	// then go into install action
+	if !p.SetupConfig.Install { //when no need to install
 		return
 	}
-	logger.System.Debug("开始生成安装的Yaml文件..")
+	logger.System.Debug("start generating install yaml file..")
 	os.WriteFile(outputPath, tmpWriter.ByteBuffer, 0755)
 	deployService := service.NewDeploymentService()
 	chainType, err := deployService.GetEnv(outputPath, "CHAIN_TYPE")
 	if err != nil {
-		err = errors.WithMessage(err, "配置中缺少链类型的配置")
+		err = errors.WithMessage(err, "configuration missing chain type config")
 		return
 	}
 	envList, err := deployService.GetEnvList(outputPath)
 	if err != nil {
-		err = errors.WithMessage(err, "没有获取到envList")
+		err = errors.WithMessage(err, "did not get envlist")
 		return
 	}
 	if chainType == "" {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "配置中缺少链类型的配置:")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "configuration missing chain type config:")
 		return
 	}
 	cmdRes, err := utils.ExecuteCMD("kubectl", []string{"apply", "-f", outputPath})
@@ -171,7 +171,7 @@ func (s *installCtrlPanelsrvc) UninstallLpClient(ctx context.Context, p *install
 		return
 	}
 	if installRow.Status <= 0 {
-		err = errors.New("没有已经安装过的服务")
+		err = errors.New("no service installed before")
 		return
 	}
 
@@ -180,7 +180,7 @@ func (s *installCtrlPanelsrvc) UninstallLpClient(ctx context.Context, p *install
 	os.WriteFile(outputPath, []byte(installRow.Yaml), 0766)
 	cmdRes, err := utils.ExecuteCMD("kubectl", []string{"delete", "-f", outputPath})
 	if err != nil {
-		logger.System.Errorf("卸载service 时发生了错误:%s", err)
+		logger.System.Errorf("uninstalling service error: %s", err)
 		//return
 	}
 	res.Code = ptr.Int64(0)
@@ -231,7 +231,7 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 		return
 	}
 	if installRow.Status <= 0 {
-		err = errors.New("没有已经安装过的服务")
+		err = errors.New("no service installed before")
 		return
 	}
 	templatePath := ""
@@ -257,7 +257,7 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 		outputPath = fmt.Sprintf("./setup/userApp/%s/%s/deployment_update.yaml", globalvar.SystemEnv, p.SetupConfig.Name)
 	}
 	if templatePath == "" {
-		err = fmt.Errorf("没有适配的安装程序")
+		err = fmt.Errorf("no adapted installer")
 		return
 	}
 	tmpl, err := template.ParseFiles(templatePath)
@@ -286,22 +286,22 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 
 	tmpWriter := &types.TemplateWriter{}
 
-	log.Println(setupConfig, "0000000000")
+	log.Println(setupConfig)
 	err = tmpl.Execute(tmpWriter, setupConfig)
 	if err != nil {
 		fmt.Printf("err: %v\n", err)
 		return
 	}
 	logger.System.Debug("UpdateDeployment ")
-	if !p.SetupConfig.Update { //无需安装的时候
+	if !p.SetupConfig.Update { //when no need to install
 		return
 	}
-	logger.System.Debug("开始生成更新Yaml文件..", outputPath)
+	logger.System.Debug("start generating update yaml file", outputPath)
 	os.WriteFile(outputPath, tmpWriter.ByteBuffer, 0755)
 	if p.SetupConfig.InstallType == "ammClient" {
 		chainType, err = service.NewDeploymentService().GetEnv(outputPath, "CHAIN_TYPE")
 		if err != nil {
-			err = errors.WithMessage(err, "配置中缺少链类型的配置")
+			err = errors.WithMessage(err, "configuration missing chain type config")
 			return
 		}
 	}
@@ -340,55 +340,55 @@ func (s *installCtrlPanelsrvc) InstallDeployment(ctx context.Context, p *install
 	cps := service.NewCtrlPanelLogicService()
 	installed := cps.Installed(p.SetupConfig.InstallType, p.SetupConfig.Name)
 	if installed {
-		err = errors.New("已经安装过了，不能再次重复安装")
+		err = errors.New("already installed, cannot install repeatedly")
 		return
 	}
 	if p.SetupConfig.InstallType == "market" {
 		marketInstalled := cps.InstalledByType(p.SetupConfig.InstallType)
 		if marketInstalled {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "market应用只能安装一个")
+			err = errors.WithMessage(utils.GetNoEmptyError(err), "market app can only install one")
 			return
 		}
 	}
 	templatePath := fmt.Sprintf("./setup/%s/%s/deployment.yaml", p.SetupConfig.InstallType, globalvar.SystemEnv)
 	os.MkdirAll(fmt.Sprintf("./setup/%s/%s/%s", p.SetupConfig.InstallType, globalvar.SystemEnv, p.SetupConfig.Name), os.ModePerm)
 	outputPath := fmt.Sprintf("./setup/%s/%s/%s/deployment_install.yaml", p.SetupConfig.InstallType, globalvar.SystemEnv, p.SetupConfig.Name)
-	tmpl, err := template.ParseFiles(templatePath) // 创建模版对象
+	tmpl, err := template.ParseFiles(templatePath) // create template object
 	if err != nil {
 		return
 	}
-	// 处理自定义的环境变量
+	// handle custom env variables
 	customEnv := make([]types.AmmSetupConfigDeploymentCustomEnv, 0)
 	if len(p.SetupConfig.CustomEnv) > 0 {
 		for _, v := range p.SetupConfig.CustomEnv {
 			customEnv = append(customEnv, types.AmmSetupConfigDeploymentCustomEnv{Key: ptr.ToString(v.Key), Value: ptr.ToString(v.Value)})
 		}
 	}
-	// 初始化配置
+	// initialize config
 	setupConfig := types.AmmSetupConfig{
 		Service: types.AmmSetupConfigService{},
 		Deployment: types.AmmSetupConfigDeployment{
-			OsSystemServer: os.Getenv("OS_SYSTEM_SERVER"),
-			OsApiSecret:    os.Getenv("OS_API_SECRET"),
-			OsApiKey:       os.Getenv("OS_API_KEY"),
-			RedisHost: 		os.Getenv("REDIS_HOST"),
-			MongodbHost: 	os.Getenv("MONGODB_HOST"),
-			MongodbPass: 	os.Getenv("MONGODBPASS"),
-			RedisPass: 		os.Getenv("REDIS_PASS"),
-			RedisPort: 		os.Getenv("REDIS_PORT"),
-			MongodbPort: 	os.Getenv("MONGODB_PORT"),
-			Namespace:      os.Getenv("POD_NAMESPACE"),
-			MongodbAccount: os.Getenv("MONGODB_USER"),
+			OsSystemServer:       os.Getenv("OS_SYSTEM_SERVER"),
+			OsApiSecret:          os.Getenv("OS_API_SECRET"),
+			OsApiKey:             os.Getenv("OS_API_KEY"),
+			RedisHost:            os.Getenv("REDIS_HOST"),
+			MongodbHost:          os.Getenv("MONGODB_HOST"),
+			MongodbPass:          os.Getenv("MONGODBPASS"),
+			RedisPass:            os.Getenv("REDIS_PASS"),
+			RedisPort:            os.Getenv("REDIS_PORT"),
+			MongodbPort:          os.Getenv("MONGODB_PORT"),
+			Namespace:            os.Getenv("POD_NAMESPACE"),
+			MongodbAccount:       os.Getenv("MONGODB_USER"),
 			MongodbDbnameLpStore: os.Getenv("MONGODB_DBNAME_LP_STORE"),
 			MongodbDbnameHistory: os.Getenv("MONGODB_DBNAME_BUSINESS_HISTORY"),
-			Name:           p.SetupConfig.Name,
-			CustomEnv:      customEnv,
-			Image:          p.SetupConfig.ImageRepository,
-			ContainerPort:  ptr.ToString(p.SetupConfig.ContainerPort),
+			Name:                 p.SetupConfig.Name,
+			CustomEnv:            customEnv,
+			Image:                p.SetupConfig.ImageRepository,
+			ContainerPort:        ptr.ToString(p.SetupConfig.ContainerPort),
 		},
 	}
 	tmpWriter := &types.TemplateWriter{}
-	// 渲染模版
+	// render template
 	err = tmpl.Execute(tmpWriter, setupConfig)
 	if err != nil {
 		logger.System.Errorf("err: %v\n", err)
@@ -397,11 +397,11 @@ func (s *installCtrlPanelsrvc) InstallDeployment(ctx context.Context, p *install
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
 	res.Result.Template = ptr.String(string(tmpWriter.ByteBuffer))
-	if !p.SetupConfig.Install { //无需安装的时候
+	if !p.SetupConfig.Install {
 		return
 	}
-	logger.System.Debug("开始安装Amm")
-	logger.System.Debug("开始生成安装的Yaml文件..")
+	logger.System.Debug("start installing amm")
+	logger.System.Debug("start generating install yaml file")
 	os.WriteFile(outputPath, tmpWriter.ByteBuffer, 0755)
 	envList, err := service.NewDeploymentService().GetEnvList(outputPath)
 	if err != nil {
@@ -418,7 +418,7 @@ func (s *installCtrlPanelsrvc) InstallDeployment(ctx context.Context, p *install
 	res.Result.CmdStdout = &cmdRes.Stdout
 	res.Result.CmdStderr = &cmdRes.Stderr
 	cps.MarkInstalled(p.SetupConfig.InstallType, p.SetupConfig.Name, tmpWriter.ByteBuffer, []byte(cmdRes.Stdout), []byte(cmdRes.Stderr))
-	// 保存安装上下文
+	// save install context
 	cps.UpdateInstallRow(p.SetupConfig.InstallType, p.SetupConfig.Name, bson.M{
 		"$set": bson.M{
 			"envList":        envList,
@@ -440,16 +440,16 @@ func (s *installCtrlPanelsrvc) UninstallDeployment(ctx context.Context, p *insta
 		return
 	}
 	if installRow.Status <= 0 {
-		err = errors.New("没有已经安装过的服务")
+		err = errors.New("no service installed before")
 		return
 	}
-	logger.System.Debugf("卸载%s", p.SetupConfig.InstallType)
+	logger.System.Debugf("uninstalling %s", p.SetupConfig.InstallType)
 	outputPath := fmt.Sprintf("./setup/%s/%s/%s/deployment_uninstall.yaml", p.SetupConfig.InstallType, globalvar.SystemEnv, p.SetupConfig.Name)
 	os.MkdirAll(fmt.Sprintf("./setup/%s/%s/%s", p.SetupConfig.InstallType, globalvar.SystemEnv, p.SetupConfig.Name), os.ModePerm)
 	os.WriteFile(outputPath, []byte(installRow.Yaml), 0766)
 	cmdRes, err := utils.ExecuteCMD("kubectl", []string{"delete", "-f", outputPath})
 	if err != nil {
-		logger.System.Errorf("卸载服务发生了错误:%s", err)
+		logger.System.Errorf("uninstall service occur error:%s", err)
 		//return
 	}
 	res.Result.CmdStdout = ptr.String(cmdRes.Stdout)

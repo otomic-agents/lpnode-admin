@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 用于管理Lp到Client的注册
+// used to manage lp to client registration
 type Service interface {
 	// RegisterAll implements registerAll.
 	RegisterAll(context.Context) (res *RegisterAllResult, err error)

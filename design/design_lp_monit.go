@@ -7,15 +7,15 @@ import (
 var LpMonit_TaskItem = Type("LpMointTaskItem", func() {
 	Attribute("_id", String)
 	Attribute("name", String)
-	Attribute("cron", String, "定时任务")
-	Attribute("createdAt", Int64, "创建时间戳")
-	Attribute("scriptPath", String, "脚本路径")
-	Attribute("taskType", String, "任务类型")
+	Attribute("cron", String, "scheduled task")
+	Attribute("createdAt", Int64, "create timestamp")
+	Attribute("scriptPath", String, "script path")
+	Attribute("taskType", String, "task type")
 
 	Required("name", "cron", "createdAt", "taskType")
 })
 var _ = Service("lpmonit", func() {
-	Description("监控脚本程序")
+	Description("monitor script")
 	Method("add_script", func() {
 		Description("add script and save")
 		Payload(func() {
@@ -26,8 +26,8 @@ var _ = Service("lpmonit", func() {
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("task_id", String, "创建后的Id")
-			Attribute("result", String, "创建成功后的Id")
+			Attribute("task_id", String, "id after creation")
+			Attribute("result", String, "id after successful creation")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -40,7 +40,7 @@ var _ = Service("lpmonit", func() {
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", ArrayOf(LpMonit_TaskItem), "任务列表")
+			Attribute("result", ArrayOf(LpMonit_TaskItem), "task list")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -50,12 +50,12 @@ var _ = Service("lpmonit", func() {
 	Method("delete_script", func() {
 		Description("task_list_delete")
 		Payload(func() {
-			Attribute("_id", String, "Mongodb 的主键")
+			Attribute("_id", String, "mongodb primary key")
 			Required("_id")
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "是否删除成功")
+			Attribute("result", Int64, "result")
 			Attribute("message", String)
 		})
 		HTTP(func() {

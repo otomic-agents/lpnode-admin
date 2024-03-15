@@ -11,15 +11,15 @@ import (
 	"context"
 )
 
-// 用于配置chain的基础设置
+// used to configure basic chain settings
 type Service interface {
-	// 用于配置chain的基础设置,批量设置接口Upsert
+	// SetChainList implements setChainList.
 	SetChainList(context.Context, *SetChainListPayload) (res *SetChainListResult, err error)
-	// 用于删除一项链的基础设置
+	// used to delete basic data for a chain
 	DelChainList(context.Context, *DelChainListPayload) (res *DelChainListResult, err error)
-	// 列出链的列表，并附加链相关服务的状态，如Client 运行时状态
+	// list chain and append chain service status, like client runtime status
 	ChainList(context.Context) (res *ChainListResult, err error)
-	// 用于换目标链原生币种时，最少换多少USD价值的原生币
+	// SetChainGasUsd implements setChainGasUsd.
 	SetChainGasUsd(context.Context, *SetChainGasUsdPayload) (res *SetChainGasUsdResult, err error)
 	// SetChainClientConfig implements setChainClientConfig.
 	SetChainClientConfig(context.Context, *SetChainClientConfigPayload) (res *SetChainClientConfigResult, err error)
@@ -49,7 +49,7 @@ type ChainDataItem struct {
 // method.
 type ChainListResult struct {
 	Code *int64
-	// 链的列表
+	// chain list
 	Data    []*ChainDataItem
 	Message *string
 }
@@ -59,7 +59,7 @@ type ChainListResult struct {
 type DelChainListPayload struct {
 	// ChainId
 	ChainID int64
-	// mongodb的id
+	// mongodb id
 	ID string
 }
 
@@ -84,7 +84,7 @@ type SetChainClientConfigPayload struct {
 // setChainClientConfig method.
 type SetChainClientConfigResult struct {
 	Code *int64
-	// 是否成功
+	// result
 	Data    *int64
 	Message *string
 }
@@ -94,7 +94,7 @@ type SetChainClientConfigResult struct {
 type SetChainGasUsdPayload struct {
 	// ChainId
 	ChainID int64
-	// mongodb的id
+	// mongodb id
 	ID string
 	// usd value
 	Usd int64
@@ -104,7 +104,7 @@ type SetChainGasUsdPayload struct {
 // setChainGasUsd method.
 type SetChainGasUsdResult struct {
 	Code *int64
-	// 是否成功
+	// result
 	Data    *int64
 	Message *string
 }
@@ -120,7 +120,7 @@ type SetChainListPayload struct {
 // setChainList method.
 type SetChainListResult struct {
 	Code *int64
-	// 添加成功的链
+	// result
 	Data    []*ChainDataItem
 	Message *string
 }

@@ -2,36 +2,41 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: "user-once-script-run-{{.JobName}}"
-  namespace: "otmoiclp-bigdog"
+  namespace: "{{.Namespace}}"
 spec:
   template:
     spec:
       volumes:
         - name: user-script
-          persistentVolumeClaim:
-            claimName: user-moniter-script
+          hostPath:
+            type: DirectoryOrCreate
+            path: "{{.UserSpacePath}}/UserScript"
       containers:
       - name: "user-once-script-run-{{.JobName}}"
-        image: kldtks/edge:otmoic-lpnode-monitor-c96d4564
+        image: kldtks/edge:otmoic-lpnode-monitor-latest
         volumeMounts:
           - name: user-script
-            mountPath: /user-script
-        imagePullPolicy: IfNotPresent
+            mountPath: /user-script/run-script
+        imagePullPolicy: Always
         env:
-        - name: REDIS_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: obridge-lpnode-db-redis
-              key: redis-password
-        - name: MONGODB_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: obridge-lpnode-db-mongodb
-              key: mongodb-root-password
+        - name: MongoDbHost
+          value: "{{.MongoDbHost}}"
+        - name: MongoDbPort
+          value: "{{.MongoDbPort}}"
+        - name: MongoDbUser
+          value: "{{.MongoDbUser}}"
+        - name: MongoDbPass
+          value: "{{.MongoDbPass}}"
+        - name: MongoDbLpStore
+          value: "{{.MongoDbLpStore}}"
+        - name: MongoDbBusiness
+          value: "{{.MongoDbBusiness}}"
         - name: REDIS_HOST
-          value: obridge-lpnode-db-redis-master
-        - name: MONGODB_HOST
-          value: obridge-lpnode-db-mongodb
+          value: "{{.RedisHost}}"
+        - name: REDIS_PORT
+          value: "{{.RedisPort}}"
+        - name: REDIS_PASSWORD
+          value: "{{.RedisPass}}"
         command:
         - /bin/sh
         - -c

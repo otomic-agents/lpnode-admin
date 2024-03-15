@@ -15,7 +15,7 @@ import (
 // endpoint HTTP response body.
 type WalletInfoResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否成功
+	// result
 	Data    []*CexAccountBalanceResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string                          `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }

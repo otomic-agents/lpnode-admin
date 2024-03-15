@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 用于管理账号
+// used to manage wallets
 type Service interface {
 	// ListDexWallet implements listDexWallet.
 	ListDexWallet(context.Context) (res *ListDexWalletResult, err error)
@@ -21,6 +21,8 @@ type Service interface {
 	DeleteDexWallet(context.Context, *DeleteFilter) (res *DeleteDexWalletResult, err error)
 	// VaultList implements vaultList.
 	VaultList(context.Context) (res *VaultListResult, err error)
+	// UpdateLpWallet implements updateLpWallet.
+	UpdateLpWallet(context.Context) (res *UpdateLpWalletResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -31,7 +33,7 @@ const ServiceName = "dexWallet"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [4]string{"listDexWallet", "createDexWallet", "deleteDexWallet", "vaultList"}
+var MethodNames = [5]string{"listDexWallet", "createDexWallet", "deleteDexWallet", "vaultList", "updateLpWallet"}
 
 // CreateDexWalletResult is the result type of the dexWallet service
 // createDexWallet method.
@@ -47,7 +49,7 @@ type CreateDexWalletResult struct {
 // deleteDexWallet method.
 type DeleteDexWalletResult struct {
 	Code *int64
-	// 是否删除成功
+	// result
 	Result  *int64
 	Message *string
 }
@@ -55,7 +57,7 @@ type DeleteDexWalletResult struct {
 // DeleteFilter is the payload type of the dexWallet service deleteDexWallet
 // method.
 type DeleteFilter struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID string
 }
 
@@ -63,44 +65,53 @@ type DeleteFilter struct {
 // listDexWallet method.
 type ListDexWalletResult struct {
 	Code *int64
-	// 钱包别表
+	// wallet list
 	Result  []*WalletRow
+	Message *string
+}
+
+// UpdateLpWalletResult is the result type of the dexWallet service
+// updateLpWallet method.
+type UpdateLpWalletResult struct {
+	Code *int64
+	// list
+	Result  string
 	Message *string
 }
 
 // VaultListResult is the result type of the dexWallet service vaultList method.
 type VaultListResult struct {
 	Code *int64
-	// 列表
+	// list
 	Result  []*VaultRow
 	Message *string
 }
 
 type VaultRow struct {
-	// 地址
+	// address
 	Address *string
-	// 托管类型
+	// host type
 	HostType *string
-	// 存储Id
+	// storeId
 	ID *string
-	// 钱包名称
+	// store name
 	Name *string
-	// 私钥类型
+	// store secert type
 	SecertType *string
 }
 
 // WalletRow is the payload type of the dexWallet service createDexWallet
 // method.
 type WalletRow struct {
-	// mongodb主键
+	// mongodb primary key
 	ID         *string
 	WalletName string
 	PrivateKey *string
 	Address    *string
 	ChainType  string
-	// wallet对应的人类可阅读的名称
+	// wallet
 	AccountID *string
-	// 链的Id
+	// chain Id
 	ChainID         int64
 	StoreID         *string
 	VaultHostType   *string

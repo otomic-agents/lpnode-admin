@@ -6,25 +6,24 @@ import (
 
 var chainConfig_ChainDataItem = Type("chainDataItem", func() {
 	Attribute("chainId", Int64, "ChainId")
-	Attribute("chainName", String, "chainName") // 链的全称
-	Attribute("name", String, "")               //链的简称
-	Attribute("tokenName", String, "tokenName") //链token币的名称， 对冲，或者获取行情的时候使用
+	Attribute("chainName", String, "chainName")
+	Attribute("name", String, "")
+	Attribute("tokenName", String, "tokenName")
 })
 var chainConfig_walletDataItem = Type("chainWallet", func() {
 	Attribute("walletName", String, "")
 	Attribute("privateKey", String, "")
-	Attribute("tokenList", ArrayOf(String), "Token列表")
+	Attribute("tokenList", ArrayOf(String), "token list")
 })
 var _ = Service("chainConfig", func() {
-	Description("用于配置chain的基础设置")
+	Description("used to configure basic chain settings")
 	Method("setChainList", func() {
-		Description("用于配置chain的基础设置,批量设置接口Upsert")
 		Payload(func() {
 			Attribute("chainList", ArrayOf(chainConfig_ChainDataItem), "listData")
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("data", ArrayOf(chainConfig_ChainDataItem), "添加成功的链")
+			Attribute("data", ArrayOf(chainConfig_ChainDataItem), "result")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -32,10 +31,10 @@ var _ = Service("chainConfig", func() {
 		})
 	})
 	Method("delChainList", func() {
-		Description("用于删除一项链的基础设置")
+		Description("used to delete basic data for a chain")
 		Payload(func() {
 			Attribute("chainId", Int64, "ChainId")
-			Attribute("_id", String, "mongodb的id")
+			Attribute("_id", String, "mongodb id")
 			Required("_id", "chainId")
 		})
 		Result(func() {
@@ -48,12 +47,12 @@ var _ = Service("chainConfig", func() {
 		})
 	})
 	Method("chainList", func() {
-		Description("列出链的列表，并附加链相关服务的状态，如Client 运行时状态")
+		Description("list chain and append chain service status, like client runtime status")
 		Payload(func() {
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("data", ArrayOf(chainConfig_ChainDataItem), "链的列表")
+			Attribute("data", ArrayOf(chainConfig_ChainDataItem), "chain list")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -61,16 +60,15 @@ var _ = Service("chainConfig", func() {
 		})
 	})
 	Method("setChainGasUsd", func() {
-		Description("用于换目标链原生币种时，最少换多少USD价值的原生币")
 		Payload(func() {
 			Attribute("chainId", Int64, "ChainId")
-			Attribute("_id", String, "mongodb的id")
+			Attribute("_id", String, "mongodb id")
 			Attribute("usd", Int64, "usd value")
 			Required("usd", "_id", "chainId")
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("data", Int64, "是否成功")
+			Attribute("data", Int64, "result")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -85,7 +83,7 @@ var _ = Service("chainConfig", func() {
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("data", Int64, "是否成功")
+			Attribute("data", Int64, "result")
 			Attribute("message", String)
 		})
 		HTTP(func() {

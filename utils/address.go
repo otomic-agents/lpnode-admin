@@ -25,7 +25,7 @@ func Base58ToHexString(input string) (ret string, err error) {
 }
 func HexNumberToBigIntString(input string) (ret string, err error) {
 	if !strings.HasPrefix(input, "0x") {
-		err = fmt.Errorf("错误的Input 格式%s", input)
+		err = fmt.Errorf("invalid input format %s", input)
 		return
 	}
 	ret = hexToBigInt(input).String()
@@ -47,6 +47,6 @@ func GetUniqAddress(address string, chainType string) (ret string, err error) {
 		}
 		return
 	}
-	err = fmt.Errorf("没有适配的addres converter")
+	err = fmt.Errorf("no matching address converter")
 	return
 }

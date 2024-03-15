@@ -43,11 +43,11 @@ func (s *configResourcesrvc) CreateResource(ctx context.Context, p *configresour
 		"clientId": p.ClientID,
 	}, &v)
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库失败")
+		err = errors.WithMessage(err, "query database failed")
 		return
 	}
 	if v.Id.Hex() != types.MongoEmptyIdHex {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "已经存在的配置")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "already exist config")
 		return
 	}
 	updateResult, err := database.FindOneAndUpdate("main", "configResources", bson.M{
@@ -62,11 +62,11 @@ func (s *configResourcesrvc) CreateResource(ctx context.Context, p *configresour
 		},
 	})
 	if err != nil {
-		errors.WithMessage(err, "更新数据库发生了错误")
+		errors.WithMessage(err, "update database occur error")
 		return
 	}
 	if updateResult.UpsertedID == nil {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "没有更新到文档")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "no update document")
 		return
 	}
 	_id := updateResult.UpsertedID.(primitive.ObjectID).Hex()
@@ -94,11 +94,11 @@ func (s *configResourcesrvc) GetResource(ctx context.Context, p *configresource.
 		"clientId": p.ClientID,
 	}, &result)
 	if err != nil {
-		err = errors.WithMessage(err, "读取数据库发生了错误")
+		err = errors.WithMessage(err, "reading database occur error")
 		return
 	}
 	if result.ID.Hex() == types.MongoEmptyIdHex {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "没有找到文档")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "configId is not exist")
 		return
 	}
 	res.Result.ClientID = result.ClientID
@@ -169,17 +169,17 @@ func (s *configResourcesrvc) EditResult(ctx context.Context, p *configresource.E
 		"clientId": p.ClientID,
 	}, &v)
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库失败")
+		err = errors.WithMessage(err, "query database failed")
 		return
 	}
 	if v.Id.Hex() == types.MongoEmptyIdHex {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "没有找到需要更新的文档")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "no update document")
 		return
 	}
 	cps := service.NewCtrlPanelLogicService()
 	ammInstallResult, err := cps.GetInstallRow("amm", ptr.ToString(p.AppName))
 	if err != nil {
-		err = errors.WithMessage(err, "没有找到对应安装好的服务，无法配置资源")
+		err = errors.WithMessage(err, "did not find the corresponding installed service, unable to configure resources")
 		return
 	}
 	updateResult, err := database.FindOneAndUpdate("main", "configResources", bson.M{
@@ -194,14 +194,17 @@ func (s *configResourcesrvc) EditResult(ctx context.Context, p *configresource.E
 		},
 	})
 	if err != nil {
-		errors.WithMessage(err, "更新数据库发生了错误")
+		errors.WithMessage(err, "updating database occur error")
 		return
 	}
 	if updateResult.UpsertedID == nil && updateResult.ModifiedCount <= 0 {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "没有更新到文档")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "no update document")
 		return
 	}
-	service.NewLpCluster().RestartPod(ammInstallResult.Namespace, "obridge-amm-", ptr.ToString(p.AppName))
+	go func() {
+		service.NewLpCluster().RestartPod(ammInstallResult.Namespace, "obridge-amm-", ptr.ToString(p.AppName))
+	}()
+
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
 	res.Result = ptr.String(v.Id.Hex())

@@ -10,10 +10,16 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 	"strings"
+	"time"
+
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 
 	"github.com/aws/smithy-go/ptr"
 	"github.com/pkg/errors"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -66,6 +72,7 @@ func (s *dexWalletsrvc) ListDexWallet(ctx context.Context) (res *dexwallet.ListD
 
 // CreateDexWallet implements createDexWallet.
 func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.WalletRow) (res *dexwallet.CreateDexWalletResult, err error) {
+	fmt.Println(p.WalletName, "_______", ptr.ToString(&p.WalletName))
 	res = &dexwallet.CreateDexWalletResult{Result: &struct{ ID *string }{}}
 
 	address := ""
@@ -76,16 +83,16 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 	dwls := service.NewDexWalletLogicService()
 	if p.WalletType == "storeId" {
 		if storeId == "" {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "storeIdType 必须提供Id")
+			err = errors.WithMessage(utils.GetNoEmptyError(err), "storeIdType is required")
 			return
 		}
 		vault, getVaultErr := dwls.GetVault(storeId)
 		if getVaultErr != nil {
-			err = errors.WithMessage(getVaultErr, "获取vault出错")
+			err = errors.WithMessage(getVaultErr, "get vault failed")
 			return
 		}
 		if vault == nil {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "没有找到对应的vault")
+			err = errors.WithMessage(utils.GetNoEmptyError(err), "vault not found")
 			return
 		}
 		address = vault.Address
@@ -96,22 +103,29 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 
 	if p.WalletType == "privateKey" {
 		if ptr.ToString(p.PrivateKey) == "" {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "privateKey 不能为空")
+			err = errors.WithMessage(utils.GetNoEmptyError(err), "privateKey cannot be empty")
 			return
 		}
 		if ptr.ToString(p.Address) == "" {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "address不能为空")
+			err = errors.WithMessage(utils.GetNoEmptyError(err), "address cannot be empty")
 			return
 		}
 		address = ptr.ToString(p.Address)
 	}
+	if p.WalletType == "privateKey" {
+		p.WalletType = "secretVault"
+	}
+
 	if address == "" {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "address 不能为空")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "address cannot be empty")
 		return
 	}
 	filter := bson.M{
-		"chainId":      p.ChainID,
-		"addressLower": strings.ToLower(address),
+		"chainId": p.ChainID,
+		"$or": []bson.M{
+			{"addressLower": strings.ToLower(address)},
+			{"walletName": p.WalletName},
+		},
 	}
 	baseDatasrvc := service.NewBaseDataLogicService()
 	chainRow, err := baseDatasrvc.GetChainRowById(p.ChainID)
@@ -119,7 +133,7 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 		return
 	}
 	if chainRow.ID.Hex() == types.MongoEmptyIdHex {
-		err = errors.New("没有找到对应的ChainBase数据")
+		err = errors.New("no chain")
 		return
 	}
 
@@ -127,9 +141,23 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 	if err != nil {
 		return
 	}
+	fmt.Println("ret.ID.Hex()", ret.ID.Hex())
 	if ret.ID.Hex() != types.MongoEmptyIdHex {
-		err = errors.New("已经存在的Wallet")
+		err = errors.New("wallet is already exist")
 		return
+	}
+	if p.WalletType == "secretVault" { // save to secret vault
+		privatePrivateKey := ptr.ToString(p.PrivateKey)
+		p.PrivateKey = ptr.String(fmt.Sprintf("%d", time.Now().UnixNano()))
+		storeWalletName := fmt.Sprintf("%s_%d", strings.ToLower(address), time.Now().UnixNano())
+
+		storedName, storeErr := dwls.StoreToSecretVault(storeWalletName, privatePrivateKey)
+		if storeErr != nil {
+			err = errors.WithMessage(storeErr, "save to secret vault failed")
+			return
+		}
+		vaultName = storedName
+
 	}
 	createData := &types.DBWalletRow{
 		ID:              primitive.NewObjectID(),
@@ -146,7 +174,11 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 		VaultName:       vaultName,
 		VaultSecertType: vaultSecertType,
 	}
-	dwls.CreateByBsonMap(createData)
+	err = dwls.CreateByBsonMap(createData)
+	if err != nil {
+		err = errors.WithMessage(err, "create wallet failed")
+		return
+	}
 	res.Code = ptr.Int64(0)
 	res.Result.ID = ptr.String(createData.ID.Hex())
 	s.logger.Print("dexWallet.createDexWallet")
@@ -159,7 +191,7 @@ func (s *dexWalletsrvc) DeleteDexWallet(ctx context.Context, p *dexwallet.Delete
 	dwls := service.NewDexWalletLogicService()
 	objectId, idErr := primitive.ObjectIDFromHex(p.ID)
 	if idErr != nil {
-		err = errors.WithMessage(err, "id格式不正确,无法转为Mongoid")
+		err = errors.WithMessage(err, "id format incorrect, unable to convert to mongoid")
 		return
 	}
 	v := struct {
@@ -171,7 +203,7 @@ func (s *dexWalletsrvc) DeleteDexWallet(ctx context.Context, p *dexwallet.Delete
 		"wallet_id": objectId,
 	}, &v)
 	if v.Id.Hex() != types.MongoEmptyIdHex {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("已经有Bridage在使用这个Token ,Amm:%s,Bridge:%s", v.AmmName, v.BridgeName))
+		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("bridge already using this token, amm:%s, bridge:%s", v.AmmName, v.BridgeName))
 		return
 	}
 	delCount, delErr := dwls.DeleteById(p.ID)
@@ -188,16 +220,16 @@ func (s *dexWalletsrvc) DeleteDexWallet(ctx context.Context, p *dexwallet.Delete
 func (s *dexWalletsrvc) VaultList(cxt context.Context) (res *dexwallet.VaultListResult, err error) {
 	res = &dexwallet.VaultListResult{Result: make([]*dexwallet.VaultRow, 0)}
 	logger.System.Debug("listVault")
-	// 请求accessToken
+	// request accessToken
 	dwls := service.NewDexWalletLogicService()
 	accessToken, err := dwls.GetVaultAccessToken()
 	if err != nil {
-		err = errors.WithMessage(err, "获取accessToken Error")
+		err = errors.WithMessage(err, "get accesstoken error")
 		return
 	}
 	vaultList, err := dwls.GetVaultList(accessToken)
 	if err != nil {
-		err = errors.WithMessage(err, "获取vaultList发生了错误")
+		err = errors.WithMessage(err, "get vaultlist occur error")
 		return
 	}
 
@@ -213,5 +245,42 @@ func (s *dexWalletsrvc) VaultList(cxt context.Context) (res *dexwallet.VaultList
 
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
+	return
+}
+func (s *dexWalletsrvc) UpdateLpWallet(cxt context.Context) (res *dexwallet.UpdateLpWalletResult, err error) {
+	res = &dexwallet.UpdateLpWalletResult{}
+	relayUrl := os.Getenv("RELAY_ACCESS_URL")
+	if relayUrl == "" {
+		err = errors.New("unable to get relay url")
+		return
+		// relayUrl = "http://localhost:18009"
+	}
+	url := fmt.Sprintf("%s/relay-admin-panel/lpnode_admin_panel/update_lp_wallet", relayUrl)
+	tobeSend := "{}"
+	tobeSend, _ = sjson.Set(tobeSend, "name", os.Getenv("LP_NAME"))
+	log.Println(tobeSend)
+	body, ok, requestError := utils.NewHttpCall().PostJsonCall(&utils.HttpCallRequestOption{
+		Header:  map[string]string{},
+		Url:     url,
+		Timeout: 1000 * 10,
+		JsonStr: tobeSend,
+		TestOKFun: func(bodyStr string) bool {
+			log.Println("bodyis:", bodyStr)
+			code := gjson.Get(bodyStr, "code").Int()
+			return code == 200
+		},
+	})
+	if requestError != nil {
+		err = requestError
+		return
+	}
+	if !ok {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "refresh failed, assert return error")
+		return
+	}
+	res.Code = ptr.Int64(0)
+	res.Result = body
+	res.Message = ptr.String("")
+	logger.System.Debug("updateLpWallet")
 	return
 }

@@ -49,7 +49,7 @@ type TaskListResponseBody struct {
 // endpoint HTTP response body.
 type TaskDeployResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 创建影响的行数
+	// rows affected on creation
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -58,7 +58,7 @@ type TaskDeployResponseBody struct {
 // endpoint HTTP response body.
 type UnDeployResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 创建影响的行数
+	// rows affected on creation
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -67,7 +67,7 @@ type UnDeployResponseBody struct {
 // endpoint HTTP response body.
 type TaskCreateResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 创建影响的行数
+	// rows affected on creation
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }

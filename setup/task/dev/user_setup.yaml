@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: "{{.Name}}"
-  namespace: "otmoiclp-bigdog"
+  namespace: "{{.Namespace}}"
 spec:
   schedule: "{{.Cron}}"
   concurrencyPolicy: Forbid
@@ -12,24 +12,35 @@ spec:
         spec:
           volumes:
             - name: user-script
-              persistentVolumeClaim:
-                claimName: user-moniter-script
+              hostPath:
+                type: DirectoryOrCreate
+                path: "{{.UserSpacePath}}/UserScript"
           containers:
           - name: "{{.Name}}"
-            image: kldtks/edge:otmoic-lpnode-monitor-c96d4564
+            image: kldtks/edge:otmoic-lpnode-monitor-latest
             volumeMounts:
               - name: user-script
-                mountPath: /user-script
-            imagePullPolicy: IfNotPresent
+                mountPath: /user-script/run-script
+            imagePullPolicy: Always
             env:
-            - name: REDIS_PASSWORD
-              value: "{{.Deployment.RedisPass}}"
-            - name: MONGODB_ROOT_PASSWORD
-              value: "{{.Deployment.MongodbPass}}"
+            - name: MongoDbHost
+              value: "{{.MongoDbHost}}"
+            - name: MongoDbPort
+              value: "{{.MongoDbPort}}"
+            - name: MongoDbUser
+              value: "{{.MongoDbUser}}"
+            - name: MongoDbPass
+              value: "{{.MongoDbPass}}"
+            - name: MongoDbLpStore
+              value: "{{.MongoDbLpStore}}"
+            - name: MongoDbBusiness
+              value: "{{.MongoDbBusiness}}"
             - name: REDIS_HOST
-              value: obridge-lpnode-db-redis-master
-            - name: MONGODB_HOST
-              value: obridge-lpnode-db-mongodb
+              value: "{{.RedisHost}}"
+            - name: REDIS_PORT
+              value: "{{.RedisPort}}"
+            - name: REDIS_PASSWORD
+              value: "{{.RedisPass}}"
             command:
             - /bin/sh
             - -c

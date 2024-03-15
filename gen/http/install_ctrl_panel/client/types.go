@@ -16,7 +16,7 @@ import (
 // ListInstallRequestBody is the type of the "installCtrlPanel" service
 // "listInstall" endpoint HTTP request body.
 type ListInstallRequestBody struct {
-	// 安装的服务类型
+	// type of service installed
 	InstallType string `form:"installType" json:"installType" xml:"installType"`
 }
 
@@ -59,7 +59,7 @@ type UpdateDeploymentRequestBody struct {
 // "listInstall" endpoint HTTP response body.
 type ListInstallResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 已经安装的列表
+	// list of installed services
 	Result  []*CtrlDeploayItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                        `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -69,7 +69,7 @@ type ListInstallResponseBody struct {
 type InstallLpClientResponseBody struct {
 	Code   *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result *struct {
-		// 渲染后的模版内容
+		// rendered template content
 		Template  *string `form:"Template" json:"Template" xml:"Template"`
 		CmdStdout *string `form:"CmdStdout" json:"CmdStdout" xml:"CmdStdout"`
 		CmdStderr *string `form:"CmdStderr" json:"CmdStderr" xml:"CmdStderr"`
@@ -82,7 +82,7 @@ type InstallLpClientResponseBody struct {
 type UninstallLpClientResponseBody struct {
 	Code   *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result *struct {
-		// 渲染后的模版内容
+		// rendered template content
 		Template  *string `form:"Template" json:"Template" xml:"Template"`
 		CmdStdout *string `form:"CmdStdout" json:"CmdStdout" xml:"CmdStdout"`
 		CmdStderr *string `form:"CmdStderr" json:"CmdStderr" xml:"CmdStderr"`
@@ -94,7 +94,7 @@ type UninstallLpClientResponseBody struct {
 // "installDeployment" endpoint HTTP response body.
 type InstallDeploymentResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 安装完成的结果
+	// install result
 	Result  *InstallDeploymentDataResultResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                                  `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -114,7 +114,7 @@ type UpdateDeploymentResponseBody struct {
 	Result *struct {
 		CmdStdout *string `form:"CmdStdout" json:"CmdStdout" xml:"CmdStdout"`
 		CmdStderr *string `form:"CmdStderr" json:"CmdStderr" xml:"CmdStderr"`
-		// 渲染后的模版内容
+		// rendered template content
 		Template *string `form:"Template" json:"Template" xml:"Template"`
 	} `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
@@ -122,15 +122,15 @@ type UpdateDeploymentResponseBody struct {
 
 // CtrlDeploayItemResponseBody is used to define fields on response body types.
 type CtrlDeploayItemResponseBody struct {
-	// 安装的类型 Client Amm Market等等...
+	// install type
 	InstallType *string `form:"installType,omitempty" json:"installType,omitempty" xml:"installType,omitempty"`
-	// 具体的服务名称，如bsc avax
+	// name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	// 服务当前的安装状态
+	// install status
 	Status *int64 `form:"status,omitempty" json:"status,omitempty" xml:"status,omitempty"`
-	// 之前安装的上下文
+	// install context
 	InstallContext *string `form:"installContext,omitempty" json:"installContext,omitempty" xml:"installContext,omitempty"`
-	// 安装模版的原始内容
+	// yaml
 	Yaml *string `form:"yaml,omitempty" json:"yaml,omitempty" xml:"yaml,omitempty"`
 }
 
@@ -138,13 +138,13 @@ type CtrlDeploayItemResponseBody struct {
 // types.
 type AmmClientSetupConfigRequestBody struct {
 	CustomEnv []*DeploymentSetupConfigEnvItemRequestBody `form:"customEnv,omitempty" json:"customEnv,omitempty" xml:"customEnv,omitempty"`
-	// 需要安装的镜像地址
+	// imageRepository
 	ImageRepository string `form:"imageRepository" json:"imageRepository" xml:"imageRepository"`
-	// 需要安装的ServiceName
+	// serviceName
 	ServiceName *string `form:"serviceName,omitempty" json:"serviceName,omitempty" xml:"serviceName,omitempty"`
-	// 需要安装的deploymentName
+	// deploymentName
 	DeploymentName *string `form:"deploymentName,omitempty" json:"deploymentName,omitempty" xml:"deploymentName,omitempty"`
-	// 安装的类型
+	// type
 	Type                  string  `form:"type" json:"type" xml:"type"`
 	StartBlock            *string `form:"startBlock,omitempty" json:"startBlock,omitempty" xml:"startBlock,omitempty"`
 	RPCURL                *string `form:"rpcUrl,omitempty" json:"rpcUrl,omitempty" xml:"rpcUrl,omitempty"`
@@ -155,8 +155,7 @@ type AmmClientSetupConfigRequestBody struct {
 	AwsAccessKeyID        *string `form:"awsAccessKeyId,omitempty" json:"awsAccessKeyId,omitempty" xml:"awsAccessKeyId,omitempty"`
 	ContainerPort         *string `form:"containerPort,omitempty" json:"containerPort,omitempty" xml:"containerPort,omitempty"`
 	AwsSecretAccessKey    *string `form:"awsSecretAccessKey,omitempty" json:"awsSecretAccessKey,omitempty" xml:"awsSecretAccessKey,omitempty"`
-	// 是否直接安装
-	Install bool `form:"install" json:"install" xml:"install"`
+	Install               bool    `form:"install" json:"install" xml:"install"`
 }
 
 // DeploymentSetupConfigEnvItemRequestBody is used to define fields on request
@@ -169,25 +168,19 @@ type DeploymentSetupConfigEnvItemRequestBody struct {
 // AmmClientUnSetupConfigRequestBody is used to define fields on request body
 // types.
 type AmmClientUnSetupConfigRequestBody struct {
-	// 安装的类型
-	Type *string `form:"type,omitempty" json:"type,omitempty" xml:"type,omitempty"`
-	// 是否直接操作
-	Uninstall *bool `form:"uninstall,omitempty" json:"uninstall,omitempty" xml:"uninstall,omitempty"`
+	Type      *string `form:"type,omitempty" json:"type,omitempty" xml:"type,omitempty"`
+	Uninstall *bool   `form:"uninstall,omitempty" json:"uninstall,omitempty" xml:"uninstall,omitempty"`
 }
 
 // DeploymentSetupConfigRequestBody is used to define fields on request body
 // types.
 type DeploymentSetupConfigRequestBody struct {
-	// 需要安装的镜像地址
-	ImageRepository string `form:"imageRepository" json:"imageRepository" xml:"imageRepository"`
-	// 容器的端口 可选
-	ContainerPort *string `form:"containerPort,omitempty" json:"containerPort,omitempty" xml:"containerPort,omitempty"`
-	// 是否直接安装
-	Install     bool   `form:"install" json:"install" xml:"install"`
-	InstallType string `form:"installType" json:"installType" xml:"installType"`
-	// 这个服务叫什么名字
-	Name string `form:"name" json:"name" xml:"name"`
-	// Env配置列表
+	ImageRepository string  `form:"imageRepository" json:"imageRepository" xml:"imageRepository"`
+	ContainerPort   *string `form:"containerPort,omitempty" json:"containerPort,omitempty" xml:"containerPort,omitempty"`
+	Install         bool    `form:"install" json:"install" xml:"install"`
+	InstallType     string  `form:"installType" json:"installType" xml:"installType"`
+	Name            string  `form:"name" json:"name" xml:"name"`
+	// env list
 	CustomEnv []*DeploymentSetupConfigEnvItemRequestBody `form:"customEnv,omitempty" json:"customEnv,omitempty" xml:"customEnv,omitempty"`
 }
 
@@ -202,7 +195,6 @@ type InstallDeploymentDataResultResponseBody struct {
 // UnDeploymentSetupConfigRequestBody is used to define fields on request body
 // types.
 type UnDeploymentSetupConfigRequestBody struct {
-	// 是否直接卸载
 	Uninstall   bool   `form:"uninstall" json:"uninstall" xml:"uninstall"`
 	InstallType string `form:"installType" json:"installType" xml:"installType"`
 	Name        string `form:"name" json:"name" xml:"name"`
@@ -313,7 +305,7 @@ func NewInstallLpClientResultOK(body *InstallLpClientResponseBody) *installctrlp
 	}
 	if body.Result != nil {
 		v.Result = &struct {
-			// 渲染后的模版内容
+			// rendered template content
 			Template  *string
 			CmdStdout *string
 			CmdStderr *string
@@ -336,7 +328,7 @@ func NewUninstallLpClientResultOK(body *UninstallLpClientResponseBody) *installc
 	}
 	if body.Result != nil {
 		v.Result = &struct {
-			// 渲染后的模版内容
+			// rendered template content
 			Template  *string
 			CmdStdout *string
 			CmdStderr *string
@@ -389,7 +381,7 @@ func NewUpdateDeploymentResultOK(body *UpdateDeploymentResponseBody) *installctr
 		v.Result = &struct {
 			CmdStdout *string
 			CmdStderr *string
-			// 渲染后的模版内容
+			// rendered template content
 			Template *string
 		}{
 			CmdStdout: body.Result.CmdStdout,

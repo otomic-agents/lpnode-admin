@@ -20,6 +20,7 @@ import (
 type Server struct {
 	Mounts        []*MountPoint
 	ChainDataList http.Handler
+	RunTimeEnv    http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -50,8 +51,10 @@ func New(
 	return &Server{
 		Mounts: []*MountPoint{
 			{"ChainDataList", "GET", "/lpnode/lpnode_admin_panel/baseData/chainDataList"},
+			{"RunTimeEnv", "GET", "/lpnode/lpnode_admin_panel/baseData/runTimeEnv"},
 		},
 		ChainDataList: NewChainDataListHandler(e.ChainDataList, mux, decoder, encoder, errhandler, formatter),
+		RunTimeEnv:    NewRunTimeEnvHandler(e.RunTimeEnv, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -61,6 +64,7 @@ func (s *Server) Service() string { return "baseData" }
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.ChainDataList = m(s.ChainDataList)
+	s.RunTimeEnv = m(s.RunTimeEnv)
 }
 
 // MethodNames returns the methods served.
@@ -69,6 +73,7 @@ func (s *Server) MethodNames() []string { return basedata.MethodNames[:] }
 // Mount configures the mux to serve the baseData endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountChainDataListHandler(mux, h.ChainDataList)
+	MountRunTimeEnvHandler(mux, h.RunTimeEnv)
 }
 
 // Mount configures the mux to serve the baseData endpoints.
@@ -105,6 +110,50 @@ func NewChainDataListHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "chainDataList")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "baseData")
+		var err error
+		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountRunTimeEnvHandler configures the mux to serve the "baseData" service
+// "runTimeEnv" endpoint.
+func MountRunTimeEnvHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/lpnode/lpnode_admin_panel/baseData/runTimeEnv", f)
+}
+
+// NewRunTimeEnvHandler creates a HTTP handler which loads the HTTP request and
+// calls the "baseData" service "runTimeEnv" endpoint.
+func NewRunTimeEnvHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		encodeResponse = EncodeRunTimeEnvResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "runTimeEnv")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "baseData")
 		var err error
 		res, err := endpoint(ctx, nil)

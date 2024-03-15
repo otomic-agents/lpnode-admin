@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 用于管理Lp和relay之间的账号
+// used to manage lp account on relay
 type Service interface {
 	// ListAccount implements listAccount.
 	ListAccount(context.Context) (res *ListAccountResult, err error)
@@ -56,7 +56,6 @@ type ListAccountResult struct {
 // RegisterAccountPayload is the payload type of the relayAccount service
 // registerAccount method.
 type RegisterAccountPayload struct {
-	Name    string
 	Profile *string
 }
 

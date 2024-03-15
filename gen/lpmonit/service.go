@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 监控脚本程序
+// monitor script
 type Service interface {
 	// add script and save
 	AddScript(context.Context, *AddScriptPayload) (res *AddScriptResult, err error)
@@ -45,9 +45,9 @@ type AddScriptPayload struct {
 // AddScriptResult is the result type of the lpmonit service add_script method.
 type AddScriptResult struct {
 	Code *int64
-	// 创建后的Id
+	// id after creation
 	TaskID *string
-	// 创建成功后的Id
+	// id after successful creation
 	Result  *string
 	Message *string
 }
@@ -55,7 +55,7 @@ type AddScriptResult struct {
 // DeleteScriptPayload is the payload type of the lpmonit service delete_script
 // method.
 type DeleteScriptPayload struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID string
 }
 
@@ -63,7 +63,7 @@ type DeleteScriptPayload struct {
 // method.
 type DeleteScriptResult struct {
 	Code *int64
-	// 是否删除成功
+	// result
 	Result  *int64
 	Message *string
 }
@@ -72,7 +72,7 @@ type DeleteScriptResult struct {
 // method.
 type ListScriptResult struct {
 	Code *int64
-	// 任务列表
+	// task list
 	Result  []*LpMointTaskItem
 	Message *string
 }
@@ -80,13 +80,13 @@ type ListScriptResult struct {
 type LpMointTaskItem struct {
 	ID   *string
 	Name string
-	// 定时任务
+	// scheduled task
 	Cron string
-	// 创建时间戳
+	// create timestamp
 	CreatedAt int64
-	// 脚本路径
+	// script path
 	ScriptPath *string
-	// 任务类型
+	// task type
 	TaskType string
 }
 

@@ -16,8 +16,8 @@ func (templateWriter *TemplateWriter) Write(p []byte) (n int, err error) {
 type InstallRow struct {
 	ID                   primitive.ObjectID `bson:"_id"`
 	InstallType          string             `bson:"installType"` // client  amm market
-	Name                 string             `bson:"name"`        // bsc avax 服务的名称
-	Status               int64              `bson:"status"`      // 目前的状态
+	Name                 string             `bson:"name"`        // bsc avax
+	Status               int64              `bson:"status"`
 	Yaml                 string             `bson:"yaml"`
 	Stdout               string             `bson:"stdout"`
 	Stderr               string             `bson:"stderr"`
@@ -29,7 +29,7 @@ type InstallRow struct {
 	UninstallStdOut      string             `bson:"un_stdout"`
 	ChainType            string             `bson:"chainType"`
 	Namespace            string             `bson:"namespace"`
-	RegisterClientStatus int64              `bson:"registerClientStatus"` // 是否完成了client的注册
+	RegisterClientStatus int64              `bson:"registerClientStatus"`
 	EnvList              []struct {
 		Name  string `bson:"name"`
 		Value string `bson:"value"`
@@ -67,9 +67,9 @@ type ClientSetupConfigDeployment struct {
 	RedisPass             string                              `json:"redisPass"`
 	RedisPort             string                              `json:"redisPort"`
 	MongodbPort           string                              `json:"mongodbPort"`
-	MongodbAccount 		  string                              `json:"mongodbAccount"`
-	MongodbDbnameLpStore  string                        	  `json:"mongodbDbnameLpStore"`
-	MongodbDbnameHistory  string					   		  `json:"mongodbDbnameHistory"`
+	MongodbAccount        string                              `json:"mongodbAccount"`
+	MongodbDbnameLpStore  string                              `json:"mongodbDbnameLpStore"`
+	MongodbDbnameHistory  string                              `json:"mongodbDbnameHistory"`
 }
 type AmmSetupConfigDeploymentCustomEnv struct {
 	Key   string `json:"key" bson:"key"`
@@ -80,23 +80,23 @@ type AmmSetupConfigDeploymentCustomEnv struct {
 type AmmSetupConfigService struct {
 }
 type AmmSetupConfigDeployment struct {
-	Namespace      string                              `json:"namespace"`
-	CustomEnv      []AmmSetupConfigDeploymentCustomEnv `json:"customEnv"`
-	Image          string                              `json:"image"`
-	Name           string                              `json:"name"`
-	ContainerPort  string                              `json:"containerPort"`
-	OsSystemServer string                              `json:"osSystemServer"`
-	OsApiSecret    string                              `json:"osApiSecret"`
-	OsApiKey       string                              `json:"osApiKey"`
-	RedisHost      string                              `json:"redisHost"`
-	MongodbHost    string                              `json:"mongodbHost"`
-	MongodbPass    string                              `json:"mongodbPass"`
-	RedisPass      string                              `json:"redisPass"`
-	RedisPort      string                              `json:"redisPort"`
-	MongodbPort    string                              `json:"mongodbPort"`
-	MongodbAccount string                              `json:"mongodbAccount"`
-	MongodbDbnameLpStore string                        `json:"mongodbDbnameLpStore"`
-	MongodbDbnameHistory	string					   `json:"mongodbDbnameHistory"`
+	Namespace            string                              `json:"namespace"`
+	CustomEnv            []AmmSetupConfigDeploymentCustomEnv `json:"customEnv"`
+	Image                string                              `json:"image"`
+	Name                 string                              `json:"name"`
+	ContainerPort        string                              `json:"containerPort"`
+	OsSystemServer       string                              `json:"osSystemServer"`
+	OsApiSecret          string                              `json:"osApiSecret"`
+	OsApiKey             string                              `json:"osApiKey"`
+	RedisHost            string                              `json:"redisHost"`
+	MongodbHost          string                              `json:"mongodbHost"`
+	MongodbPass          string                              `json:"mongodbPass"`
+	RedisPass            string                              `json:"redisPass"`
+	RedisPort            string                              `json:"redisPort"`
+	MongodbPort          string                              `json:"mongodbPort"`
+	MongodbAccount       string                              `json:"mongodbAccount"`
+	MongodbDbnameLpStore string                              `json:"mongodbDbnameLpStore"`
+	MongodbDbnameHistory string                              `json:"mongodbDbnameHistory"`
 }
 
 type AmmSetupConfig struct {

@@ -25,7 +25,7 @@ type SetChainListRequestBody struct {
 type DelChainListRequestBody struct {
 	// ChainId
 	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
-	// mongodb的id
+	// mongodb id
 	ID *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
 }
 
@@ -34,7 +34,7 @@ type DelChainListRequestBody struct {
 type SetChainGasUsdRequestBody struct {
 	// ChainId
 	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
-	// mongodb的id
+	// mongodb id
 	ID *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
 	// usd value
 	Usd *int64 `form:"usd,omitempty" json:"usd,omitempty" xml:"usd,omitempty"`
@@ -53,7 +53,7 @@ type SetChainClientConfigRequestBody struct {
 // "setChainList" endpoint HTTP response body.
 type SetChainListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 添加成功的链
+	// result
 	Data    []*ChainDataItemResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string                      `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -70,7 +70,7 @@ type DelChainListResponseBody struct {
 // endpoint HTTP response body.
 type ChainListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 链的列表
+	// chain list
 	Data    []*ChainDataItemResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string                      `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -79,7 +79,7 @@ type ChainListResponseBody struct {
 // "setChainGasUsd" endpoint HTTP response body.
 type SetChainGasUsdResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否成功
+	// result
 	Data    *int64  `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -88,7 +88,7 @@ type SetChainGasUsdResponseBody struct {
 // "setChainClientConfig" endpoint HTTP response body.
 type SetChainClientConfigResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否成功
+	// result
 	Data    *int64  `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }

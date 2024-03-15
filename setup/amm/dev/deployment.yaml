@@ -21,30 +21,31 @@ spec:
           env:
             - name: APP_NAME
               value: "{{.Deployment.Name}}-analyze"
-            - name: APP_VERSION
-              value: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
-            - name: OBRIDGE_REDIS_HOST
-              value: "{{.Deployment.RedisHost}}"
-            - name: OBRIDGE_MONGODB_HOST
-              value: "{{.Deployment.MongodbHost}}"
             - name: NODE_ENV
               value: "production"
-            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
-              value: "http://lpnode-admin-server:18006"
-            - name: MONGODB_PASSWORD
-              value: "{{.Deployment.MongodbPass}}"
-            - name: MONGODB_ACCOUNT
-              value: "{{.Deployment.MongodbAccount}}"
-            - name: MONGODB_DBNAME_LP_STORE
-              value: "{{.Deployment.MongodbDbnameLpStore}}"
-            - name: MONGODB_DBNAME_HISTORY
-              value: "{{.Deployment.MongodbDbnameHistory}}"
+            - name: APP_VERSION
+              value: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
+            - name: REDIS_HOST
+              value: "{{.Deployment.RedisHost}}"
             - name: REDIS_PASSWORD
               value: "{{.Deployment.RedisPass}}"
             - name: REDIS_PORT
               value: "{{.Deployment.RedisPort}}"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
             - name: MONGODB_PORT
               value: "{{.Deployment.MongodbPort}}"
+            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
+              value: "http://lpnode-admin-server:18006"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_PASSWORD
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_DBNAME_HISTORY
+              value: "{{.Deployment.MongodbDbnameHistory}}"
+
 ---
 apiVersion: apps/v1
 kind: Deployment

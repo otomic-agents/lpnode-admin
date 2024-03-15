@@ -21,11 +21,10 @@ func BuildRegisterAccountPayload(relayAccountRegisterAccountBody string) (*relay
 	{
 		err = json.Unmarshal([]byte(relayAccountRegisterAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"name\": \"Unde beatae soluta nihil architecto eligendi necessitatibus.\",\n      \"profile\": \"Consequatur illum nulla.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"profile\": \"Officiis officia facilis.\"\n   }'")
 		}
 	}
 	v := &relayaccount.RegisterAccountPayload{
-		Name:    body.Name,
 		Profile: body.Profile,
 	}
 
@@ -40,7 +39,7 @@ func BuildDeleteAccountPayload(relayAccountDeleteAccountBody string) (*relayacco
 	{
 		err = json.Unmarshal([]byte(relayAccountDeleteAccountBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Iure quisquam in commodi et natus debitis.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Accusamus et.\"\n   }'")
 		}
 	}
 	v := &relayaccount.DeleteAccountPayload{

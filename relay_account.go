@@ -8,6 +8,7 @@ import (
 	"admin-panel/types"
 	"context"
 	"log"
+	"os"
 	"time"
 
 	"github.com/aws/smithy-go/ptr"
@@ -32,13 +33,13 @@ func (s *relayAccountsrvc) ListAccount(ctx context.Context) (res *relayaccount.L
 	res = &relayaccount.ListAccountResult{}
 	err, cursor := database.FindAll("main", "relayAccounts", bson.M{})
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库发生了错误")
+		err = errors.WithMessage(err, "query database error occur")
 		return
 	}
 	var results []types.DBRelayAccount
 	retList := make([]*relayaccount.RelayAccountItem, 0)
 	if err = cursor.All(context.TODO(), &results); err != nil {
-		err = errors.WithMessage(err, "处理cusor发生了错误")
+		err = errors.WithMessage(err, "handle cursor error occur")
 		return
 	}
 	for _, result := range results {
@@ -64,22 +65,27 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 	}{}
 	err = database.FindOne("main", "relayAccounts", bson.M{}, &rowData)
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库发生了错误")
+		err = errors.WithMessage(err, "query database error occur")
 		return
 	}
 	if rowData.Id.Hex() != types.MongoEmptyIdHex {
-		err = errors.New("已经存在的账号")
+		err = errors.New("account already exist")
 		return
 	}
-	registerResult, err := rrs.RegisterAccount(p.Name, ptr.ToString(p.Profile)) // 向relay 发起注册请求
+	lpName := os.Getenv("LP_NAME")
+	if lpName == "" {
+		err = errors.WithMessage(errors.New("value error"), "cannot get env variable lpname")
+		return
+	}
+	registerResult, err := rrs.RegisterAccount(lpName, ptr.ToString(p.Profile))
 	if err != nil {
-		err = errors.WithMessage(err, "向后端注册账号发生了错误")
+		err = errors.WithMessage(err, "register account to backend error occur")
 		return
 	}
 	log.Println(registerResult)
 
 	ret, err := database.FindOneAndUpdate("main", "relayAccounts", bson.M{
-		"name": p.Name,
+		"name": lpName,
 	}, bson.M{
 		"$set": bson.M{
 			"profile":      p.Profile,
@@ -91,14 +97,14 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 		},
 	})
 	if err != nil {
-		err = errors.WithMessage(err, "更新数据库记录发生了错误:")
+		err = errors.WithMessage(err, "update database record error occur:")
 		return
 	}
 
 	// bcls := service.NewBridgeConfigLogicService()
 	// _, err = bcls.ConfigLp()
 	// if err != nil {
-	// 	err = errors.WithMessage(err, "ConfigLp 发生了错误.")
+	// 	err = errors.WithMessage(err, "ConfigLp error occur.")
 	// 	return
 	// }
 
@@ -109,7 +115,7 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
 	res.Result.ID = ptr.String(_id)
-	res.Result.Name = ptr.String(p.Name)
+	res.Result.Name = ptr.String(lpName)
 	res.Result.RelayAPIKey = ptr.String(registerResult.RelayApiKey)
 	res.Result.LpIDFake = ptr.String(registerResult.LpIdFake)
 	log.Println(ret)
@@ -119,7 +125,7 @@ func (s *relayAccountsrvc) DeleteAccount(ctx context.Context, p *relayaccount.De
 	res = &relayaccount.DeleteAccountResult{}
 	mongoId, err := primitive.ObjectIDFromHex(p.ID)
 	if err != nil {
-		err = errors.WithMessage(err, "id格式不正确无法转为Mongoid")
+		err = errors.WithMessage(err, "id format incorrect cannot convert to Mongoid")
 		return
 	}
 	var v struct {
@@ -129,15 +135,15 @@ func (s *relayAccountsrvc) DeleteAccount(ctx context.Context, p *relayaccount.De
 	}{}
 	err = database.FindOne("main", "relayAccounts", bson.M{"_id": mongoId}, &v)
 	if err != nil {
-		err = errors.WithMessage(err, "查询数据库错误")
+		err = errors.WithMessage(err, "query database error occur")
 		return
 	}
 	if v.Id.Hex() == types.MongoEmptyIdHex {
-		err = errors.New("没有找到relayaccount")
+		err = errors.New("relayaccount not found")
 		return
 	}
 	delCount, err := database.DeleteOne("main", "relayAccounts", bson.M{"_id": mongoId})
-	logger.System.Debug("删除了%d个账号", delCount)
+	logger.System.Debug("deleted %d accounts", delCount)
 	if err != nil {
 		return
 	}

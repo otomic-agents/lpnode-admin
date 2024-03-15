@@ -6,3 +6,25 @@
 // $ goa gen admin-panel/design
 
 package server
+
+import (
+	mainlogic "admin-panel/gen/main_logic"
+)
+
+// MainLogicLinkResponseBody is the type of the "mainLogic" service
+// "mainLogicLink" endpoint HTTP response body.
+type MainLogicLinkResponseBody struct {
+	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	// result
+	Data *string `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
+}
+
+// NewMainLogicLinkResponseBody builds the HTTP response body from the result
+// of the "mainLogicLink" endpoint of the "mainLogic" service.
+func NewMainLogicLinkResponseBody(res *mainlogic.MainLogicLinkResult) *MainLogicLinkResponseBody {
+	body := &MainLogicLinkResponseBody{
+		Code: res.Code,
+		Data: res.Data,
+	}
+	return body
+}

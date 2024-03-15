@@ -35,7 +35,7 @@ type UrlOption struct {
 	DataBase string
 }
 
-// IsInit 判断数据库是否已经链接
+// IsInit check if db already connected
 func IsInit(dbKey string) bool {
 	_, ok := DbList[dbKey]
 	if !ok {
@@ -45,7 +45,7 @@ func IsInit(dbKey string) bool {
 }
 func InitConnect(dbKey string, option *UrlOption) (err error) {
 	if IsInit(dbKey) {
-		log.Printf("数据库已经连接过Key[%s]", dbKey)
+		log.Printf("key for db already connected [%s]", dbKey)
 		return
 	}
 	var url string
@@ -55,7 +55,7 @@ func InitConnect(dbKey string, option *UrlOption) (err error) {
 		url = mongoConfig.Url
 		dbName = mongoConfig.Database
 		if !ok {
-			sysLogger.Config.Errorf("Mongo的配置文件不存在,Key[%s]", dbKey)
+			sysLogger.Config.Errorf("mongodb config file does not exist ,Key[%s]", dbKey)
 			os.Exit(0)
 		}
 	} else {
@@ -63,15 +63,15 @@ func InitConnect(dbKey string, option *UrlOption) (err error) {
 		dbName = option.DataBase
 	}
 
-	log.Println("开始链接数据库", url)
+	log.Println("start connecting database", url)
 	ctx, _ := context.WithTimeout(context.TODO(), time.Second*2)
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(url))
 	if err != nil {
-		log.Println("链接发生了错误", err)
+		log.Println("error occurred connecting", err)
 		return
 	}
 	dbSession := client.Database(dbName)
-	log.Println("选择数据库", dbName)
+	log.Println("select database", dbName)
 
 	selectCtx, _ := context.WithDeadline(context.Background(), time.Now().Add(time.Second*2))
 	selectCtx.Deadline()
@@ -87,13 +87,13 @@ func InitConnect(dbKey string, option *UrlOption) (err error) {
 		DbName:  dbName,
 	}
 	MongoSetLock.Unlock()
-	log.Println("选择数据库结束", dbName)
+	log.Println("finish selecting database", dbName)
 	return
 }
 
 func FindOne(dbKey string, collection string, filter bson.M, v interface{}) error {
 	if !IsInit(dbKey) {
-		return errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey))
+		return errors.New(fmt.Sprintf("database not initialized%s", dbKey))
 	}
 	session := DbList[dbKey].Session
 	// database := DbList[dbKey].DbName
@@ -110,7 +110,7 @@ func MatchOne(dbKey string, collection string, filter bson.M) (res bool, err err
 	res = false
 	err = nil
 	if !IsInit(dbKey) {
-		err = errors.WithMessage(err, fmt.Sprintf("数据库没有初始化%s", dbKey))
+		err = errors.WithMessage(err, fmt.Sprintf("database not initialized%s", dbKey))
 		return
 	}
 	session := DbList[dbKey].Session
@@ -130,7 +130,7 @@ func MatchOne(dbKey string, collection string, filter bson.M) (res bool, err err
 }
 func FindAll(dbKey string, collection string, filter bson.M) (error, *mongo.Cursor) {
 	if !IsInit(dbKey) {
-		return errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey)), nil
+		return errors.New(fmt.Sprintf("database not initialized%s", dbKey)), nil
 	}
 	session := DbList[dbKey].Session
 	cursor, err := session.Collection(collection).Find(context.Background(), filter)
@@ -141,7 +141,7 @@ func FindAll(dbKey string, collection string, filter bson.M) (error, *mongo.Curs
 }
 func FindAllOpt(dbKey string, collection string, filter bson.M, opts *options.FindOptions) (error, *mongo.Cursor) {
 	if !IsInit(dbKey) {
-		return errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey)), nil
+		return errors.New(fmt.Sprintf("database not initialized%s", dbKey)), nil
 	}
 	session := DbList[dbKey].Session
 	cursor, err := session.Collection(collection).Find(context.Background(), filter, opts)
@@ -152,7 +152,7 @@ func FindAllOpt(dbKey string, collection string, filter bson.M, opts *options.Fi
 }
 func Count(dbKey string, collection string, filter bson.M) (int64, error) {
 	if !IsInit(dbKey) {
-		return 0, errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey))
+		return 0, errors.New(fmt.Sprintf("database not initialized%s", dbKey))
 	}
 	session := DbList[dbKey].Session
 	count, err := session.Collection(collection).CountDocuments(context.Background(), filter)
@@ -164,7 +164,7 @@ func Count(dbKey string, collection string, filter bson.M) (int64, error) {
 }
 func FindOneAndUpdate(dbKey string, collection string, filter interface{}, update interface{}) (*mongo.UpdateResult, error) {
 	if !IsInit(dbKey) {
-		return nil, errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey))
+		return nil, errors.New(fmt.Sprintf("database not initialized%s", dbKey))
 	}
 	session := DbList[dbKey].Session
 	result, err := session.Collection(collection).UpdateOne(context.Background(), filter, update, &options.UpdateOptions{Upsert: ptr.Bool(true)})
@@ -175,7 +175,7 @@ func FindOneAndUpdate(dbKey string, collection string, filter interface{}, updat
 }
 func Update(dbKey string, collection string, filter interface{}, update interface{}) error {
 	if !IsInit(dbKey) {
-		return errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey))
+		return errors.New(fmt.Sprintf("database not initialized%s", dbKey))
 	}
 	session := DbList[dbKey].Session
 	_, err := session.Collection(collection).UpdateOne(context.Background(), filter, update, &options.UpdateOptions{Upsert: ptr.Bool(false)})
@@ -186,15 +186,18 @@ func Update(dbKey string, collection string, filter interface{}, update interfac
 }
 func Insert(dbKey string, collection string, set interface{}) error {
 	if !IsInit(dbKey) {
-		return errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey))
+		return errors.New(fmt.Sprintf("database not initialized%s", dbKey))
 	}
 	session := DbList[dbKey].Session
-	session.Collection(collection).InsertOne(context.Background(), set)
+	_, err := session.Collection(collection).InsertOne(context.Background(), set)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 func DeleteOne(dbKey string, collection string, filter interface{}) (int64, error) {
 	if !IsInit(dbKey) {
-		return 0, errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey))
+		return 0, errors.New(fmt.Sprintf("database not initialized%s", dbKey))
 	}
 	session := DbList[dbKey].Session
 	deleteCount, err := session.Collection(collection).DeleteOne(context.TODO(), filter)
@@ -206,7 +209,7 @@ func DeleteOne(dbKey string, collection string, filter interface{}) (int64, erro
 
 func GetSession(dbKey string) (*mongo.Database, error) {
 	if !IsInit(dbKey) {
-		return nil, errors.New(fmt.Sprintf("数据库没有初始化%s", dbKey))
+		return nil, errors.New(fmt.Sprintf("database not initialized%s", dbKey))
 	}
 	session := DbList[dbKey].Session
 	return session, nil

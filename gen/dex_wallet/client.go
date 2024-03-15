@@ -19,15 +19,17 @@ type Client struct {
 	CreateDexWalletEndpoint goa.Endpoint
 	DeleteDexWalletEndpoint goa.Endpoint
 	VaultListEndpoint       goa.Endpoint
+	UpdateLpWalletEndpoint  goa.Endpoint
 }
 
 // NewClient initializes a "dexWallet" service client given the endpoints.
-func NewClient(listDexWallet, createDexWallet, deleteDexWallet, vaultList goa.Endpoint) *Client {
+func NewClient(listDexWallet, createDexWallet, deleteDexWallet, vaultList, updateLpWallet goa.Endpoint) *Client {
 	return &Client{
 		ListDexWalletEndpoint:   listDexWallet,
 		CreateDexWalletEndpoint: createDexWallet,
 		DeleteDexWalletEndpoint: deleteDexWallet,
 		VaultListEndpoint:       vaultList,
+		UpdateLpWalletEndpoint:  updateLpWallet,
 	}
 }
 
@@ -71,4 +73,15 @@ func (c *Client) VaultList(ctx context.Context) (res *VaultListResult, err error
 		return
 	}
 	return ires.(*VaultListResult), nil
+}
+
+// UpdateLpWallet calls the "updateLpWallet" endpoint of the "dexWallet"
+// service.
+func (c *Client) UpdateLpWallet(ctx context.Context) (res *UpdateLpWalletResult, err error) {
+	var ires interface{}
+	ires, err = c.UpdateLpWalletEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.(*UpdateLpWalletResult), nil
 }

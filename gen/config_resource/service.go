@@ -36,9 +36,9 @@ const ServiceName = "configResource"
 var MethodNames = [5]string{"createResource", "getResource", "listResource", "deleteResult", "editResult"}
 
 type ConfigResultIDItem struct {
-	// mongodb的id
+	// mongodb primary key
 	ID string
-	// 客户端提交的id
+	// clientId
 	ClientID *string
 }
 
@@ -54,7 +54,7 @@ type CreateResourcePayload struct {
 // CreateResourceResult is the result type of the configResource service
 // createResource method.
 type CreateResourceResult struct {
-	// 0是成功
+	// 0 is success
 	Code    *int64
 	Result  *ConfigResultIDItem
 	Message *string
@@ -82,7 +82,7 @@ type EditResultPayload struct {
 type EditResultResult struct {
 	Code    *int64
 	Message *string
-	// 修改影响的Id
+	// update affected id
 	Result *string
 }
 
@@ -95,7 +95,7 @@ type GetResourcePayload struct {
 // GetResourceResult is the result type of the configResource service
 // getResource method.
 type GetResourceResult struct {
-	// 0是成功
+	// 0 is success
 	Code    *int64
 	Result  *ResourceConfigResult
 	Message *string

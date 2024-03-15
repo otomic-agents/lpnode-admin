@@ -14,7 +14,7 @@ import (
 // WalletInfoRequestBody is the type of the "accountDex" service "walletInfo"
 // endpoint HTTP request body.
 type WalletInfoRequestBody struct {
-	// 链的Id
+	// chain Id
 	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
 }
 
@@ -22,7 +22,7 @@ type WalletInfoRequestBody struct {
 // endpoint HTTP response body.
 type WalletInfoResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否成功
+	// result
 	Data    []*DexAccountBalanceResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string                          `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }

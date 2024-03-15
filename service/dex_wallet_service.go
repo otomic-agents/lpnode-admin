@@ -108,7 +108,7 @@ func (dwls *DexWalletLogicService) GetVaultAccessToken() (accessToken string, er
 		return
 	}
 	if !ok {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "断言返回结果错误")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "assert return result error")
 		return
 	}
 	logger.System.Debug("ok is ", ok)
@@ -136,7 +136,7 @@ func (dwls *DexWalletLogicService) GetVaultList(accessToken string) (res []types
 		return
 	}
 	if !listOk {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "获取vault列表错误,断言返回错误")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "get vault list error, assert return error")
 		return
 	}
 	for _, item := range gjson.Get(listVaultBody, "data.data").Array() {
@@ -154,12 +154,12 @@ func (dwls *DexWalletLogicService) GetVault(storeId string) (res *types.VaultDat
 	res = nil
 	accessToken, err := dwls.GetVaultAccessToken()
 	if err != nil {
-		err = errors.WithMessage(err, "获取accessToken出错")
+		err = errors.WithMessage(err, "get accessToken error")
 		return
 	}
 	list, err := dwls.GetVaultList(accessToken)
 	if err != nil {
-		err = errors.WithMessage(err, "GetVaultList出错")
+		err = errors.WithMessage(err, "GetVaultList error")
 		return
 	}
 	for _, item := range list {
@@ -167,5 +167,138 @@ func (dwls *DexWalletLogicService) GetVault(storeId string) (res *types.VaultDat
 			res = &item
 		}
 	}
+	return
+}
+func (dwls *DexWalletLogicService) getSecretVaultAccessToken() (accessToken string, err error) {
+	acctokenUrl := fmt.Sprintf("http://%s/permission/v1alpha1/access", os.Getenv("OS_SYSTEM_SERVER"))
+	OS_APP_KEY := os.Getenv("OS_API_KEY")
+	OS_APP_SECRET := os.Getenv("OS_API_SECRET")
+	timestamp := time.Now().UnixNano() / 1e6 / 1000
+	srcText := fmt.Sprintf("%s%d%s", OS_APP_KEY, timestamp, OS_APP_SECRET)
+	tokenBytes, err := bcrypt.GenerateFromPassword([]byte(srcText), 10)
+	tokenStr := string(tokenBytes)
+	tobeSend := "{}"
+	tobeSend, _ = sjson.Set(tobeSend, "app_key", OS_APP_KEY)
+	tobeSend, _ = sjson.Set(tobeSend, "timestamp", timestamp)
+	tobeSend, _ = sjson.Set(tobeSend, "token", tokenStr)
+	tobeSend, _ = sjson.SetRaw(tobeSend, "perm", `{"group":"secret.infisical","dataType":"secret","version":"v1","ops":["CreateSecret?workspace=otmoic","RetrieveSecret?workspace=otmoic"]}`)
+	logger.System.Debug("tobeSend is:", "\n", tobeSend)
+	resultOption := &utils.HttpCallRequestOption{
+		Url:     acctokenUrl,
+		Timeout: 1000 * 10,
+		JsonStr: tobeSend,
+		TestOKFun: func(bodyStr string) bool {
+			log.Println("bodyis:", bodyStr)
+			code := gjson.Get(bodyStr, "code").Int()
+			return code == 0
+		},
+	}
+	accessTokenBody, ok, requestAccessTokenErr := utils.NewHttpCall().PostJsonCall(resultOption)
+	if requestAccessTokenErr != nil {
+		err = requestAccessTokenErr
+		return
+	}
+	if !ok {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "assert return result error:")
+		return
+	}
+	logger.System.Debug("ok is ", ok)
+	accessToken = gjson.Get(accessTokenBody, "data.access_token").String()
+	return
+}
+
+func (dwls *DexWalletLogicService) SaveToSecretVault(vaultName string, privateKey string, accessToken string) (id string, err error) {
+	id = ""
+	createSecretUrl := fmt.Sprintf("http://%s/system-server/v1alpha1/secret/secret.infisical/v1/CreateSecret?workspace=otmoic", os.Getenv("OS_SYSTEM_SERVER"))
+	createTobeSend := "{}"
+	createTobeSend, _ = sjson.Set(createTobeSend, "name", vaultName)
+	createTobeSend, _ = sjson.Set(createTobeSend, "value", privateKey)
+	createTobeSend, _ = sjson.Set(createTobeSend, "env", "prod")
+	createRequestOption := &utils.HttpCallRequestOption{
+		Header:  map[string]string{"X-Access-Token": accessToken},
+		Url:     createSecretUrl,
+		Timeout: 1000 * 10,
+		JsonStr: createTobeSend,
+		TestOKFun: func(bodyStr string) bool {
+			log.Println("bodyis:", bodyStr)
+			code := gjson.Get(bodyStr, "code").Int()
+			sub_code := gjson.Get(bodyStr, "data.code").Int()
+			return code == 0 && sub_code == 0
+		},
+	}
+	fmt.Println(createTobeSend)
+	_, listOk, createErr := utils.NewHttpCall().PostJsonCall(createRequestOption)
+	if createErr != nil {
+		err = createErr
+		return
+	}
+	if !listOk {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "create secret error, assert return error:")
+		fmt.Println(err)
+		return
+	}
+	id = vaultName
+	return
+}
+func (dwls *DexWalletLogicService) GetSecretFromSecretVault(vaultName string, accessToken string) (id string, err error) {
+	id = ""
+	createSecretUrl := fmt.Sprintf("http://%s/system-server/v1alpha1/secret/secret.infisical/v1/RetrieveSecret?workspace=otmoic", os.Getenv("OS_SYSTEM_SERVER"))
+	createTobeSend := "{}"
+	createTobeSend, _ = sjson.Set(createTobeSend, "name", vaultName)
+	createTobeSend, _ = sjson.Set(createTobeSend, "env", "prod")
+	createRequestOption := &utils.HttpCallRequestOption{
+		Header:  map[string]string{"X-Access-Token": accessToken},
+		Url:     createSecretUrl,
+		Timeout: 1000 * 10,
+		JsonStr: createTobeSend,
+		TestOKFun: func(bodyStr string) bool {
+			log.Println("bodyis:", bodyStr)
+			code := gjson.Get(bodyStr, "code").Int()
+			sub_code := gjson.Get(bodyStr, "data.code").Int()
+			return code == 0 && sub_code == 0
+		},
+	}
+	fmt.Println(createTobeSend)
+	_, listOk, createErr := utils.NewHttpCall().PostJsonCall(createRequestOption)
+	if createErr != nil {
+		err = createErr
+		return
+	}
+	if !listOk {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "query secret, assert return error:")
+		fmt.Println(err)
+		return
+	}
+	id = vaultName
+	return
+}
+
+func (dwls *DexWalletLogicService) StoreToSecretVault(vaultName string, privateKey string) (res string, err error) {
+	accessToken, err := dwls.getSecretVaultAccessToken()
+	fmt.Println(accessToken, err)
+	fmt.Println("privateKey is ", privateKey)
+	fmt.Println("walletName is ", vaultName)
+	id, storeErr := dwls.SaveToSecretVault(vaultName, privateKey, accessToken)
+	if storeErr != nil {
+		err = errors.WithMessage(storeErr, "save to vault error:")
+		return
+	}
+	res = id
+	return
+}
+
+func (dwls *DexWalletLogicService) GetFromSecretVault(vaultName string) (res string, err error) {
+	accessToken, err := dwls.getSecretVaultAccessToken()
+	if err != nil {
+		err = errors.WithMessage(err, "getSecretVaultAccessToken error:")
+		return
+	}
+	fmt.Println("walletName is ", vaultName)
+	secretId, err := dwls.GetSecretFromSecretVault(vaultName, accessToken)
+	if err != nil {
+		err = errors.WithMessage(err, "get secret from vault error:")
+		return
+	}
+	res = secretId
 	return
 }

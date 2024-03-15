@@ -25,7 +25,7 @@ func (*RelayRequestService) RegisterAccount(name string, profile string) (res ty
 	res = types.RelayRegisterResponse{}
 	relayUrl := os.Getenv("RELAY_ACCESS_URL")
 	if relayUrl == "" {
-		err = errors.New("Relay url无法获取")
+		err = errors.New("cannot find relay url")
 		return
 		// relayUrl = "http://localhost:18009"
 	}
@@ -44,7 +44,7 @@ func (*RelayRequestService) RegisterAccount(name string, profile string) (res ty
 	log.Println(sendPayload)
 	url := fmt.Sprintf("%s/relay-admin-panel/lpnode_admin_panel/register_lp", relayUrl)
 	log.Println(url)
-	
+
 	resp, body, errs := gorequest.New().Post(url).
 		Send(sendPayload).
 		End()
@@ -54,20 +54,21 @@ func (*RelayRequestService) RegisterAccount(name string, profile string) (res ty
 	}
 	if resp.StatusCode != 200 {
 		err = utils.GetNoEmptyError(err)
-		err = errors.WithMessage(err, fmt.Sprintf("不正确的服务器状态响应码:%d", resp.StatusCode))
+		err = errors.WithMessage(err, fmt.Sprintf("incorrect server status code response:%d", resp.StatusCode))
 		return
 	}
 
 	err = json.Unmarshal([]byte(body), &res)
-	if res.Code != 200 {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "relay注册失败, relay code !=200")
+	if err != nil {
+		err = errors.WithMessage(err, "json unmarshal error:")
+		return
+	}
+	if res.Code != 200 && res.Code != 30210 {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "relay registration failed, relay code != 200 and != 30210")
 		return
 	}
 	if res.RelayApiKey == "" || res.LpnodeApiKey == "" {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "relay注册失败, RelayApiKey LpnodeApiKey empty")
-		return
-	}
-	if err != nil {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "relay registration failed, relayapikey or lpnodeapikey empty")
 		return
 	}
 	return

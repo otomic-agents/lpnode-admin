@@ -23,6 +23,7 @@ type Server struct {
 	CreateDexWallet http.Handler
 	DeleteDexWallet http.Handler
 	VaultList       http.Handler
+	UpdateLpWallet  http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -56,11 +57,13 @@ func New(
 			{"CreateDexWallet", "POST", "/lpnode/lpnode_admin_panel/dexWallet/create"},
 			{"DeleteDexWallet", "POST", "/lpnode/lpnode_admin_panel/dexWallet/delete"},
 			{"VaultList", "POST", "/lpnode/lpnode_admin_panel/dexWallet/vaultList"},
+			{"UpdateLpWallet", "POST", "/lpnode/lpnode_admin_panel/dexWallet/updateLpWallet"},
 		},
 		ListDexWallet:   NewListDexWalletHandler(e.ListDexWallet, mux, decoder, encoder, errhandler, formatter),
 		CreateDexWallet: NewCreateDexWalletHandler(e.CreateDexWallet, mux, decoder, encoder, errhandler, formatter),
 		DeleteDexWallet: NewDeleteDexWalletHandler(e.DeleteDexWallet, mux, decoder, encoder, errhandler, formatter),
 		VaultList:       NewVaultListHandler(e.VaultList, mux, decoder, encoder, errhandler, formatter),
+		UpdateLpWallet:  NewUpdateLpWalletHandler(e.UpdateLpWallet, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -73,6 +76,7 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.CreateDexWallet = m(s.CreateDexWallet)
 	s.DeleteDexWallet = m(s.DeleteDexWallet)
 	s.VaultList = m(s.VaultList)
+	s.UpdateLpWallet = m(s.UpdateLpWallet)
 }
 
 // MethodNames returns the methods served.
@@ -84,6 +88,7 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountCreateDexWalletHandler(mux, h.CreateDexWallet)
 	MountDeleteDexWalletHandler(mux, h.DeleteDexWallet)
 	MountVaultListHandler(mux, h.VaultList)
+	MountUpdateLpWalletHandler(mux, h.UpdateLpWallet)
 }
 
 // Mount configures the mux to serve the dexWallet endpoints.
@@ -266,6 +271,50 @@ func NewVaultListHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "vaultList")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "dexWallet")
+		var err error
+		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountUpdateLpWalletHandler configures the mux to serve the "dexWallet"
+// service "updateLpWallet" endpoint.
+func MountUpdateLpWalletHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/lpnode/lpnode_admin_panel/dexWallet/updateLpWallet", f)
+}
+
+// NewUpdateLpWalletHandler creates a HTTP handler which loads the HTTP request
+// and calls the "dexWallet" service "updateLpWallet" endpoint.
+func NewUpdateLpWalletHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		encodeResponse = EncodeUpdateLpWalletResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "updateLpWallet")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "dexWallet")
 		var err error
 		res, err := endpoint(ctx, nil)

@@ -20,7 +20,7 @@ type EditRequestBody struct {
 // DelRequestBody is the type of the "hedge" service "del" endpoint HTTP
 // request body.
 type DelRequestBody struct {
-	// 删除的主键Id
+	// primary key
 	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
 }
 
@@ -28,7 +28,7 @@ type DelRequestBody struct {
 // response body.
 type ListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 添加成功的链
+	// list
 	Data    []*HedgeItemResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string                  `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -37,7 +37,7 @@ type ListResponseBody struct {
 // response body.
 type EditResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 添加成功的链
+	// result
 	Data    *int64  `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -46,7 +46,7 @@ type EditResponseBody struct {
 // response body.
 type DelResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否成功删除
+	// result
 	Data    *int64  `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }

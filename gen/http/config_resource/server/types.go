@@ -42,7 +42,7 @@ type EditResultRequestBody struct {
 // CreateResourceResponseBody is the type of the "configResource" service
 // "createResource" endpoint HTTP response body.
 type CreateResourceResponseBody struct {
-	// 0是成功
+	// 0 is success
 	Code    *int64                          `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result  *ConfigResultIDItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                         `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
@@ -51,7 +51,7 @@ type CreateResourceResponseBody struct {
 // GetResourceResponseBody is the type of the "configResource" service
 // "getResource" endpoint HTTP response body.
 type GetResourceResponseBody struct {
-	// 0是成功
+	// 0 is success
 	Code    *int64                            `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Result  *ResourceConfigResultResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                           `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
@@ -76,16 +76,16 @@ type DeleteResultResponseBody struct {
 type EditResultResponseBody struct {
 	Code    *int64  `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
-	// 修改影响的Id
+	// update affected id
 	Result *string `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 }
 
 // ConfigResultIDItemResponseBody is used to define fields on response body
 // types.
 type ConfigResultIDItemResponseBody struct {
-	// mongodb的id
+	// mongodb primary key
 	ID string `form:"id" json:"id" xml:"id"`
-	// 客户端提交的id
+	// clientId
 	ClientID *string `form:"clientId,omitempty" json:"clientId,omitempty" xml:"clientId,omitempty"`
 }
 

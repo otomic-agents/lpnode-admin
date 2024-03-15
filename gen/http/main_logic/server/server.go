@@ -18,8 +18,9 @@ import (
 
 // Server lists the mainLogic service endpoint HTTP handlers.
 type Server struct {
-	Mounts    []*MountPoint
-	MainLogic http.Handler
+	Mounts        []*MountPoint
+	MainLogic     http.Handler
+	MainLogicLink http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -50,8 +51,10 @@ func New(
 	return &Server{
 		Mounts: []*MountPoint{
 			{"MainLogic", "GET", "/"},
+			{"MainLogicLink", "GET", "/link"},
 		},
-		MainLogic: NewMainLogicHandler(e.MainLogic, mux, decoder, encoder, errhandler, formatter),
+		MainLogic:     NewMainLogicHandler(e.MainLogic, mux, decoder, encoder, errhandler, formatter),
+		MainLogicLink: NewMainLogicLinkHandler(e.MainLogicLink, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -61,6 +64,7 @@ func (s *Server) Service() string { return "mainLogic" }
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.MainLogic = m(s.MainLogic)
+	s.MainLogicLink = m(s.MainLogicLink)
 }
 
 // MethodNames returns the methods served.
@@ -69,6 +73,7 @@ func (s *Server) MethodNames() []string { return mainlogic.MethodNames[:] }
 // Mount configures the mux to serve the mainLogic endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
 	MountMainLogicHandler(mux, h.MainLogic)
+	MountMainLogicLinkHandler(mux, h.MainLogicLink)
 }
 
 // Mount configures the mux to serve the mainLogic endpoints.
@@ -105,6 +110,50 @@ func NewMainLogicHandler(
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "mainLogic")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "mainLogic")
+		var err error
+		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountMainLogicLinkHandler configures the mux to serve the "mainLogic"
+// service "mainLogicLink" endpoint.
+func MountMainLogicLinkHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/link", f)
+}
+
+// NewMainLogicLinkHandler creates a HTTP handler which loads the HTTP request
+// and calls the "mainLogic" service "mainLogicLink" endpoint.
+func NewMainLogicLinkHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		encodeResponse = EncodeMainLogicLinkResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "mainLogicLink")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "mainLogic")
 		var err error
 		res, err := endpoint(ctx, nil)

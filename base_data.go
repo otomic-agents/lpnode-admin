@@ -6,6 +6,7 @@ import (
 	"admin-panel/types"
 	"context"
 	"log"
+	"os"
 
 	"github.com/aws/smithy-go/ptr"
 	"go.mongodb.org/mongo-driver/bson"
@@ -47,5 +48,15 @@ func (s *baseDatasrvc) ChainDataList(ctx context.Context) (res *basedata.ChainDa
 	res.Message = ptr.String("")
 
 	s.logger.Print("baseData.chainDataList")
+	return
+}
+func (s *baseDatasrvc) RunTimeEnv(ctx context.Context) (res *basedata.RunTimeEnvResult, err error) {
+	res = &basedata.RunTimeEnvResult{Result: ptr.String(""), Code: ptr.Int64(0), Message: ptr.String("")}
+	env := os.Getenv("DEPLOY_ENV")
+	if env != "" {
+		res.Result = ptr.String(env)
+	} else {
+		res.Result = ptr.String("dev")
+	}
 	return
 }

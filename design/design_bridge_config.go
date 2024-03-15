@@ -5,22 +5,21 @@ import (
 )
 
 var BridgeConfig_bridgeItem = Type("bridgeItem", func() {
-	// Attribute("installId", String, "安装服务后的安装id")
-	Attribute("bridgeName", String, "bridge的Name ****")
-	Attribute("srcChainId", String, "mongodb的主键,baseData中获取")
-	Attribute("dstChainId", String, "mongodb的主键,baseData中获取")
-	Attribute("srcTokenId", String, "mongodb的主键,tokenList中获取")
-	Attribute("dstTokenId", String, "mongodb的主键,tokenList中获取")
-	Attribute("walletId", String, "mongodb的主键,walletList 中获取")    // 付款钱包信息
-	Attribute("srcWalletId", String, "mongodb的主键,walletList 中获取") // 收款钱包信息
-	Attribute("ammName", String, "amm安装时候的name")
-	Attribute("enableHedge", Boolean, func() { // 是否开启币对的对冲
+	// Attribute("installId", String, "id after service installed")
+	Attribute("bridgeName", String, "bridge name ****")
+	Attribute("srcChainId", String, "mongodb primary key, from basedata")
+	Attribute("dstChainId", String, "mongodb primary key, from basedata")
+	Attribute("srcTokenId", String, "mongodb primary key, from tokenlist")
+	Attribute("dstTokenId", String, "mongodb primary key, from tokenlist")
+	Attribute("walletId", String, "mongodb primary key, from walletlist")    // payment wallet info
+	Attribute("srcWalletId", String, "mongodb primary key, from walletlist") // receiving wallet info
+	Attribute("ammName", String, "amm name at install")
+	Attribute("enableHedge", Boolean, func() { // enable hedging for token pair
 		Default(true)
 	})
-	//Attribute("receiveAddress", String, "") // 原始链收款地址 , 这个应该程序，通过收款钱包 id来获取
-	// Attribute("msmqName", String, "应当根据链和TokenAddress自动生成一个 ****")
-	// Attribute("dstChainClientUri", String, "根据dstChainId 查install记录 并找到对应的serviceName ****")
-	// Attribute("relay_api_key", String, "***** ") // 最后再处理这个逻辑
+	Attribute("enableLimiter", Boolean, func() { // enable trade limit
+		Default(true)
+	})
 	Required("bridgeName", "srcChainId", "dstChainId", "srcTokenId", "dstTokenId", "srcWalletId", "walletId", "ammName")
 })
 var BridgeConfig_listItem = Type("listBridgeItem", func() {
@@ -43,16 +42,16 @@ var BridgeConfig_listItem = Type("listBridgeItem", func() {
 	Attribute("enableHedge", Boolean)
 })
 var BridgeConfig_DeleteBridgeFilter = Type("deleteBridgeFilter", func() {
-	Attribute("id", String, "Mongodb 的主键")
+	Attribute("id", String, "mongodb primary key")
 	Required("id")
 })
 var _ = Service("bridgeConfig", func() {
 	Method("bridgeCreate", func() {
-		Description("用于创建跨链配置")
+		Description("used to create cross-chain config")
 		Payload(BridgeConfig_bridgeItem)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "是否成功")
+			Attribute("result", Int64, "result")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -64,7 +63,7 @@ var _ = Service("bridgeConfig", func() {
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", ArrayOf(BridgeConfig_listItem), "链的列表")
+			Attribute("result", ArrayOf(BridgeConfig_listItem), "chain list")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -75,7 +74,7 @@ var _ = Service("bridgeConfig", func() {
 		Payload(BridgeConfig_DeleteBridgeFilter)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "是否删除成功")
+			Attribute("result", Int64, "result")
 			Attribute("message", String)
 		})
 		HTTP(func() {

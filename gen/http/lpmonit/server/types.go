@@ -24,7 +24,7 @@ type AddScriptRequestBody struct {
 // DeleteScriptRequestBody is the type of the "lpmonit" service "delete_script"
 // endpoint HTTP request body.
 type DeleteScriptRequestBody struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
 }
 
@@ -44,9 +44,9 @@ type RunResultRequestBody struct {
 // endpoint HTTP response body.
 type AddScriptResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 创建后的Id
+	// id after creation
 	TaskID *string `form:"task_id,omitempty" json:"task_id,omitempty" xml:"task_id,omitempty"`
-	// 创建成功后的Id
+	// id after successful creation
 	Result  *string `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -55,7 +55,7 @@ type AddScriptResponseBody struct {
 // endpoint HTTP response body.
 type ListScriptResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 任务列表
+	// task list
 	Result  []*LpMointTaskItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                        `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -64,7 +64,7 @@ type ListScriptResponseBody struct {
 // "delete_script" endpoint HTTP response body.
 type DeleteScriptResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否删除成功
+	// result
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -89,13 +89,13 @@ type RunResultResponseBody struct {
 type LpMointTaskItemResponseBody struct {
 	ID   *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
 	Name string  `form:"name" json:"name" xml:"name"`
-	// 定时任务
+	// scheduled task
 	Cron string `form:"cron" json:"cron" xml:"cron"`
-	// 创建时间戳
+	// create timestamp
 	CreatedAt int64 `form:"createdAt" json:"createdAt" xml:"createdAt"`
-	// 脚本路径
+	// script path
 	ScriptPath *string `form:"scriptPath,omitempty" json:"scriptPath,omitempty" xml:"scriptPath,omitempty"`
-	// 任务类型
+	// task type
 	TaskType string `form:"taskType" json:"taskType" xml:"taskType"`
 }
 

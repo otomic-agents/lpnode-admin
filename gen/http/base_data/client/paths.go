@@ -11,3 +11,8 @@ package client
 func ChainDataListBaseDataPath() string {
 	return "/lpnode/lpnode_admin_panel/baseData/chainDataList"
 }
+
+// RunTimeEnvBaseDataPath returns the URL path to the baseData service runTimeEnv HTTP endpoint.
+func RunTimeEnvBaseDataPath() string {
+	return "/lpnode/lpnode_admin_panel/baseData/runTimeEnv"
+}

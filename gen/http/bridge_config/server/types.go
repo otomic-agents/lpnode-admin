@@ -16,29 +16,30 @@ import (
 // BridgeCreateRequestBody is the type of the "bridgeConfig" service
 // "bridgeCreate" endpoint HTTP request body.
 type BridgeCreateRequestBody struct {
-	// bridge的Name ****
+	// bridge name ****
 	BridgeName *string `form:"bridgeName,omitempty" json:"bridgeName,omitempty" xml:"bridgeName,omitempty"`
-	// mongodb的主键,baseData中获取
+	// mongodb primary key, from basedata
 	SrcChainID *string `form:"srcChainId,omitempty" json:"srcChainId,omitempty" xml:"srcChainId,omitempty"`
-	// mongodb的主键,baseData中获取
+	// mongodb primary key, from basedata
 	DstChainID *string `form:"dstChainId,omitempty" json:"dstChainId,omitempty" xml:"dstChainId,omitempty"`
-	// mongodb的主键,tokenList中获取
+	// mongodb primary key, from tokenlist
 	SrcTokenID *string `form:"srcTokenId,omitempty" json:"srcTokenId,omitempty" xml:"srcTokenId,omitempty"`
-	// mongodb的主键,tokenList中获取
+	// mongodb primary key, from tokenlist
 	DstTokenID *string `form:"dstTokenId,omitempty" json:"dstTokenId,omitempty" xml:"dstTokenId,omitempty"`
-	// mongodb的主键,walletList 中获取
+	// mongodb primary key, from walletlist
 	WalletID *string `form:"walletId,omitempty" json:"walletId,omitempty" xml:"walletId,omitempty"`
-	// mongodb的主键,walletList 中获取
+	// mongodb primary key, from walletlist
 	SrcWalletID *string `form:"srcWalletId,omitempty" json:"srcWalletId,omitempty" xml:"srcWalletId,omitempty"`
-	// amm安装时候的name
-	AmmName     *string `form:"ammName,omitempty" json:"ammName,omitempty" xml:"ammName,omitempty"`
-	EnableHedge *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	// amm name at install
+	AmmName       *string `form:"ammName,omitempty" json:"ammName,omitempty" xml:"ammName,omitempty"`
+	EnableHedge   *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	EnableLimiter *bool   `form:"enableLimiter,omitempty" json:"enableLimiter,omitempty" xml:"enableLimiter,omitempty"`
 }
 
 // BridgeDeleteRequestBody is the type of the "bridgeConfig" service
 // "bridgeDelete" endpoint HTTP request body.
 type BridgeDeleteRequestBody struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
 }
 
@@ -52,7 +53,7 @@ type BridgeTestRequestBody struct {
 // "bridgeCreate" endpoint HTTP response body.
 type BridgeCreateResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否成功
+	// result
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -61,7 +62,7 @@ type BridgeCreateResponseBody struct {
 // "bridgeList" endpoint HTTP response body.
 type BridgeListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 链的列表
+	// chain list
 	Result  []*ListBridgeItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                       `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -70,7 +71,7 @@ type BridgeListResponseBody struct {
 // "bridgeDelete" endpoint HTTP response body.
 type BridgeDeleteResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否删除成功
+	// result
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -165,8 +166,14 @@ func NewBridgeCreateBridgeItem(body *BridgeCreateRequestBody) *bridgeconfig.Brid
 	if body.EnableHedge != nil {
 		v.EnableHedge = *body.EnableHedge
 	}
+	if body.EnableLimiter != nil {
+		v.EnableLimiter = *body.EnableLimiter
+	}
 	if body.EnableHedge == nil {
 		v.EnableHedge = true
+	}
+	if body.EnableLimiter == nil {
+		v.EnableLimiter = true
 	}
 
 	return v

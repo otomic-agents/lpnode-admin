@@ -16,15 +16,15 @@ import (
 // CreateDexWalletRequestBody is the type of the "dexWallet" service
 // "createDexWallet" endpoint HTTP request body.
 type CreateDexWalletRequestBody struct {
-	// mongodb主键
+	// mongodb primary key
 	ID         *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
 	WalletName string  `form:"walletName" json:"walletName" xml:"walletName"`
 	PrivateKey *string `form:"privateKey,omitempty" json:"privateKey,omitempty" xml:"privateKey,omitempty"`
 	Address    *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
 	ChainType  string  `form:"chainType" json:"chainType" xml:"chainType"`
-	// wallet对应的人类可阅读的名称
+	// wallet
 	AccountID *string `form:"accountId,omitempty" json:"accountId,omitempty" xml:"accountId,omitempty"`
-	// 链的Id
+	// chain Id
 	ChainID         int64   `form:"chainId" json:"chainId" xml:"chainId"`
 	StoreID         *string `form:"storeId,omitempty" json:"storeId,omitempty" xml:"storeId,omitempty"`
 	VaultHostType   *string `form:"vaultHostType,omitempty" json:"vaultHostType,omitempty" xml:"vaultHostType,omitempty"`
@@ -36,7 +36,7 @@ type CreateDexWalletRequestBody struct {
 // DeleteDexWalletRequestBody is the type of the "dexWallet" service
 // "deleteDexWallet" endpoint HTTP request body.
 type DeleteDexWalletRequestBody struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID string `form:"id" json:"id" xml:"id"`
 }
 
@@ -44,7 +44,7 @@ type DeleteDexWalletRequestBody struct {
 // "listDexWallet" endpoint HTTP response body.
 type ListDexWalletResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 钱包别表
+	// wallet list
 	Result  []*WalletRowResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                  `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -63,7 +63,7 @@ type CreateDexWalletResponseBody struct {
 // "deleteDexWallet" endpoint HTTP response body.
 type DeleteDexWalletResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 是否删除成功
+	// result
 	Result  *int64  `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
@@ -72,22 +72,31 @@ type DeleteDexWalletResponseBody struct {
 // endpoint HTTP response body.
 type VaultListResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// 列表
+	// list
 	Result  []*VaultRowResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
 	Message *string                 `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
+// UpdateLpWalletResponseBody is the type of the "dexWallet" service
+// "updateLpWallet" endpoint HTTP response body.
+type UpdateLpWalletResponseBody struct {
+	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	// list
+	Result  *string `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
 // WalletRowResponseBody is used to define fields on response body types.
 type WalletRowResponseBody struct {
-	// mongodb主键
+	// mongodb primary key
 	ID         *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
 	WalletName *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
 	PrivateKey *string `form:"privateKey,omitempty" json:"privateKey,omitempty" xml:"privateKey,omitempty"`
 	Address    *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
 	ChainType  *string `form:"chainType,omitempty" json:"chainType,omitempty" xml:"chainType,omitempty"`
-	// wallet对应的人类可阅读的名称
+	// wallet
 	AccountID *string `form:"accountId,omitempty" json:"accountId,omitempty" xml:"accountId,omitempty"`
-	// 链的Id
+	// chain Id
 	ChainID         *int64  `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
 	StoreID         *string `form:"storeId,omitempty" json:"storeId,omitempty" xml:"storeId,omitempty"`
 	VaultHostType   *string `form:"vaultHostType,omitempty" json:"vaultHostType,omitempty" xml:"vaultHostType,omitempty"`
@@ -98,15 +107,15 @@ type WalletRowResponseBody struct {
 
 // VaultRowResponseBody is used to define fields on response body types.
 type VaultRowResponseBody struct {
-	// 地址
+	// address
 	Address *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
-	// 托管类型
+	// host type
 	HostType *string `form:"hostType,omitempty" json:"hostType,omitempty" xml:"hostType,omitempty"`
-	// 存储Id
+	// storeId
 	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	// 钱包名称
+	// store name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
-	// 私钥类型
+	// store secert type
 	SecertType *string `form:"secertType,omitempty" json:"secertType,omitempty" xml:"secertType,omitempty"`
 }
 
@@ -201,6 +210,18 @@ func NewVaultListResultOK(body *VaultListResponseBody) *dexwallet.VaultListResul
 	return v
 }
 
+// NewUpdateLpWalletResultOK builds a "dexWallet" service "updateLpWallet"
+// endpoint result from a HTTP "OK" response.
+func NewUpdateLpWalletResultOK(body *UpdateLpWalletResponseBody) *dexwallet.UpdateLpWalletResult {
+	v := &dexwallet.UpdateLpWalletResult{
+		Code:    body.Code,
+		Result:  *body.Result,
+		Message: body.Message,
+	}
+
+	return v
+}
+
 // ValidateListDexWalletResponseBody runs the validations defined on
 // ListDexWalletResponseBody
 func ValidateListDexWalletResponseBody(body *ListDexWalletResponseBody) (err error) {
@@ -217,6 +238,15 @@ func ValidateListDexWalletResponseBody(body *ListDexWalletResponseBody) (err err
 // ValidateVaultListResponseBody runs the validations defined on
 // VaultListResponseBody
 func ValidateVaultListResponseBody(body *VaultListResponseBody) (err error) {
+	if body.Result == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("result", "body"))
+	}
+	return
+}
+
+// ValidateUpdateLpWalletResponseBody runs the validations defined on
+// UpdateLpWalletResponseBody
+func ValidateUpdateLpWalletResponseBody(body *UpdateLpWalletResponseBody) (err error) {
 	if body.Result == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("result", "body"))
 	}

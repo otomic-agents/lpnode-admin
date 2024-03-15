@@ -7,7 +7,7 @@ type BridgeConfigLpConfigItemBridge struct {
 	DstToken   string `json:"dst_token"`
 }
 
-// configLp  的基础数据结构
+// configLp  base struct
 type BridgeConfigLpConfigItem struct {
 	Bridge BridgeConfigLpConfigItemBridge `json:"bridge"`
 	Wallet struct {
@@ -18,6 +18,7 @@ type BridgeConfigLpConfigItem struct {
 	SrcClientUri      string `json:"src_client_uri"`
 	DstClientUri      string `json:"dst_client_uri"`
 	RelayApiKey       string `json:"relay_api_key"`
+	EnableLimiter     bool   `json:"enableLimiter"`
 }
 
 type BridgeConfigClientConfigItem struct {

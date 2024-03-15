@@ -13,9 +13,9 @@ import (
 	goa "goa.design/goa/v3/pkg"
 )
 
-// 用于控制各个节点的安装和启动
+// used to control install and startup of nodes
 type Service interface {
-	// 列出已经安装的服务和状态,每一项针对多个服务，针对一个配置文件
+	// ListInstall implements listInstall.
 	ListInstall(context.Context, *ListInstallPayload) (res *ListInstallResult, err error)
 	// InstallLpClient implements installLpClient.
 	InstallLpClient(context.Context, *InstallLpClientPayload) (res *InstallLpClientResult, err error)
@@ -41,13 +41,13 @@ var MethodNames = [6]string{"listInstall", "installLpClient", "uninstallLpClient
 
 type AmmClientSetupConfig struct {
 	CustomEnv []*DeploymentSetupConfigEnvItem
-	// 需要安装的镜像地址
+	// imageRepository
 	ImageRepository string
-	// 需要安装的ServiceName
+	// serviceName
 	ServiceName *string
-	// 需要安装的deploymentName
+	// deploymentName
 	DeploymentName *string
-	// 安装的类型
+	// type
 	Type                  string
 	StartBlock            *string
 	RPCURL                *string
@@ -58,41 +58,34 @@ type AmmClientSetupConfig struct {
 	AwsAccessKeyID        *string
 	ContainerPort         *string
 	AwsSecretAccessKey    *string
-	// 是否直接安装
-	Install bool
+	Install               bool
 }
 
 type AmmClientUnSetupConfig struct {
-	// 安装的类型
-	Type *string
-	// 是否直接操作
+	Type      *string
 	Uninstall *bool
 }
 
 type CtrlDeploayItem struct {
-	// 安装的类型 Client Amm Market等等...
+	// install type
 	InstallType *string
-	// 具体的服务名称，如bsc avax
+	// name
 	Name *string
-	// 服务当前的安装状态
+	// install status
 	Status *int64
-	// 之前安装的上下文
+	// install context
 	InstallContext *string
-	// 安装模版的原始内容
+	// yaml
 	Yaml *string
 }
 
 type DeploymentSetupConfig struct {
-	// 需要安装的镜像地址
 	ImageRepository string
-	// 容器的端口 可选
-	ContainerPort *string
-	// 是否直接安装
-	Install     bool
-	InstallType string
-	// 这个服务叫什么名字
-	Name string
-	// Env配置列表
+	ContainerPort   *string
+	Install         bool
+	InstallType     string
+	Name            string
+	// env list
 	CustomEnv []*DeploymentSetupConfigEnvItem
 }
 
@@ -118,7 +111,7 @@ type InstallDeploymentPayload struct {
 // installDeployment method.
 type InstallDeploymentResult struct {
 	Code *int64
-	// 安装完成的结果
+	// install result
 	Result  *InstallDeploymentDataResult
 	Message *string
 }
@@ -135,7 +128,7 @@ type InstallLpClientPayload struct {
 type InstallLpClientResult struct {
 	Code   *int64
 	Result *struct {
-		// 渲染后的模版内容
+		// rendered template content
 		Template  *string
 		CmdStdout *string
 		CmdStderr *string
@@ -146,7 +139,7 @@ type InstallLpClientResult struct {
 // ListInstallPayload is the payload type of the installCtrlPanel service
 // listInstall method.
 type ListInstallPayload struct {
-	// 安装的服务类型
+	// type of service installed
 	InstallType string
 }
 
@@ -154,13 +147,12 @@ type ListInstallPayload struct {
 // listInstall method.
 type ListInstallResult struct {
 	Code *int64
-	// 已经安装的列表
+	// list of installed services
 	Result  []*CtrlDeploayItem
 	Message *string
 }
 
 type UnDeploymentSetupConfig struct {
-	// 是否直接卸载
 	Uninstall   bool
 	InstallType string
 	Name        string
@@ -199,7 +191,7 @@ type UninstallLpClientPayload struct {
 type UninstallLpClientResult struct {
 	Code   *int64
 	Result *struct {
-		// 渲染后的模版内容
+		// rendered template content
 		Template  *string
 		CmdStdout *string
 		CmdStderr *string
@@ -228,7 +220,7 @@ type UpdateDeploymentResult struct {
 	Result *struct {
 		CmdStdout *string
 		CmdStderr *string
-		// 渲染后的模版内容
+		// rendered template content
 		Template *string
 	}
 	Message *string

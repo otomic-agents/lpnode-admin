@@ -5,21 +5,21 @@ import (
 )
 
 var TokenManager_DeleteTokenFilter = Type("DeleteTokenFilter", func() {
-	Attribute("_id", String, "Mongodb 的主键")
+	Attribute("_id", String, "mongodb primary key")
 	Required("_id")
 })
 var TokenManager_TokenItem = Type("TokenItem", func() {
 	Attribute("_id", String)
-	Attribute("tokenId", String) // near 多一个这个
-	Attribute("chainId", Int64, "链Id")
-	Attribute("address", String, "token address") // near 时候 address 为 receipt_id
-	Attribute("tokenName", String, "token 合约中的名称")
-	Attribute("marketName", String, "Cex中所对应的名称")
+	Attribute("tokenId", String) // near only
+	Attribute("chainId", Int64, "chain id")
+	Attribute("address", String, "token address") // address is receipt_id on near
+	Attribute("tokenName", String, "name in token contract")
+	Attribute("marketName", String, "corresponding name in cex")
 	Attribute("precision", Int64, func() {
 		Maximum(18)
 		Minimum(6)
 	})
-	Attribute("chainType", String, "") // 后端根据chanID自动填充
+	Attribute("chainType", String, "")
 	Attribute("coinType", String, func() {
 		Enum("stable_coin", "coin")
 	})
@@ -27,14 +27,14 @@ var TokenManager_TokenItem = Type("TokenItem", func() {
 })
 
 var _ = Service("tokenManager", func() {
-	Description("用于管理所有的token")
+	Description("used to manage all tokens")
 	Method("tokenList", func() {
 		Payload(func() {
 
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", ArrayOf(TokenManager_TokenItem), "添加成功的链")
+			Attribute("result", ArrayOf(TokenManager_TokenItem), "list")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -45,7 +45,7 @@ var _ = Service("tokenManager", func() {
 		Payload(TokenManager_TokenItem)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "创建影响的行数")
+			Attribute("result", Int64, "")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -56,7 +56,7 @@ var _ = Service("tokenManager", func() {
 		Payload(TokenManager_DeleteTokenFilter)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "是否删除成功")
+			Attribute("result", Int64, "")
 			Attribute("message", String)
 		})
 		HTTP(func() {

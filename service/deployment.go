@@ -28,7 +28,7 @@ func (*DeploymentService) GetEnv(yamlPath string, envName string) (val string, e
 	dtsByte := []byte(content[maxIndex])
 	err = yaml.Unmarshal(dtsByte, &dts)
 	if len(dts.Spec.Template.Spec.Containers) <= 0 {
-		err = errors.New("没有找到容器")
+		err = errors.New("cannot find container")
 		return
 	}
 	val = ""
@@ -61,7 +61,7 @@ func (*DeploymentService) GetEnvList(yamlPath string) (list []struct {
 	log.Println(string(dtsByte))
 	err = yaml.Unmarshal(dtsByte, &dts)
 	if len(dts.Spec.Template.Spec.Containers) <= 0 {
-		err = errors.New("没有找到容器")
+		err = errors.New("cannot find container")
 		return
 	}
 

@@ -13,7 +13,7 @@ import (
 
 // Service is the bridgeConfig service interface.
 type Service interface {
-	// 用于创建跨链配置
+	// used to create cross-chain config
 	BridgeCreate(context.Context, *BridgeItem) (res *BridgeCreateResult, err error)
 	// BridgeList implements bridgeList.
 	BridgeList(context.Context) (res *BridgeListResult, err error)
@@ -37,7 +37,7 @@ var MethodNames = [4]string{"bridgeCreate", "bridgeList", "bridgeDelete", "bridg
 // bridgeCreate method.
 type BridgeCreateResult struct {
 	Code *int64
-	// 是否成功
+	// result
 	Result  *int64
 	Message *string
 }
@@ -46,7 +46,7 @@ type BridgeCreateResult struct {
 // bridgeDelete method.
 type BridgeDeleteResult struct {
 	Code *int64
-	// 是否删除成功
+	// result
 	Result  *int64
 	Message *string
 }
@@ -54,30 +54,31 @@ type BridgeDeleteResult struct {
 // BridgeItem is the payload type of the bridgeConfig service bridgeCreate
 // method.
 type BridgeItem struct {
-	// bridge的Name ****
+	// bridge name ****
 	BridgeName string
-	// mongodb的主键,baseData中获取
+	// mongodb primary key, from basedata
 	SrcChainID string
-	// mongodb的主键,baseData中获取
+	// mongodb primary key, from basedata
 	DstChainID string
-	// mongodb的主键,tokenList中获取
+	// mongodb primary key, from tokenlist
 	SrcTokenID string
-	// mongodb的主键,tokenList中获取
+	// mongodb primary key, from tokenlist
 	DstTokenID string
-	// mongodb的主键,walletList 中获取
+	// mongodb primary key, from walletlist
 	WalletID string
-	// mongodb的主键,walletList 中获取
+	// mongodb primary key, from walletlist
 	SrcWalletID string
-	// amm安装时候的name
-	AmmName     string
-	EnableHedge bool
+	// amm name at install
+	AmmName       string
+	EnableHedge   bool
+	EnableLimiter bool
 }
 
 // BridgeListResult is the result type of the bridgeConfig service bridgeList
 // method.
 type BridgeListResult struct {
 	Code *int64
-	// 链的列表
+	// chain list
 	Result  []*ListBridgeItem
 	Message *string
 }
@@ -97,7 +98,7 @@ type BridgeTestResult struct {
 // DeleteBridgeFilter is the payload type of the bridgeConfig service
 // bridgeDelete method.
 type DeleteBridgeFilter struct {
-	// Mongodb 的主键
+	// mongodb primary key
 	ID string
 }
 

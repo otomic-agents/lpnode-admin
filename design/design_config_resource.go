@@ -5,8 +5,8 @@ import (
 )
 
 var configResource_ConfigResultIdItem = Type("ConfigResultIdItem", func() {
-	Attribute("id", String, "mongodb的id")
-	Attribute("clientId", String, "客户端提交的id")
+	Attribute("id", String, "mongodb primary key")
+	Attribute("clientId", String, "clientId")
 	Required("id")
 })
 var configResource_ConfigResult = Type("ResourceConfigResult", func() {
@@ -30,7 +30,7 @@ var _ = Service("configResource", func() {
 			Required("appName", "clientId")
 		})
 		Result(func() {
-			Attribute("code", Int64, "0是成功")
+			Attribute("code", Int64, "0 is success")
 			Attribute("result", configResource_ConfigResultIdItem)
 			Attribute("message", String)
 		})
@@ -44,7 +44,7 @@ var _ = Service("configResource", func() {
 			Required("clientId")
 		})
 		Result(func() {
-			Attribute("code", Int64, "0是成功")
+			Attribute("code", Int64, "0 is success")
 			Attribute("result", configResource_ConfigResult)
 			Attribute("message", String)
 		})
@@ -89,7 +89,7 @@ var _ = Service("configResource", func() {
 		Result(func() {
 			Attribute("code", Int64, "")
 			Attribute("message", String, "")
-			Attribute("result", String, "修改影响的Id")
+			Attribute("result", String, "update affected id")
 		})
 		HTTP(func() {
 			POST("/lpnode/lpnode_admin_panel/configResource/edit")

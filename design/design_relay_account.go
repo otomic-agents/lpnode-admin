@@ -13,7 +13,7 @@ var relayAccount_AccountItem = Type("relayAccountItem", func() {
 	Attribute("relayApiKey", String)
 })
 var _ = Service("relayAccount", func() {
-	Description("用于管理Lp和relay之间的账号")
+	Description("used to manage lp account on relay")
 	Method("listAccount", func() {
 		Payload(func() {})
 		Result(func() {
@@ -28,9 +28,9 @@ var _ = Service("relayAccount", func() {
 	})
 	Method("registerAccount", func() {
 		Payload(func() {
-			Attribute("name", String)
+			// Attribute("name", String)
 			Attribute("profile", String)
-			Required("name")
+			// Required("name")
 		})
 		Result(func() {
 			Attribute("code", Int64, "")

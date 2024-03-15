@@ -21,7 +21,7 @@ func BuildListPayload(ammOrderCenterListBody string) (*ammordercenter.ListPayloa
 	{
 		err = json.Unmarshal([]byte(ammOrderCenterListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"ammName\": \"Sit enim doloremque rerum minima.\",\n      \"page\": 4906814959670522513,\n      \"pageSize\": 4493050191874293017,\n      \"status\": 1245436374065682402\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"ammName\": \"Non et ea consequatur iure.\",\n      \"page\": 8625246950805419602,\n      \"pageSize\": 3032865872983854076,\n      \"status\": 4435816264699419802\n   }'")
 		}
 	}
 	v := &ammordercenter.ListPayload{

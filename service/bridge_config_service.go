@@ -75,7 +75,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 			if err != nil {
 				return err
 			}
-			log.Println("删除:", tobeDelId)
+			log.Println("delete:", tobeDelId)
 			database.DeleteOne("main", "bridges", bson.M{
 				"_id": tobeDelId,
 			})
@@ -86,20 +86,20 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 	ammInfo, err := bcls.GetAmmInstallRowByName(ammName)
 	if err != nil || ammInfo.ID.Hex() == types.MongoEmptyIdHex {
 		err = utils.GetNoEmptyError(err)
-		err = errors.WithMessage(err, "获取 amm install 信息出错")
+		err = errors.WithMessage(err, "get amm install info error")
 		return
 	}
 	// log.Println(idMap)
 	srcChainInfo, err := bcls.GetChainRowById(idMap["srcChainId"])
 	if err != nil || srcChainInfo.ID.Hex() == types.MongoEmptyIdHex {
 		err = utils.GetNoEmptyError(err)
-		err = errors.WithMessage(err, "获取src chain Info 信息出错")
+		err = errors.WithMessage(err, "get src chain info error")
 		return
 	}
 	dstChainInfo, err := bcls.GetChainRowById(idMap["dstChainId"])
 	if err != nil || dstChainInfo.ID.Hex() == types.MongoEmptyIdHex {
 		err = utils.GetNoEmptyError(err)
-		err = errors.WithMessage(err, "获取dst chain Info 信息出错")
+		err = errors.WithMessage(err, "get dst chain info error")
 		return
 	}
 	srcTokenInfo, err := bcls.GetTokenRowById(idMap["srcTokenId"])
@@ -109,7 +109,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		return
 	}
 	if srcTokenInfo.ChainId != srcChainInfo.ChainId {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("源链Token和Id不匹配,链Id:%d,Token:%s", srcChainInfo.ChainId, srcTokenInfo.Address))
+		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("source chain token and id mismatch, chainId:%d, token:%s", srcChainInfo.ChainId, srcTokenInfo.Address))
 		return
 	}
 	dstTokenInfo, err := bcls.GetTokenRowById(idMap["dstTokenId"])
@@ -119,7 +119,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		return
 	}
 	if dstTokenInfo.ChainId != dstChainInfo.ChainId {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("目标token不属于目标链,链Id:%d,Token:%s", dstChainInfo.ChainId, dstTokenInfo.Address))
+		err = errors.WithMessage(utils.GetNoEmptyError(err), fmt.Sprintf("target token not belong to target chain, chainId:%d, token:%s", dstChainInfo.ChainId, dstTokenInfo.Address))
 		return
 	}
 	walletInfo, err := bcls.GetWalletRowById(idMap["walletId"])
@@ -129,7 +129,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		return
 	}
 	if walletInfo.ChainId != dstTokenInfo.ChainId {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "钱包不属于目标链，请检查数据配置")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "wallet not belong to target chain, please check config")
 		return
 	}
 	srcWalletInfo, err := bcls.GetWalletRowById(idMap["srcWalletId"])
@@ -139,22 +139,31 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		return
 	}
 	if srcWalletInfo.ChainId != srcTokenInfo.ChainId {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "钱包不属于来源链，请检查数据配置")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "wallet not belong to source chain, please check config")
 		return
 	}
 	bridgeExist := bcls.HasBridge(srcTokenInfo.Address, dstTokenInfo.Address, srcChainInfo.ChainId, dstChainInfo.ChainId, ammInfo.Name)
 	if bridgeExist {
 		err = utils.GetNoEmptyError(err)
-		err = errors.WithMessage(err, "已经存在的bridge")
+		err = errors.WithMessage(err, "bridge already exist")
+		return
+	}
+	srcClientUrl, err := bcls.GetClientUrl(srcChainInfo.ChainId)
+	if err != nil {
+		err = errors.WithMessage(err, "get src chain url error occur:")
+		return
+	}
+	if srcClientUrl == "" {
+		err = errors.New("cannot get correct SrcClientUrl, cannot create bridge")
 		return
 	}
 	clientUrl, err := bcls.GetClientUrl(dstChainInfo.ChainId)
 	if err != nil {
-		err = errors.WithMessage(err, "获取目标链的Dst Url 发生了错误:")
+		err = errors.WithMessage(err, "get dst chain Url error occur:")
 		return
 	}
 	if clientUrl == "" {
-		err = errors.New("无法获得正确的DstClientUrl,无法创建bridge")
+		err = errors.New("cannot get correct DstClientUrl, cannot create bridge")
 		return
 	}
 	srcToken, err := bcls.GetHexAddress(srcTokenInfo.Address, srcChainInfo.ChainType)
@@ -174,6 +183,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		"dstToken_id": dstTokenInfo.ID,
 	}, bson.M{
 		"$set": bson.M{
+			"enableLimiter":     p.EnableLimiter,
 			"enableHedge":       p.EnableHedge,
 			"bridgeName":        p.BridgeName,
 			"srcChainId":        srcChainInfo.ChainId,
@@ -185,6 +195,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 			"src_wallet_id":     srcWalletInfo.ID,
 			"lpReceiverAddress": srcWalletInfo.Address,
 			"msmqName":          bcls.GetMsmqName(srcToken, dstToken, srcChainInfo.ChainId, dstChainInfo.ChainId),
+			"srcClientUri":      srcClientUrl,
 			"dstClientUri":      clientUrl,
 			"createdAt":         time.Now().UnixNano() / 1e6,
 			"ammName":           ammInfo.Name,
@@ -194,7 +205,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		return
 	}
 	if mongoUpsert.UpsertedID == nil {
-		err = errors.New("没有成功创建bridge")
+		err = errors.New("did not successfully create bridge")
 		return
 	}
 	log.Println(mongoUpsert.UpsertedID, "🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️")
@@ -214,7 +225,7 @@ func (bcls *BridgeConfigLogicService) GetHexAddress(address string, evmType stri
 	}
 	ret = address
 	if !strings.HasPrefix(ret, "0x") {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "地址格式错误")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "address format incorrect")
 	}
 	return
 }
@@ -263,12 +274,12 @@ func (bcls *BridgeConfigLogicService) GetConfigLpStruct() (res []types.BridgeCon
 
 	err, cursor := database.FindAll("main", "bridges", bson.M{})
 	if err != nil {
-		errors.WithMessage(err, "查询发生了错误")
+		errors.WithMessage(err, "query error")
 		return
 	}
 	var results []types.DBBridgeRow
 	if err = cursor.All(context.TODO(), &results); err != nil {
-		errors.WithMessage(err, "游标处理错误")
+		errors.WithMessage(err, "cursor handle error")
 		return
 	}
 	for _, result := range results {
@@ -286,6 +297,8 @@ func (bcls *BridgeConfigLogicService) GetConfigLpStruct() (res []types.BridgeCon
 			LpReceiverAddress: result.LpReceiverAddress,
 			MsmqName:          result.MsmqName,
 			DstClientUri:      result.DstClientUri,
+			SrcClientUri:      result.SrcClientUri,
+			EnableLimiter:     result.EnableLimiter, // whether enable permission limit
 		})
 	}
 	return
@@ -299,7 +312,7 @@ func (bcls *BridgeConfigLogicService) GetClientUrl(chainId int64) (ret string, e
 	}{}
 	err = database.FindOne("main", "install", bson.M{"chainId": chainId}, &result)
 	if err != nil {
-		logger.System.Warn("没有找到对应的安装记录", chainId, "service")
+		logger.System.Warn("cannot find corresponding install record", chainId, "service")
 		return
 	}
 
@@ -325,7 +338,7 @@ func (bcls *BridgeConfigLogicService) GetClientSetWalletUrl(chainId int64) (ret 
 		return
 	}
 	if result.ID.Hex() == types.MongoEmptyIdHex {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "没有找到安装记录，无法返回url")
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "cannot find install record, cannot return url")
 		return
 	}
 	// https://obridge-api-lpnode-3.edge-dev.xyz/evm-client-9000/lpnode_admin_panel/set_wallet
@@ -337,14 +350,14 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 
 	mdb, err := database.GetSession("main")
 	if err != nil {
-		log.Println("获取数据库实例发生了错误")
+		log.Println("get database instance error occur")
 		return
 	}
 	var results []types.DBBridgeRow
 
 	cursor, err := mdb.Collection("bridges").Find(context.TODO(), bson.M{})
 	if err = cursor.All(context.TODO(), &results); err != nil {
-		err = errors.WithMessage(err, "cursor处理错误")
+		err = errors.WithMessage(err, "cursor handle error")
 		return
 	}
 	baseJson := "{}"
@@ -352,34 +365,34 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 		cursor.Decode(&result)
 		srcChainInfo, getChainInfoErr := bcls.GetChainRowById(result.SrcChain_ID)
 		if getChainInfoErr != nil {
-			err = errors.WithMessage(getChainInfoErr, "getChainInfoErr Error")
+			err = errors.WithMessage(getChainInfoErr, "getChainInfoErr error:")
 			return
 		}
 		srcChainInfoStr, _ := json.Marshal(srcChainInfo)
 		dstChainInfo, getDstChainInfoErr := bcls.GetChainRowById(result.DstChain_ID)
 		if getDstChainInfoErr != nil {
-			err = errors.WithMessage(getDstChainInfoErr, "getDstChainInfoErr Error")
+			err = errors.WithMessage(getDstChainInfoErr, "getDstChainInfoErr error:")
 			return
 		}
 		dstChainInfoStr, _ := json.Marshal(dstChainInfo)
 		srcWalletInfo, getSrcWalletErr := bcls.GetWalletRowById(result.Src_Wallet_Id)
 		if getSrcWalletErr != nil {
-			err = errors.WithMessage(getSrcWalletErr, "获取Src getSrcWalletErr Error")
+			err = errors.WithMessage(getSrcWalletErr, " getSrcWalletErr error:")
 			return
 		}
 		dstWalletInfo, getDstWalletErr := bcls.GetWalletRowById(result.Wallet_ID)
 		if getDstWalletErr != nil {
-			err = errors.WithMessage(getDstWalletErr, "获取Dst getDstWalletErr Error")
+			err = errors.WithMessage(getDstWalletErr, " getDstWalletErr error:")
 			return
 		}
 		srcTokenInfo, getSrcTokenErr := bcls.GetTokenRowById(result.SrcToken_ID)
 		if getSrcTokenErr != nil {
-			err = errors.WithMessage(getSrcTokenErr, "获取 getSrcTokenErr Error")
+			err = errors.WithMessage(getSrcTokenErr, " getSrcTokenErr error:")
 			return
 		}
 		dstTokenInfo, getDstTokenErr := bcls.GetTokenRowById(result.DstToken_ID)
 		if getDstTokenErr != nil {
-			err = errors.WithMessage(getDstTokenErr, "获取 getDstTokenErr Error")
+			err = errors.WithMessage(getDstTokenErr, " getDstTokenErr error:")
 			return
 		}
 		srcTokenBase := "{}"
@@ -397,7 +410,7 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.chainInfo", result.SrcChainId), string(srcChainInfoStr))
 		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.chainInfo", result.DstChainId), string(dstChainInfoStr))
 
-		//## wallet 的set
+		//## wallet set
 
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.walletName", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.WalletName)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.accountId", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.AccountId)
@@ -422,24 +435,24 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 		// # token set
 		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.walletInfo.%s.tokenInfo.%s", result.SrcChainId, srcWalletInfo.ID.Hex(), result.SrcToken_ID.Hex()), srcTokenBase)
 		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.walletInfo.%s.tokenInfo.%s", result.DstChainId, dstWalletInfo.ID.Hex(), result.DstToken_ID.Hex()), dstTokenBase)
-		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.walletInfo.%s.tokenInfo.%s", result.SrcChainId, srcWalletInfo.ID.Hex(), "0x0000000000000000000000000000000000000000"), nativeTokenBase) // 原生的币对 ，src wallet 和 dst wallet 都增加
-		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.walletInfo.%s.tokenInfo.%s", result.DstChainId, dstWalletInfo.ID.Hex(), "0x0000000000000000000000000000000000000000"), nativeTokenBase) // 原生的币对 ，src wallet 和 dst wallet 都增加
+		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.walletInfo.%s.tokenInfo.%s", result.SrcChainId, srcWalletInfo.ID.Hex(), "0x0000000000000000000000000000000000000000"), nativeTokenBase)
+		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.walletInfo.%s.tokenInfo.%s", result.DstChainId, dstWalletInfo.ID.Hex(), "0x0000000000000000000000000000000000000000"), nativeTokenBase)
 	}
 	res = baseJson
-	logger.System.Debug("得到的ConfigJson", "\r\n", gjson.Get(baseJson, "@pretty").String())
+	logger.System.Debug("got configJson", "\r\n", gjson.Get(baseJson, "@pretty").String())
 	return
 }
 func (bcls *BridgeConfigLogicService) GetUniqDstToken(dstChainId int64, walletName string) (res []types.TDBBridgeUniqDstToken, err error) {
 	err, cursor := database.FindAll("main", "bridges", bson.M{"dstChainId": dstChainId, "walletName": walletName})
 	if err != nil {
-		err = errors.WithMessage(err, "查询唯一DstToken时发生了错误")
+		err = errors.WithMessage(err, "query unique dstToken error occur")
 		return
 	}
-	var results []types.DBBridgeUniqDstToken // 根据DstChain group
+	var results []types.DBBridgeUniqDstToken // DstChain group
 	res = make([]types.TDBBridgeUniqDstToken, 0)
 
 	if err = cursor.All(context.TODO(), &results); err != nil {
-		err = errors.WithMessage(err, "cursor处理错误")
+		err = errors.WithMessage(err, "cursor handle error")
 		return
 	}
 	for _, result := range results {
@@ -452,7 +465,7 @@ func (bcls *BridgeConfigLogicService) GetUniqDstToken(dstChainId int64, walletNa
 			return
 		}
 		if tokenRow.Id.Hex() == types.MongoEmptyIdHex {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "查询Token的实际值发生了错误")
+			err = errors.WithMessage(utils.GetNoEmptyError(err), "query token actual value error occur")
 			return
 		}
 		res = append(res, types.TDBBridgeUniqDstToken{
@@ -478,12 +491,17 @@ func (bcls *BridgeConfigLogicService) GetUniqDstToken(dstChainId int64, walletNa
 	return
 }
 
-// 这里来构建数据，访问Lp 来进行Config
 func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) {
 	lprs := NewLpRegisterLogicService()
+	als := NewAuthenticationLimiterService()
 	relayApiKey, err := lprs.GetRelayApiKey()
 	if err != nil {
-		err = errors.WithMessage(err, "获取relayApiKey出错,Lp可能还没有注册账号")
+		err = errors.WithMessage(err, "get relayApiKey error, lp may not register account yet")
+		return
+	}
+	lpName, err := lprs.GetLpName()
+	if err != nil {
+		err = errors.WithMessage(err, "get lpname error, lp may not register account yet")
 		return
 	}
 	configResult = false
@@ -491,9 +509,14 @@ func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) 
 	if err != nil {
 		return
 	}
+	limiterConf, err := als.Get()
+	if err != nil {
+		return
+	}
 	jsonStr := `{"data":[]}`
 
 	for i, v := range lpItemList {
+		fmt.Println(v)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.bridge.src_chain_id", i), v.Bridge.SrcChainId)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.bridge.dst_chain_id", i), v.Bridge.DstChainId)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.bridge.src_token", i), v.Bridge.SrcToken)
@@ -501,21 +524,33 @@ func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) 
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.wallet.name", i), v.Wallet.Name)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.lp_receiver_address", i), v.LpReceiverAddress)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.msmq_name", i), v.MsmqName)
-		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.src_client_uri", i), "")
+		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.src_client_uri", i), v.SrcClientUri)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.dst_client_uri", i), v.DstClientUri)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.relay_api_key", i), relayApiKey)
+		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.lp_id", i), lpName)
+		if limiterConf.Data == "" {
+			limiterConf.Data = "{}"
+		}
+		if v.EnableLimiter { // if record enable limiter, then add in configlp
+			jsonStr, _ = sjson.SetRaw(jsonStr, fmt.Sprintf("data.%d.authentication_limiter", i), limiterConf.Data)
+			jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.authentication_limiter.limiter_state", i), "on")
+		} else {
+			jsonStr, _ = sjson.SetRaw(jsonStr, fmt.Sprintf("data.%d.authentication_limiter", i), limiterConf.Data)
+			jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.authentication_limiter.limiter_state", i), "off")
+		}
 
 	}
 	// toSendArr := gjson.Get(jsonStr, "data").Array()
 	// if len(toSendArr) <= 0 {
-	// 	log.Println("[暂时没有数据需要发送]")
+	// 	log.Println("[currently no data to send]")
 	// 	return
 	// }
 	toSend := gjson.Get(jsonStr, "data").Raw
 	postOption := &utils.HttpCallRequestOption{
 		Url:     fmt.Sprintf("http://%s:%d/lpnode/lpnode_admin_panel/config_lp", globalval.LpNodeHost, globalval.LpNodePort),
-		Timeout: 1000,
+		Timeout: 2000,
 		JsonStr: toSend,
+		Header:  map[string]string{"Content-Type": "application/json"},
 		TestOKFun: func(bodyStr string) bool {
 			log.Println("bodyis:", bodyStr)
 			return gjson.Get(bodyStr, "code").Int() == 200
@@ -524,24 +559,25 @@ func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) 
 	_, configResult, err = utils.NewHttpCall().PostJsonCall(postOption)
 	log.Println("___________________")
 	log.Println(postOption.Url)
+	log.Println("send Body json")
 	log.Println(toSend)
-	log.Println(err)
+	log.Println("err:", err)
 	log.Println("___________________")
 	return
 }
 
-func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err error) { // 根据新创建的BridgeConfig config client
+func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err error) {
 
 	configResult = false
 	chainListStr, err := bcls.GetConfigJsonData()
 	if err != nil {
-		err = errors.WithMessage(err, "没有办法获取到正确的config 结构,请检查数据源")
+		err = errors.WithMessage(err, "cannot get correct config structure, please check datasource")
 		return
 	}
 
 	//dwls := NewDexWalletLogicService()
-	log.Printf("一共要请求%d个链", len(gjson.Get(chainListStr, "@this").Map()))
-	for chainKey, chainItem := range gjson.Get(chainListStr, "@this").Map() { // 链id级别
+	log.Printf("total need request %d chains", len(gjson.Get(chainListStr, "@this").Map()))
+	for chainKey, chainItem := range gjson.Get(chainListStr, "@this").Map() { // chain id level
 		log.Println(chainKey, "ChainId:🟥🟥🟥🟥🟥🟥")
 		dataStr := `{"data":[]}`
 		walletIndex := 0
@@ -556,10 +592,11 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 			vaultName := wallet.Get("vaultName").String()
 			vaultSecertType := wallet.Get("vaultSecertType").String()
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.wallet_name", walletIndex), walletName)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign_712", walletIndex), true)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.account_id", walletIndex), accountId)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.private_key", walletIndex), privateKey)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.address", walletIndex), address)
-
+			isTypeSet := false
 			if walletType == "storeId" {
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "vault")
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.secert_id", walletIndex), storeId)
@@ -567,7 +604,17 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
-			} else {
+				isTypeSet = true
+			}
+			if walletType == "secretVault" {
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "secret_vault")
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.secert_id", walletIndex), vaultName)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
+				isTypeSet = true
+			}
+			if !isTypeSet {
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "key")
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
@@ -589,10 +636,10 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 			walletIndex++
 			chainId, _ := strconv.ParseInt(chainKey, 10, 64)
 			url, getUrlErr := bcls.GetClientSetWalletUrl(chainId)
-			log.Println("需要请求的地址是", url)
+			log.Println("address need request is", url)
 			if getUrlErr != nil {
-				if strings.Contains(getUrlErr.Error(), "没有找到安装记录") {
-					logger.System.Warnf("这个链无法找到安装记录和Url,暂时停止配置....🌏🌏🌏🌏🌏%s", chainKey)
+				if strings.Contains(getUrlErr.Error(), "install record not found") {
+					logger.System.Warnf("cannot find install record and url for this chain, stop config temporary 🌏🌏🌏🌏🌏%s", chainKey)
 					continue
 				}
 				err = getUrlErr
@@ -619,8 +666,8 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 				return
 			}
 			if !ok {
-				err = errors.New(fmt.Sprintf("目标服务返回解析结果不正确%s", requestOption.Url))
-				log.Println("配置发生了错误", "🟥🟥🟥🟥🟥🟥")
+				err = errors.New(fmt.Sprintf("target service return parse result incorrect %s", requestOption.Url))
+				log.Println("config error occur", "🟥🟥🟥🟥🟥🟥")
 			}
 		}
 	}

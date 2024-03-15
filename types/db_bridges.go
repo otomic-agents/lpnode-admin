@@ -16,13 +16,14 @@ type DBBridgeRow struct {
 	WalletName        string             `bson:"walletName"`
 	Wallet_ID         primitive.ObjectID `bson:"wallet_id"`
 	Src_Wallet_Id     primitive.ObjectID `bson:"src_wallet_id"`
-	LpReceiverAddress string             `bson:"lpReceiverAddress"` // src chain的收款地址
+	LpReceiverAddress string             `bson:"lpReceiverAddress"`
 	MsmqName          string             `bson:"msmqName"`
 	SrcClientUri      string             `bson:"srcClientUri"`
 	DstClientUri      string             `bson:"dstClientUri"`
 	RelayApiKey       string             `bson:"relayApiKey"`
 	AmmName           string             `bson:"ammName"`
 	EnableHedge       bool               `bson:"enableHedge"`
+	EnableLimiter     bool               `bson:"enableLimiter"`
 }
 
 type DBBridgeDstChainAggregateItem struct {
@@ -49,12 +50,12 @@ type DBBridgeUniqDstToken struct {
 }
 
 type TDBBridgeUniqDstToken struct {
-	TokenId    string //Near 有这个
+	TokenId    string // near only
 	DstTokenId string
 	DstToken   string
 	WalletName string
 	Info       struct {
-		TokenId      string             // near 有这个
+		TokenId      string             // near only
 		Id           primitive.ObjectID `bson:"_id"`
 		Address      string
 		ReceiptId    string

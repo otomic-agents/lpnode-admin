@@ -39,7 +39,7 @@ type DexAccountBalance struct {
 // WalletInfoPayload is the payload type of the accountDex service walletInfo
 // method.
 type WalletInfoPayload struct {
-	// 链的Id
+	// chain Id
 	ChainID *int64
 }
 
@@ -47,7 +47,7 @@ type WalletInfoPayload struct {
 // method.
 type WalletInfoResult struct {
 	Code *int64
-	// 是否成功
+	// result
 	Data    []*DexAccountBalance
 	Message *string
 }

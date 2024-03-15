@@ -15,19 +15,22 @@ import (
 
 // Endpoints wraps the "mainLogic" service endpoints.
 type Endpoints struct {
-	MainLogic goa.Endpoint
+	MainLogic     goa.Endpoint
+	MainLogicLink goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "mainLogic" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		MainLogic: NewMainLogicEndpoint(s),
+		MainLogic:     NewMainLogicEndpoint(s),
+		MainLogicLink: NewMainLogicLinkEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "mainLogic" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.MainLogic = m(e.MainLogic)
+	e.MainLogicLink = m(e.MainLogicLink)
 }
 
 // NewMainLogicEndpoint returns an endpoint function that calls the method
@@ -35,5 +38,13 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 func NewMainLogicEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		return nil, s.MainLogic(ctx)
+	}
+}
+
+// NewMainLogicLinkEndpoint returns an endpoint function that calls the method
+// "mainLogicLink" of service "mainLogic".
+func NewMainLogicLinkEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.MainLogicLink(ctx)
 	}
 }

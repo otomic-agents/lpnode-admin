@@ -5,13 +5,13 @@ import (
 )
 
 var DexWallet_WalletRow = Type("walletRow", func() {
-	Attribute("id", String, "mongodb主键")
+	Attribute("id", String, "mongodb primary key")
 	Attribute("walletName", String, "")
 	Attribute("privateKey", String, "")
 	Attribute("address", String, "")
-	Attribute("chainType", String, "")                  // evm  near
-	Attribute("accountId", String, "wallet对应的人类可阅读的名称") // Near 有这个玩意
-	Attribute("chainId", Int64, "链的Id")
+	Attribute("chainType", String, "")       // evm  near
+	Attribute("accountId", String, "wallet") // Near only
+	Attribute("chainId", Int64, "chain Id")
 	Attribute("storeId", String, "")
 	Attribute("vaultHostType", String)
 	Attribute("vaultName", String)
@@ -22,25 +22,25 @@ var DexWallet_WalletRow = Type("walletRow", func() {
 	Required("walletName", "chainId", "chainType", "walletType")
 })
 var DexWallet_VaultRow = Type("vaultRow", func() {
-	Attribute("address", String, "地址")
-	Attribute("hostType", String, "托管类型")
-	Attribute("id", String, "存储Id")
-	Attribute("name", String, "钱包名称")
-	Attribute("secertType", String, "私钥类型")
+	Attribute("address", String, "address")
+	Attribute("hostType", String, "host type")
+	Attribute("id", String, "storeId")
+	Attribute("name", String, "store name")
+	Attribute("secertType", String, "store secert type")
 })
 var DexWallet_DeleteFilter = Type("deleteFilter", func() {
-	Attribute("id", String, "Mongodb 的主键")
+	Attribute("id", String, "mongodb primary key")
 	Required("id")
 })
 var _ = Service("dexWallet", func() {
-	Description("用于管理账号")
+	Description("used to manage wallets")
 	Method("listDexWallet", func() {
 		Payload(func() {
 
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", ArrayOf(DexWallet_WalletRow), "钱包别表")
+			Attribute("result", ArrayOf(DexWallet_WalletRow), "wallet list")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -52,7 +52,7 @@ var _ = Service("dexWallet", func() {
 		Result(func() {
 			Attribute("code", Int64, "")
 			Attribute("result", func() {
-				Attribute("_id", String) // Mongodb的id
+				Attribute("_id", String) // Mongodb id
 			})
 			Attribute("message", String)
 		})
@@ -64,7 +64,7 @@ var _ = Service("dexWallet", func() {
 		Payload(DexWallet_DeleteFilter)
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", Int64, "是否删除成功")
+			Attribute("result", Int64, "result")
 			Attribute("message", String)
 		})
 		HTTP(func() {
@@ -75,12 +75,25 @@ var _ = Service("dexWallet", func() {
 		Payload(func() {})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("result", ArrayOf(DexWallet_VaultRow), "列表")
+			Attribute("result", ArrayOf(DexWallet_VaultRow), "list")
 			Attribute("message", String)
 			Required("result")
 		})
 		HTTP(func() {
 			POST("/lpnode/lpnode_admin_panel/dexWallet/vaultList")
 		})
+	})
+	Method("updateLpWallet", func() {
+		Payload(func() {})
+		Result(func() {
+			Attribute("code", Int64, "")
+			Attribute("result", String, "list")
+			Attribute("message", String)
+			Required("result")
+		})
+		HTTP(func() {
+			POST("/lpnode/lpnode_admin_panel/dexWallet/updateLpWallet")
+		})
+
 	})
 })

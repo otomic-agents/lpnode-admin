@@ -21,6 +21,10 @@ type Client struct {
 	// endpoint.
 	MainLogicDoer goahttp.Doer
 
+	// MainLogicLink Doer is the HTTP client used to make requests to the
+	// mainLogicLink endpoint.
+	MainLogicLinkDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -42,6 +46,7 @@ func NewClient(
 ) *Client {
 	return &Client{
 		MainLogicDoer:       doer,
+		MainLogicLinkDoer:   doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -64,6 +69,25 @@ func (c *Client) MainLogic() goa.Endpoint {
 		resp, err := c.MainLogicDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("mainLogic", "mainLogic", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// MainLogicLink returns an endpoint that makes HTTP requests to the mainLogic
+// service mainLogicLink server.
+func (c *Client) MainLogicLink() goa.Endpoint {
+	var (
+		decodeResponse = DecodeMainLogicLinkResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildMainLogicLinkRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.MainLogicLinkDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("mainLogic", "mainLogicLink", err)
 		}
 		return decodeResponse(resp)
 	}

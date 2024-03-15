@@ -11,7 +11,7 @@ import (
 	"context"
 )
 
-// 用于列表tasklist
+// Service is the taskManager service interface.
 type Service interface {
 	// TaskList implements taskList.
 	TaskList(context.Context) (res *TaskListResult, err error)
@@ -37,7 +37,7 @@ var MethodNames = [4]string{"taskList", "taskDeploy", "unDeploy", "taskCreate"}
 // method.
 type TaskCreateResult struct {
 	Code *int64
-	// 创建影响的行数
+	// rows affected on creation
 	Result  *int64
 	Message *string
 }
@@ -51,7 +51,7 @@ type TaskDeploy2 struct {
 // method.
 type TaskDeployResult struct {
 	Code *int64
-	// 创建影响的行数
+	// rows affected on creation
 	Result  *int64
 	Message *string
 }
@@ -77,7 +77,7 @@ type TaskListResult struct {
 // UnDeployResult is the result type of the taskManager service unDeploy method.
 type UnDeployResult struct {
 	Code *int64
-	// 创建影响的行数
+	// rows affected on creation
 	Result  *int64
 	Message *string
 }

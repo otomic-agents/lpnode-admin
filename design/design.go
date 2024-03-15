@@ -17,10 +17,19 @@ var _ = API("adminApiService", func() {
 var _ = Service("mainLogic", func() {
 	Method("mainLogic", func() {
 		Result(func() {
-
+			// Attribute("code", Int64, "")
 		})
 		HTTP(func() {
 			GET("/")
+		})
+	})
+	Method("mainLogicLink", func() {
+		Result(func() {
+			Attribute("code", Int64, "")
+			Attribute("data", String, "result")
+		})
+		HTTP(func() {
+			GET("/link")
 		})
 	})
 })

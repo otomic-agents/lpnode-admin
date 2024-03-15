@@ -17,7 +17,7 @@ var _ = Service("accountCex", func() {
 		})
 		Result(func() {
 			Attribute("code", Int64, "")
-			Attribute("data", ArrayOf(accountCex_CexAccountBalance), "是否成功")
+			Attribute("data", ArrayOf(accountCex_CexAccountBalance), "result")
 			Attribute("message", String)
 		})
 

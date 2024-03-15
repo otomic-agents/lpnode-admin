@@ -28,9 +28,9 @@ func (rt *Retryer) Repet(doFun func() error) (err error) {
 	var lastErr error
 	for {
 		i++
-		log.Printf("尝试第%d", i)
+		log.Printf("attempt no %d", i)
 		if i >= int(rt.Option.MaxCount) {
-			err = errors.WithMessage(GetNoEmptyError(lastErr), "超过最大执行次数,最后的错误是")
+			err = errors.WithMessage(GetNoEmptyError(lastErr), "exceeded max tries, final error was:")
 			return
 		}
 		execErr := doFun()

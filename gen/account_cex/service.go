@@ -39,7 +39,7 @@ type CexAccountBalance struct {
 // method.
 type WalletInfoResult struct {
 	Code *int64
-	// 是否成功
+	// result
 	Data    []*CexAccountBalance
 	Message *string
 }

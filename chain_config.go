@@ -24,7 +24,6 @@ func NewChainConfig(logger *log.Logger) chainconfig.Service {
 	return &chainConfigsrvc{logger}
 }
 
-// 用于配置chain的基础设置,批量设置接口Upsert
 func (s *chainConfigsrvc) SetChainList(ctx context.Context, p *chainconfig.SetChainListPayload) (res *chainconfig.SetChainListResult, err error) {
 
 	res = &chainconfig.SetChainListResult{
@@ -54,21 +53,18 @@ func (s *chainConfigsrvc) SetChainList(ctx context.Context, p *chainconfig.SetCh
 	return
 }
 
-// 用于删除一项链的基础设置
 func (s *chainConfigsrvc) DelChainList(ctx context.Context, p *chainconfig.DelChainListPayload) (res *chainconfig.DelChainListResult, err error) {
 	res = &chainconfig.DelChainListResult{}
 	s.logger.Print("chainConfig.delChainList")
 	return
 }
 
-// 列出链的列表，并附加链相关服务的状态，如Client 运行时状态
 func (s *chainConfigsrvc) ChainList(ctx context.Context) (res *chainconfig.ChainListResult, err error) {
 	res = &chainconfig.ChainListResult{}
 	s.logger.Print("chainConfig.chainList")
 	return
 }
 
-// 用于换目标链原生币种时，最少换多少USD价值的原生币
 func (s *chainConfigsrvc) SetChainGasUsd(ctx context.Context, p *chainconfig.SetChainGasUsdPayload) (res *chainconfig.SetChainGasUsdResult, err error) {
 	res = &chainconfig.SetChainGasUsdResult{}
 	objectId, oErr := primitive.ObjectIDFromHex(p.ID)
