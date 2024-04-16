@@ -8,3 +8,5 @@ node_modules
 cmd/api_service/__debug_bin
 /user_script/**/*
 data.txt
+./.vscode
+/.vscode

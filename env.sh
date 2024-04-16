@@ -1,9 +1,9 @@
-export OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST=redis-cluster-proxy.user-system-vaughnmedellins394
+export REDIS_HOST=redis-cluster-proxy.user-system-vaughnmedellins394
 export REDIS_PASSWORD=MXoj2Tj998wxEu1p
 export MONGODB_HOST=mongo-cluster-mongos.user-system-vaughnmedellins394
 export MONGODB_PORT=27017
 export MONGODB_USER=root-vaughnmedellins394-otmoiclp
-export MONGODBPASS=iyqDvHrOsytOQiMf
+export MONGODB_PASS=iyqDvHrOsytOQiMf
 export MONGODB_DBNAME_LP_STORE=otmoiclp-vaughnmedellins394_lp_store
 export MONGODB_DBNAME_BUSINESS_HISTORY=otmoiclp-vaughnmedellins394_businessHistory
 export POD_NAMESPACE=otmoiclp-vaughnmedellins394

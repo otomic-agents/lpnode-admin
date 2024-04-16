@@ -10,6 +10,7 @@ var LpNodePort int = 9202
 var SystemEnv string
 
 func init() {
+	// obtain from environment variables
 	SystemEnv = os.Getenv("DEPLOY_ENV")
 	if SystemEnv == "" {
 		SystemEnv = "dev"

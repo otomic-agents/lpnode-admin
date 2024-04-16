@@ -30,7 +30,7 @@ spec:
               value: "{{.Deployment.Name}}"
             - name: APP_VERSION
               value: "{{.Deployment.Image}}"
-            - name: OBRIDGE_LPNODE_DB_REDIS_MASTER_SERVICE_HOST
+            - name: REDIS_HOST
               value: "{{.Deployment.RedisHost}}"
             - name: LP_NODE_DATA_MONGO_URL
               value: "{{.Deployment.MongodbHost}}"
@@ -40,7 +40,7 @@ spec:
               value: "obridge-lpnode-market"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
-            - name: MONGODBPASS
+            - name: MONGODB_PASS
               value: "{{.Deployment.MongodbPass}}"
             - name: REDIS_PASSWORD
               value: "{{.Deployment.RedisPass}}"

@@ -20,7 +20,7 @@ func InitMongoConfig() {
 	if prodMongoHost != "" {
 		log.Println("use mongodb config from env vars")
 		prodMongoName := os.Getenv("MONGODB_USER")
-		prodMongoPass := os.Getenv("MONGODBPASS")
+		prodMongoPass := os.Getenv("MONGODB_PASS")
 		prodMongoHost := os.Getenv("MONGODB_HOST")
 		prodMongoPort := os.Getenv("MONGODB_PORT")
 		prodMongoDBNameStore := os.Getenv("MONGODB_DBNAME_LP_STORE")
