@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 	"strings"
 	"sync"
 	"time"
@@ -78,9 +77,9 @@ func (lpc *LpCluster) InitClient() error {
 	} else {
 		var kubeconfig *string
 		if home := homedir.HomeDir(); home != "" {
-			kubeconfig = flag.String("kubeconfig", filepath.Join(home, ".kube", "config"), "(optional) absolute path to the kubeconfig file")
+			kubeconfig = flag.String("kubeconfig", "/.kube/config", "(optional) absolute path to the kubeconfig file")
 		} else {
-			kubeconfig = flag.String("kubeconfig", "", "absolute path to the kubeconfig file")
+			kubeconfig = flag.String("kubeconfig", "/.kube/config", "absolute path to the kubeconfig file")
 		}
 		flag.Parse()
 
@@ -95,6 +94,39 @@ func (lpc *LpCluster) InitClient() error {
 	}
 	lpc.ClientSet = clientset
 	return nil
+}
+func (lpc *LpCluster) DescPodEnv(namespace string, podName string) (envList []struct {
+	Name  string
+	Value string
+}, err error) {
+	useNamespace := apiv1.NamespaceDefault
+	if namespace != "" {
+		useNamespace = namespace
+	}
+	deploymentsClient := lpc.ClientSet.AppsV1().Deployments(useNamespace)
+	deployment, err := deploymentsClient.Get(context.TODO(), podName, metav1.GetOptions{})
+
+	envList = []struct {
+		Name  string
+		Value string
+	}{}
+	if len(deployment.Spec.Template.Spec.Containers) <= 0 {
+		log.Println("pod not found", namespace, podName)
+		return
+	}
+	pod := deployment.Spec.Template.Spec.Containers[0]
+	for _, envItem := range pod.Env {
+		v := struct {
+			Name  string
+			Value string
+		}{
+			Name:  envItem.Name,
+			Value: envItem.Value,
+		}
+		envList = append(envList, v)
+	}
+	return
+
 }
 
 // list all client
@@ -112,7 +144,7 @@ func (lpc *LpCluster) ListClientList(namespace string) (retList []*clustertype.L
 		return
 	}
 	for _, d := range list.Items {
-		if !strings.Contains(d.Name, "obridge-chain-client-") {
+		if !strings.Contains(d.Name, "chain-client-") {
 			continue
 		}
 		retList = append(retList, &clustertype.LpClientPodItem{
@@ -138,7 +170,7 @@ func (lpc *LpCluster) ListClientServiceList(namespace string) (retList []*cluste
 		return
 	}
 	for _, d := range list.Items {
-		if !strings.Contains(d.Name, "obridge-chain-client-") {
+		if !strings.Contains(d.Name, "chain-client-") {
 			continue
 		}
 		ports := make([]struct {

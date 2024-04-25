@@ -202,7 +202,7 @@ func (s *configResourcesrvc) EditResult(ctx context.Context, p *configresource.E
 		return
 	}
 	go func() {
-		service.NewLpCluster().RestartPod(ammInstallResult.Namespace, "obridge-amm-", ptr.ToString(p.AppName))
+		service.NewLpCluster().RestartPod(ammInstallResult.Namespace, "amm-", ptr.ToString(p.AppName))
 	}()
 
 	res.Code = ptr.Int64(0)

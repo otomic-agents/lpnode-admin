@@ -31,7 +31,7 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 	}
 	log.Println("start registration", installId, serviceName, clientName, "🏩🏩")
 	//clientName avax|bsc|xrp
-	err = NewLpCluster().RestartPod(namespace, "obridge-chain-client-", clientName)
+	err = NewLpCluster().RestartPod(namespace, "chain-client-", clientName)
 	if err != nil {
 		log.Println("error restarting pod")
 		return

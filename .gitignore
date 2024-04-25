@@ -10,3 +10,4 @@ cmd/api_service/__debug_bin
 data.txt
 ./.vscode
 /.vscode
+env.json

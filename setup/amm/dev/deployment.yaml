@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "obridge-amm-{{.Deployment.Name}}-analyze"
+  name: "amm-{{.Deployment.Name}}-analyze"
   labels:
-    app: "obridge-amm-{{.Deployment.Name}}-analyze"
+    app: "amm-{{.Deployment.Name}}-analyze"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "obridge-amm-{{.Deployment.Name}}-analyze"
+      app: "amm-{{.Deployment.Name}}-analyze"
   template:
     metadata:
       labels:
-        app: "obridge-amm-{{.Deployment.Name}}-analyze"
+        app: "amm-{{.Deployment.Name}}-analyze"
     spec:
       containers:
-        - name: "obridge-amm-{{.Deployment.Name}}-analyze"
-          image: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
+        - name: "amm-{{.Deployment.Name}}-analyze"
+          image: "otmoic/otmoic-lpnode-amm-analyze:latest"
           imagePullPolicy: "Always"
           env:
             - name: APP_NAME
@@ -24,7 +24,7 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: APP_VERSION
-              value: "kldtks/edge:otmoic-lpnode-amm-analyze-latest"
+              value: "otmoic/otmoic-lpnode-amm-analyze:latest"
             - name: REDIS_HOST
               value: "{{.Deployment.RedisHost}}"
             - name: REDIS_PASSWORD
@@ -50,27 +50,27 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "obridge-amm-{{.Deployment.Name}}"
+  name: "amm-{{.Deployment.Name}}"
   labels:
-    app: "obridge-amm-{{.Deployment.Name}}"
+    app: "amm-{{.Deployment.Name}}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "obridge-amm-{{.Deployment.Name}}"
+      app: "amm-{{.Deployment.Name}}"
   template:
     metadata:
       labels:
-        app: "obridge-amm-{{.Deployment.Name}}"
+        app: "amm-{{.Deployment.Name}}"
     spec:
       containers:
-        - name: "obridge-amm-{{.Deployment.Name}}"
+        - name: "amm-{{.Deployment.Name}}"
           image: "{{.Deployment.Image}}"
           ports:
             - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18081{{ end }}
           env:
             - name: "STATUS_KEY"
-              value: "obridge-amm-status-report-{{.Deployment.Name}}"
+              value: "amm-status-report-{{.Deployment.Name}}"
             {{range .Deployment.CustomEnv}}
             - name: "{{.Key}}"
               value: "{{.Value}}"
@@ -92,7 +92,7 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: LP_MARKET_SERVICE_HOST
-              value: "obridge-lpnode-market"
+              value: "lpnode-market"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
             - name: MONGODB_PASSWORD

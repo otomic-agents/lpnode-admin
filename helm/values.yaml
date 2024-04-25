@@ -1,6 +1,6 @@
 
 domain:
-  name: 'obridge-api-lpnode.edge-dev.xyz'
+  name: 'api-lpnode.edge-dev.xyz'
 
 nameOverride: ""
 fullnameOverride: ""

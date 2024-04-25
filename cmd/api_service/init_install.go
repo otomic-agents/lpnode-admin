@@ -143,7 +143,7 @@ func install_init_amm_client() (err error) {
 		"stdout":       "init install",
 		"yaml":         "",
 		"envList": bson.A{
-			bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("obridge-amm-status-report-%s", name)},
+			bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("amm-status-report-%s", name)},
 		},
 		"installContext": installContextJson,
 		"namespace":      os.Getenv("POD_NAMESPACE"),
@@ -180,7 +180,7 @@ func install_init_market_adapter() (err error) {
 		"stdout":       "init install",
 		"yaml":         "",
 		"envList": bson.A{
-			bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("obridge-amm-market-status-report-%s", "price")},
+			bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("amm-market-status-report-%s", "price")},
 		},
 		"installContext": installContextJson,
 		"namespace":      os.Getenv("POD_NAMESPACE"),

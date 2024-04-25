@@ -280,7 +280,73 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 	if err != nil {
 		return
 	}
-	log.Println(setupConfig)
+	findValueByName := func(envList []struct {
+		Name  string
+		Value string
+	}, name string) string {
+		for _, env := range envList {
+			if env.Name == name {
+				log.Println("find .... a ", env.Value)
+				return env.Value
+			}
+		}
+		// 如果没有找到，返回空字符串或者错误值
+		return ""
+	}
+	if p.SetupConfig.InstallType == "ammClient" {
+		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("chain-client-evm-%s-%d", installRow.Name, installRow.ChainId))
+		fmt.Println(envList, env_err, fmt.Sprintf("|%s|", os.Getenv("NAMESPACE")))
+		setupConfig.Deployment.RedisHost = findValueByName(envList, "REDIS_HOST")
+		setupConfig.Deployment.RedisPort = findValueByName(envList, "REDIS_PORT")
+		setupConfig.Deployment.RedisPass = findValueByName(envList, "REDIS_PASSWORD")
+		setupConfig.Deployment.OsApiKey = findValueByName(envList, "OS_API_KEY")
+		setupConfig.Deployment.OsApiSecret = findValueByName(envList, "OS_API_SECRET")
+		setupConfig.Deployment.OsSystemServer = findValueByName(envList, "OS_SYSTEM_SERVER")
+		setupConfig.Deployment.RpcUrl = findValueByName(envList, "RPC_URL")
+		setupConfig.Deployment.StartBlock = findValueByName(envList, "START_BLOCK")
+	}
+	if p.SetupConfig.InstallType == "amm" {
+		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("amm-%s", installRow.Name))
+		fmt.Println(envList, env_err, fmt.Sprintf("|%s|", os.Getenv("NAMESPACE")))
+		setupConfig.Deployment.RedisHost = findValueByName(envList, "REDIS_HOST")
+		setupConfig.Deployment.RedisPort = findValueByName(envList, "REDIS_PORT")
+		setupConfig.Deployment.RedisPass = findValueByName(envList, "REDIS_PASSWORD")
+		setupConfig.Deployment.MongodbHost = findValueByName(envList, "MONGODB_HOST")
+		setupConfig.Deployment.MongodbPort = findValueByName(envList, "MONGODB_PORT")
+		setupConfig.Deployment.MongodbAccount = findValueByName(envList, "MONGODB_ACCOUNT")
+		setupConfig.Deployment.MongodbPass = findValueByName(envList, "MONGODB_PASSWORD")
+		setupConfig.Deployment.MongodbDbnameLpStore = findValueByName(envList, "MONGODB_DBNAME_LP_STORE")
+		setupConfig.Deployment.MongodbDbnameHistory = findValueByName(envList, "MONGODB_DBNAME_HISTORY")
+		setupConfig.Deployment.OsApiKey = findValueByName(envList, "OS_API_KEY")
+		setupConfig.Deployment.OsApiSecret = findValueByName(envList, "OS_API_SECRET")
+		setupConfig.Deployment.OsSystemServer = findValueByName(envList, "OS_SYSTEM_SERVER")
+	}
+	if p.SetupConfig.InstallType == "market" {
+		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("amm-market-%s", installRow.Name))
+		fmt.Println(envList, env_err, fmt.Sprintf("|%s|", os.Getenv("NAMESPACE")))
+		setupConfig.Deployment.RedisHost = findValueByName(envList, "REDIS_HOST")
+		setupConfig.Deployment.RedisPort = findValueByName(envList, "REDIS_PORT")
+		setupConfig.Deployment.RedisPass = findValueByName(envList, "REDIS_PASSWORD")
+		setupConfig.Deployment.MongodbHost = findValueByName(envList, "MONGODB_HOST")
+		setupConfig.Deployment.MongodbPort = findValueByName(envList, "MONGODB_PORT")
+		setupConfig.Deployment.MongodbAccount = findValueByName(envList, "MONGODB_ACCOUNT")
+		setupConfig.Deployment.MongodbPass = findValueByName(envList, "MONGODB_PASS")
+		setupConfig.Deployment.MongodbDbnameLpStore = findValueByName(envList, "MONGODB_DBNAME_LP_STORE")
+	}
+	if p.SetupConfig.InstallType == "userApp" {
+		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("user-app-%s", installRow.Name))
+		fmt.Println(envList, env_err, fmt.Sprintf("|%s|", os.Getenv("NAMESPACE")))
+		setupConfig.Deployment.RedisHost = findValueByName(envList, "REDIS_HOST")
+		setupConfig.Deployment.RedisPort = findValueByName(envList, "REDIS_PORT")
+		setupConfig.Deployment.RedisPass = findValueByName(envList, "REDIS_PASSWORD")
+		setupConfig.Deployment.MongodbHost = findValueByName(envList, "MONGODB_HOST")
+		setupConfig.Deployment.MongodbPort = findValueByName(envList, "MONGODB_PORT")
+		setupConfig.Deployment.MongodbAccount = findValueByName(envList, "MONGODB_ACCOUNT")
+		setupConfig.Deployment.MongodbPass = findValueByName(envList, "MONGODB_PASS")
+		setupConfig.Deployment.MongodbDbnameLpStore = findValueByName(envList, "MONGODB_DBNAME_LP_STORE")
+	}
+
+	log.Println("000______", updateConfig.Deployment)
 	setupConfig = *cps.MergeSetupConfig(&setupConfig, &updateConfig)
 	logger.System.Debug("🤼🤼🤼🤼", len(setupConfig.Deployment.CustomEnv))
 

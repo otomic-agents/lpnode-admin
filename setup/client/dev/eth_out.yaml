@@ -1,16 +1,15 @@
-# Source: chain-client-evm/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: chain-client-evm-avax-server-9000
+  name: chain-client-evm-eth-server-60
   namespace: "{{.Deployment.Namespace}}"
 spec:
   selector:
-    app: chain-client-evm-avax-9000
+    app: chain-client-evm-eth-60
   type: ClusterIP
   ports:
     - protocol: TCP
-      name: chain-client-evm-avax-api-9000
+      name: chain-client-evm-eth-api-60
       port: 9100
       targetPort: 9100
 ---
@@ -18,26 +17,28 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chain-client-evm-avax-9000
+  name: chain-client-evm-eth-60
   namespace: "{{.Deployment.Namespace}}"
   labels:
-    app: chain-client-evm-avax-9000
+    app: chain-client-evm-eth-60
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chain-client-evm-avax-9000
+      app: chain-client-evm-eth-60
   template:
     metadata:
       labels:
-        app: chain-client-evm-avax-9000
+        app: chain-client-evm-eth-60
     spec:
       containers:
-        - name: chain-client-evm-avax-9000
+        - name: chain-client-evm-eth-60
           image: "{{.Deployment.Image}}"
           ports:
-            - containerPort: 9100
+            - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}9100{{ end }}
           env:
+            - name: CLEAR_PADDING
+              value: 'true'
             - name: "STATUS_KEY"
               value: "chain-client-status-report-{{.Deployment.Name}}"
             - name: CHAIN_TYPE
@@ -54,22 +55,25 @@ spec:
               value: "{{.Deployment.RedisHost}}"
             - name: REDIS_PORT
               value: "{{.Deployment.RedisPort}}"
-            - name: CONTRACT_ADDRESS
-              value: "0xE244204c900613dd084ED8543b15616bA43B560A"
             - name: SYSTEM_CHAIN_ID
-              value: "9000"
+              value: "60"
             - name: CHAIN_ID
-              value: "43113"
+              value: "11155111"
             - name: OS_API_KEY
               value: "{{.Deployment.OsApiKey}}"
             - name: OS_API_SECRET
               value: "{{.Deployment.OsApiSecret}}"
             - name: OS_SYSTEM_SERVER
               value: "{{.Deployment.OsSystemServer}}"
+            - name: CONTRACT_ADDRESS
+              value: "0xD6b2815Dc445e69aFbA7924f9744875FF2509Db2"
             - name: START_BLOCK
-              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}28119986{{ end }}"
+              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}24345141{{ end }}"
             - name: RPC_URL
-              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://rpc.ankr.com/avalanche_fuji{{ end }}"
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://eth-sepolia-public.unifra.io{{ end }}"
+            - name: AUTO_START
+              value: "false"
 # START_BLOCK
 # RPC_URL
 # image
+# image = {{.Deployment.Image}}

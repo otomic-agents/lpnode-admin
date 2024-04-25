@@ -21,11 +21,11 @@ spec:
           - containerPort: 18006
         env:
           - name: RELAY_ACCESS_URL
-            value: "https://obridge-api-relay.edge-dev.xyz"
+            value: "https://api-relay.edge-dev.xyz"
           - name: REDIS_PASS
             valueFrom:
               secretKeyRef:
-                name: obridge-lpnode-db-redis
+                name: lpnode-db-redis
                 key: redis-password
           - name: POD_NAMESPACE
             valueFrom:
@@ -35,5 +35,5 @@ spec:
           - name: MONGODB_PASS
             valueFrom:
               secretKeyRef:
-                name: obridge-lpnode-db-mongodb
+                name: lpnode-db-mongodb
                 key: mongodb-root-password

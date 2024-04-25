@@ -316,7 +316,7 @@ func (bcls *BridgeConfigLogicService) GetClientUrl(chainId int64) (ret string, e
 		return
 	}
 
-	// http://obridge-chain-client-evm-avax-server-9000:9100/evm-client-9000
+	// http://chain-client-evm-avax-server-9000:9100/evm-client-9000
 	ret = fmt.Sprintf("http://%s:9100/%s-client-%d", result.ServiceName, result.ChainType, result.ChainId)
 	return
 }
@@ -341,7 +341,7 @@ func (bcls *BridgeConfigLogicService) GetClientSetWalletUrl(chainId int64) (ret 
 		err = errors.WithMessage(utils.GetNoEmptyError(err), "cannot find install record, cannot return url")
 		return
 	}
-	// https://obridge-api-lpnode-3.edge-dev.xyz/evm-client-9000/lpnode_admin_panel/set_wallet
+	// https://api-lpnode-3.edge-dev.xyz/evm-client-9000/lpnode_admin_panel/set_wallet
 	ret = fmt.Sprintf("http://%s:9100/%s-client-%d/lpnode_admin_panel/set_wallet", result.ServiceName, result.ChainType, result.ChainId)
 	return
 }

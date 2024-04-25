@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "obridge-user-app-{{.Deployment.Name}}"
+  name: "user-app-{{.Deployment.Name}}"
   labels:
-    app: "obridge-user-app-{{.Deployment.Name}}"
+    app: "user-app-{{.Deployment.Name}}"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: "obridge-user-app-{{.Deployment.Name}}"
+      app: "user-app-{{.Deployment.Name}}"
   template:
     metadata:
       labels:
-        app: "obridge-user-app-{{.Deployment.Name}}"
+        app: "user-app-{{.Deployment.Name}}"
     spec:
       containers:
-        - name: "obridge-user-app-{{.Deployment.Name}}"
+        - name: "user-app-{{.Deployment.Name}}"
           image: "{{.Deployment.Image}}"
           ports:
             - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}17001{{ end }}
           env:
             - name: "STATUS_KEY"
-              value: "obridge-user-app-status-report-{{.Deployment.Name}}"
+              value: "user-app-status-report-{{.Deployment.Name}}"
             {{range .Deployment.CustomEnv}}
             - name: "{{.Key}}"
               value: "{{.Value}}"
@@ -32,19 +32,19 @@ spec:
               value: "{{.Deployment.Image}}"
             - name: REDIS_HOST
               value: "{{.Deployment.RedisHost}}"
-            - name: LP_NODE_DATA_MONGO_URL
-              value: "{{.Deployment.MongodbHost}}"
             - name: REDIS_PORT
               value: "{{.Deployment.RedisPort}}"
-            - name: MONGODB_PORT
-              value: "{{.Deployment.MongodbPort}}"
-            - name: NODE_ENV
-              value: "production"
-            - name: LP_MARKET_SERVICE_URL
-              value: "obridge-lpnode-market"
-            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
-              value: "http://lpnode-admin-server:18006"
-            - name: MONGODB_PASS
-              value: "{{.Deployment.MongodbPass}}"
             - name: REDIS_PASSWORD
               value: "{{.Deployment.RedisPass}}"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
+            - name: LP_MARKET_SERVICE_URL
+              value: "lpnode-market"
+            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
+              value: "http://lpnode-admin-server:18006"
+            - name: MONGODB_ACCOUNT
+              value "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_PASS
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_PORT
+              value: "{{.Deployment.MongodbPort}}"

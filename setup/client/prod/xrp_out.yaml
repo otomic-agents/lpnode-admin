@@ -1,46 +1,46 @@
 ---
-# Source: obridge-chain-client-xrp/templates/service.yaml
+# Source: chain-client-xrp/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: obridge-chain-client-xrp-server-144
+  name: chain-client-xrp-server-144
   namespace: "{{.Deployment.Namespace}}"
 spec:
   selector:
-    app: obridge-chain-client-xrp-144
+    app: chain-client-xrp-144
   type: ClusterIP
   ports:
     - protocol: TCP
-      name: obridge-chain-client-xrp-api-144
+      name: chain-client-xrp-api-144
       port: 9100
       targetPort: 9100
 ---
-# Source: obridge-chain-client-xrp/templates/deployment.yaml
+# Source: chain-client-xrp/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: obridge-chain-client-xrp-144
+  name: chain-client-xrp-144
   namespace: "{{.Deployment.Namespace}}"
   labels:
-    app: obridge-chain-client-xrp-144
+    app: chain-client-xrp-144
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: obridge-chain-client-xrp-144
+      app: chain-client-xrp-144
   template:
     metadata:
       labels:
-        app: obridge-chain-client-xrp-144
+        app: chain-client-xrp-144
     spec:
       containers:
-        - name: obridge-chain-client-xrp-144
+        - name: chain-client-xrp-144
           image: "{{.Deployment.Image}}"
           ports:
             - containerPort: 9100
           env:
             - name: "STATUS_KEY"
-              value: "obridge-chain-client-status-report-{{.Deployment.Name}}"
+              value: "chain-client-status-report-{{.Deployment.Name}}"
             - name: CHAIN_TYPE
               value: "xrp"
             {{range .Deployment.CustomEnv}}

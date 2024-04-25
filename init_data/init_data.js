@@ -11,10 +11,10 @@ var init_data = {
           tokenUsd: 300,
           chainType: "evm",
           image: "kldtks/edge:otmoic-chainclient-evm-6ef74826",
-          serviceName: "obridge-chain-client-evm-bsc-server-9006",
+          serviceName: "chain-client-evm-bsc-server-9006",
           envList: [
             {
-              STATUS_KEY: "obridge-chain-client-status-report-bsc",
+              STATUS_KEY: "chain-client-status-report-bsc",
             },
           ],
         },

@@ -1,45 +1,45 @@
-# Source: obridge-chain-client-evm/templates/service.yaml
+# Source: chain-client-evm/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: obridge-chain-client-evm-avax-server-9000
+  name: chain-client-evm-avax-server-9000
   namespace: "{{.Deployment.Namespace}}"
 spec:
   selector:
-    app: obridge-chain-client-evm-avax-9000
+    app: chain-client-evm-avax-9000
   type: ClusterIP
   ports:
     - protocol: TCP
-      name: obridge-chain-client-evm-avax-api-9000
+      name: chain-client-evm-avax-api-9000
       port: 9100
       targetPort: 9100
 ---
-# Source: obridge-chain-client-evm/templates/deployment.yaml
+# Source: chain-client-evm/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: obridge-chain-client-evm-avax-9000
+  name: chain-client-evm-avax-9000
   namespace: "{{.Deployment.Namespace}}"
   labels:
-    app: obridge-chain-client-evm-avax-9000
+    app: chain-client-evm-avax-9000
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: obridge-chain-client-evm-avax-9000
+      app: chain-client-evm-avax-9000
   template:
     metadata:
       labels:
-        app: obridge-chain-client-evm-avax-9000
+        app: chain-client-evm-avax-9000
     spec:
       containers:
-        - name: obridge-chain-client-evm-avax-9000
+        - name: chain-client-evm-avax-9000
           image: "{{.Deployment.Image}}"
           ports:
             - containerPort: 9100
           env:
             - name: "STATUS_KEY"
-              value: "obridge-chain-client-status-report-{{.Deployment.Name}}"
+              value: "chain-client-status-report-{{.Deployment.Name}}"
             - name: CHAIN_TYPE
               value: "evm"
             {{range .Deployment.CustomEnv}}
