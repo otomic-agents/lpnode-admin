@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: chain-client-evm-bsc-server-9006
+  name: chain-client-evm-op-server-614
   namespace: "{{.Deployment.Namespace}}"
 spec:
   selector:
-    app: chain-client-evm-bsc-9006
+    app: chain-client-evm-op-614
   type: ClusterIP
   ports:
     - protocol: TCP
-      name: chain-client-evm-bsc-api-9006
+      name: chain-client-evm-op-api-614
       port: 9100
       targetPort: 9100
 ---
@@ -17,22 +17,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chain-client-evm-bsc-9006
+  name: chain-client-evm-op-614
   namespace: "{{.Deployment.Namespace}}"
   labels:
-    app: chain-client-evm-bsc-9006
+    app: chain-client-evm-op-614
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chain-client-evm-bsc-9006
+      app: chain-client-evm-op-614
   template:
     metadata:
       labels:
-        app: chain-client-evm-bsc-9006
+        app: chain-client-evm-op-614
     spec:
       containers:
-        - name: chain-client-evm-bsc-9006
+        - name: chain-client-evm-op-614
           image: "{{.Deployment.Image}}"
           ports:
             - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}9100{{ end }}
@@ -56,9 +56,9 @@ spec:
             - name: REDIS_PORT
               value: "{{.Deployment.RedisPort}}"
             - name: SYSTEM_CHAIN_ID
-              value: "9006"
+              value: "614"
             - name: CHAIN_ID
-              value: "97"
+              value: "10"
             - name: OS_API_KEY
               value: "{{.Deployment.OsApiKey}}"
             - name: OS_API_SECRET
@@ -66,13 +66,8 @@ spec:
             - name: OS_SYSTEM_SERVER
               value: "{{.Deployment.OsSystemServer}}"
             - name: CONTRACT_ADDRESS
-              value: "0xcb24e8aEDB15981F4C088214722D8E3809e817eB"
-
+              value: "0x7610e5C39f0Bc4EEF57DEdAAb19a714672B21c9b"
             - name: START_BLOCK
-              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}24345141{{ end }}"
+              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}119733829{{ end }}"
             - name: RPC_URL
-              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://blockchain2.byte-trade.com:31267/bsc-archive-testnet{{ end }}"
-# START_BLOCK
-# RPC_URL
-# image
-# image = {{.Deployment.Image}}
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://mainnet.optimism.io{{ end }}"
