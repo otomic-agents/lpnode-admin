@@ -1,0 +1,48 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "{{.Name}}"
+  namespace: "{{.Namespace}}"
+spec:
+  schedule: "{{.Cron}}"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: user-script
+              hostPath:
+                type: DirectoryOrCreate
+                path: "{{.UserSpacePath}}/UserScript"
+          containers:
+          - name: "{{.Name}}"
+            image: kldtks/edge:otmoic-lpnode-monitor-latest
+            volumeMounts:
+              - name: user-script
+                mountPath: /user-script/run-script
+            imagePullPolicy: Always
+            env:
+            - name: MongoDbHost
+              value: "{{.MongoDbHost}}"
+            - name: MongoDbPort
+              value: "{{.MongoDbPort}}"
+            - name: MongoDbUser
+              value: "{{.MongoDbUser}}"
+            - name: MongoDbPass
+              value: "{{.MongoDbPass}}"
+            - name: MongoDbLpStore
+              value: "{{.MongoDbLpStore}}"
+            - name: MongoDbBusiness
+              value: "{{.MongoDbBusiness}}"
+            - name: REDIS_HOST
+              value: "{{.RedisHost}}"
+            - name: REDIS_PORT
+              value: "{{.RedisPort}}"
+            - name: REDIS_PASSWORD
+              value: "{{.RedisPass}}"
+            command:
+            - /bin/sh
+            - -c
+            - date; node dist/m_c_execute.js --script={{.ScriptPath}}
+          restartPolicy: Never
