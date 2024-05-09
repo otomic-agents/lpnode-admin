@@ -10,11 +10,76 @@ var init_data = {
           tokenName: "BNB",
           tokenUsd: 300,
           chainType: "evm",
-          image: "kldtks/edge:otmoic-chainclient-evm-6ef74826",
+          image: "otmoic/chainclient-evm:latest",
           serviceName: "chain-client-evm-bsc-server-9006",
+          deployName: "chain-client-evm-bsc-9006",
           envList: [
             {
               STATUS_KEY: "chain-client-status-report-bsc",
+            },
+          ],
+        },
+        {
+          chainId: 9000,
+          chainName: "AVAX",
+          name: "avax chain",
+          tokenName: "AVAX",
+          tokenUsd: 300,
+          chainType: "evm",
+          image: "otmoic/chainclient-evm:latest",
+          serviceName: "chain-client-evm-avax-server-9000",
+          deployName: "chain-client-evm-avax-9000",
+          envList: [
+            {
+              STATUS_KEY: "chain-client-status-report-avax",
+            },
+          ],
+        },
+        {
+          chainId: 60,
+          chainName: "eth",
+          name: "eth chain",
+          tokenName: "ETH",
+          tokenUsd: 300,
+          chainType: "evm",
+          image: "otmoic/chainclient-evm:latest",
+          serviceName: "chain-client-evm-eth-server-60",
+          deployName: "chain-client-evm-eth-60",
+          envList: [
+            {
+              STATUS_KEY: "chain-client-status-report-eth",
+            },
+          ],
+        },
+        {
+          chainId: 966,
+          chainName: "polygon",
+          name: "polygon chain",
+          tokenName: "MATIC",
+          tokenUsd: 300,
+          chainType: "evm",
+          image: "otmoic/chainclient-evm:latest",
+          serviceName: "chain-client-evm-polygon-server-966",
+          deployName: "chain-client-evm-polygon-966",
+          envList: [
+            {
+              STATUS_KEY: "chain-client-status-report-polygon",
+            },
+          ],
+        },
+        {
+          chainId: 614,
+          chainName: "op",
+          name: "OP Mainnet",
+          tokenName: "ETH",
+          tokenUsd: 300,
+          chainType: "evm",
+          image: "otmoic/chainclient-evm:latest",
+          serviceName: "chain-client-evm-op-server-614",
+          deployName: "chain-client-evm-op-614",
+          envList: [
+            {
+              STATUS_KEY: "chain-client-status-report-op",
             },
           ],
         },
@@ -52,6 +117,10 @@ var init_data = {
         },
         {
           name: "serviceName",
+          type: "string",
+        },
+        {
+          name: "deployName",
           type: "string",
         },
         {

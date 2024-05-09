@@ -11,3 +11,4 @@ data.txt
 ./.vscode
 /.vscode
 env.json
+setup/task/dev/setup_*.yaml

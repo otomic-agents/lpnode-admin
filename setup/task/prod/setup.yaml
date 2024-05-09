@@ -2,7 +2,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: "{{.Name}}"
-  namespace: "otmoiclp-bigdog"
+  namespace: "{{.Namespace}}"
 spec:
   schedule: "{{.Cron}}"
   concurrencyPolicy: Forbid

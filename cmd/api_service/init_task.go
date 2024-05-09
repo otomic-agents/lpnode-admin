@@ -54,10 +54,21 @@ func deployMonitorList(listData []types.DBMonitorListRow) (err error) {
 		}
 		tmpWriter := &types.TemplateWriter{}
 		setupSet := types.MonitorSetupConfig{
-			Namespace:  os.Getenv("POD_NAMESPACE"),
-			Name:       v.Name,
-			Cron:       v.Cron,
-			ScriptPath: v.ScriptPath,
+			Namespace:       os.Getenv("POD_NAMESPACE"),
+			Name:            v.Name,
+			Cron:            v.Cron,
+			ScriptPath:      v.ScriptPath,
+			MongoDbHost:     os.Getenv("MONGODB_HOST"),
+			MongoDbPort:     os.Getenv("MONGODB_PORT"),
+			MongoDbUser:     os.Getenv("MONGODB_USER"),
+			MongoDbPass:     os.Getenv("MONGODB_PASS"),
+			MongoDbLpStore:  os.Getenv("MONGODB_DBNAME_LP_STORE"),
+			MongoDbBusiness: os.Getenv("MONGODB_DBNAME_BUSINESS_HISTORY"),
+			RedisHost:       os.Getenv("REDIS_HOST"),
+			RedisPort:       os.Getenv("REDIS_PORT"),
+			RedisPass:       os.Getenv("REDIS_PASS"),
+			RedisDb:         0,
+			UserSpacePath:   os.Getenv("USERSPACE_DATA_PATH"),
 		}
 		err = tmpl.Execute(tmpWriter, setupSet)
 		if err != nil {
