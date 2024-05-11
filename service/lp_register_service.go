@@ -105,6 +105,96 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 	status = true
 	return
 }
+func (lprls *LpRegisterLogicService) RegisterItemWithoutRestart(installId string, serviceName string, clientName string, chainType string, chainId int64, namespace string) (status bool, err error) {
+	if serviceName == "" {
+		err = fmt.Errorf("%s ServiceName is empty", installId)
+		return
+	}
+	log.Println("start registration", installId, serviceName, clientName, "🏩🏩")
+	log.Println("preparing to register client.", lprls.GetServiceUrl(serviceName))
+	url := fmt.Sprintf("http://%s:9100/%s-client-%d/lpnode/register_lpnode", serviceName, chainType, chainId)
+	checkUrl := fmt.Sprintf("http://%s:9100/%s-client-%d/lpnode/register_lpnode_support_duplication", serviceName, chainType, chainId)
+	_, checkOk, checkErr := utils.NewHttpCall().PostJsonCall(&utils.HttpCallRequestOption{
+		Url:     checkUrl,
+		Timeout: 5000,
+		JsonStr: `{}`,
+		TestOKFun: func(bodyStr string) bool {
+			log.Println("bodyis:", bodyStr)
+			return gjson.Get(bodyStr, "code").Int() == 200
+		},
+	})
+	if checkErr != nil {
+		err = checkErr
+		return
+	}
+	if !checkOk {
+		err = errors.New("the chain client does not support duplicate registration")
+		return
+	}
+	log.Println("registration address is", url)
+	var dataStr = `{"lpnode_server_url":{"on_transfer_out":"http://lpnode-server:9202/lpnode/chain_client/on_transfer_out","on_transfer_in":"http://lpnode-server:9202/lpnode/chain_client/on_transfer_in","on_confirm":"http://lpnode-server:9202/lpnode/chain_client/on_confirm","on_refunded":"http://lpnode-server:9202/lpnode/chain_client/on_refund"}}`
+	dataStr, _ = sjson.Set(dataStr, "chainType", chainType)
+	if chainType == "near" {
+		nearTokenList := []struct {
+			Address string `bson:"address"`
+			TokenId string `bson:"tokenId"`
+		}{}
+		findErr, cursor := database.FindAll("main", "tokens", bson.M{"chainType": "near"})
+		if findErr != nil {
+			err = errors.WithMessage(findErr, "error querying token pair")
+			return
+		}
+		if err = cursor.All(context.TODO(), &nearTokenList); err != nil {
+			return
+		}
+		for _, nearToken := range nearTokenList {
+			cursor.Decode(&nearToken)
+			tokenHex, convertErr := utils.Base58ToHexString(nearToken.Address)
+			if convertErr != nil {
+				err = errors.WithMessage(err, "convert token error")
+				return
+			}
+			key := strings.Replace(nearToken.TokenId, ".", "\\.", 1)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("token_map.%s.receiver_id", key), tokenHex)
+		}
+		logger.System.Debug("dataStr:", dataStr)
+	}
+	retryer := utils.RetryerNew().SetOption(&utils.RepetOption{
+		Interval: 2000,
+		MaxCount: 15,
+	})
+	err = retryer.Repet(func() error {
+		_, ok, err := utils.NewHttpCall().PostJsonCall(&utils.HttpCallRequestOption{
+			Url:     url,
+			Timeout: 5000,
+			JsonStr: dataStr,
+			TestOKFun: func(bodyStr string) bool {
+				log.Println("bodyis:", bodyStr)
+				return gjson.Get(bodyStr, "code").Int() == 200
+			},
+		})
+		if err != nil {
+			return err
+		}
+		if ok {
+			return nil
+		} else {
+			return errors.New("not ready temporary")
+		}
+	})
+
+	log.Println("sendData:________")
+	log.Println("url", url)
+	log.Println(dataStr)
+	log.Println("___________________")
+	if err != nil {
+		err = errors.WithMessage(err, fmt.Sprintf("register error,install_id: %s", installId))
+		return
+	}
+	log.Println("🩳🩳🩳🩳")
+	status = true
+	return
+}
 func (lprls *LpRegisterLogicService) GetServiceUrl(serviceName string) string {
 	return serviceName
 }
