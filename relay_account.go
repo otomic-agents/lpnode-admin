@@ -143,7 +143,7 @@ func (s *relayAccountsrvc) DeleteAccount(ctx context.Context, p *relayaccount.De
 		return
 	}
 	delCount, err := database.DeleteOne("main", "relayAccounts", bson.M{"_id": mongoId})
-	logger.System.Debug("deleted %d accounts", delCount)
+	logger.System.Debugf("deleted %d accounts", delCount)
 	if err != nil {
 		return
 	}

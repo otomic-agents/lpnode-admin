@@ -21,7 +21,7 @@ func BuildWalletInfoPayload(accountDexWalletInfoBody string) (*accountdex.Wallet
 	{
 		err = json.Unmarshal([]byte(accountDexWalletInfoBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainId\": 5808015232872047124\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainId\": 6523664875020073430\n   }'")
 		}
 	}
 	v := &accountdex.WalletInfoPayload{

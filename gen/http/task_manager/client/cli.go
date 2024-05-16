@@ -21,7 +21,7 @@ func BuildTaskDeployPayload(taskManagerTaskDeployBody string) (*taskmanager.Task
 	{
 		err = json.Unmarshal([]byte(taskManagerTaskDeployBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Explicabo ut et dolor dignissimos.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Totam saepe ad et.\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskDeploy2{
@@ -39,7 +39,7 @@ func BuildUnDeployPayload(taskManagerUnDeployBody string) (*taskmanager.TaskDepl
 	{
 		err = json.Unmarshal([]byte(taskManagerUnDeployBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Dolorem odio nihil.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Non labore animi.\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskDeploy2{
@@ -57,7 +57,7 @@ func BuildTaskCreatePayload(taskManagerTaskCreateBody string) (*taskmanager.Task
 	{
 		err = json.Unmarshal([]byte(taskManagerTaskCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Quis a accusantium dolores dicta.\",\n      \"deployMessage\": \"Quasi molestiae commodi.\",\n      \"deployed\": false,\n      \"schedule\": \"Totam saepe ad et.\",\n      \"scriptBody\": \"Rem eveniet culpa dolore ut ut eos.\",\n      \"scriptPath\": \"Non labore animi.\",\n      \"taskType\": \"customize\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Eos placeat.\",\n      \"deployMessage\": \"Aliquam dicta molestiae qui sed quia.\",\n      \"deployed\": false,\n      \"schedule\": \"Aut nihil dolorem natus dolorum ut.\",\n      \"scriptBody\": \"Aperiam aut explicabo sint est voluptas.\",\n      \"scriptPath\": \"Enim quos deleniti vero ipsa omnis.\",\n      \"taskType\": \"customize\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskItem{
