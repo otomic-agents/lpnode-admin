@@ -3499,6 +3499,8 @@ components:
                     example: Reprehenderit minima sunt omnis.
             example:
                 relayUri: Aut cumque.
+            required:
+                - relayUri
         StatListResponseBody:
             type: object
             properties:

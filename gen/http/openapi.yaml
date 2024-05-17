@@ -913,6 +913,8 @@ paths:
                   required: true
                   schema:
                     $ref: '#/definitions/SettingsSettingsRequestBody'
+                    required:
+                        - relayUri
             responses:
                 "200":
                     description: OK response.
@@ -3441,6 +3443,8 @@ definitions:
                 example: Necessitatibus omnis.
         example:
             relayUri: Expedita suscipit ut.
+        required:
+            - relayUri
     SettingsSettingsResponseBody:
         title: SettingsSettingsResponseBody
         type: object

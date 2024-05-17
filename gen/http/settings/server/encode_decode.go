@@ -44,6 +44,10 @@ func DecodeSettingsRequest(mux goahttp.Muxer, decoder func(*http.Request) goahtt
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
+		err = ValidateSettingsRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
 		payload := NewSettingsPayload(&body)
 
 		return payload, nil

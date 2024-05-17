@@ -9,6 +9,8 @@ package server
 
 import (
 	settings "admin-panel/gen/settings"
+
+	goa "goa.design/goa/v3/pkg"
 )
 
 // SettingsRequestBody is the type of the "settings" service "settings"
@@ -40,8 +42,17 @@ func NewSettingsResponseBody(res *settings.SettingsResult) *SettingsResponseBody
 // NewSettingsPayload builds a settings service settings endpoint payload.
 func NewSettingsPayload(body *SettingsRequestBody) *settings.SettingsPayload {
 	v := &settings.SettingsPayload{
-		RelayURI: body.RelayURI,
+		RelayURI: *body.RelayURI,
 	}
 
 	return v
+}
+
+// ValidateSettingsRequestBody runs the validations defined on
+// SettingsRequestBody
+func ValidateSettingsRequestBody(body *SettingsRequestBody) (err error) {
+	if body.RelayURI == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("relayUri", "body"))
+	}
+	return
 }

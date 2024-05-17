@@ -27,7 +27,7 @@ func NewSettings(logger *log.Logger) settings.Service {
 func (s *settingssrvc) Settings(ctx context.Context, p *settings.SettingsPayload) (res *settings.SettingsResult, err error) {
 	res = &settings.SettingsResult{}
 	settingsConfig := &types.SettingsConfig{
-		RelayUri: ptr.ToString(p.RelayURI),
+		RelayUri: p.RelayURI,
 	}
 	log.Println(settingsConfig)
 	saved, err := service.NewSettingsService().SaveSetting(settingsConfig)

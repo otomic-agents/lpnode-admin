@@ -14,7 +14,7 @@ import (
 // SettingsRequestBody is the type of the "settings" service "settings"
 // endpoint HTTP request body.
 type SettingsRequestBody struct {
-	RelayURI *string `form:"relayUri,omitempty" json:"relayUri,omitempty" xml:"relayUri,omitempty"`
+	RelayURI string `form:"relayUri" json:"relayUri" xml:"relayUri"`
 }
 
 // SettingsResponseBody is the type of the "settings" service "settings"

@@ -29,7 +29,7 @@ var MethodNames = [1]string{"settings"}
 
 // SettingsPayload is the payload type of the settings service settings method.
 type SettingsPayload struct {
-	RelayURI *string
+	RelayURI string
 }
 
 // SettingsResult is the result type of the settings service settings method.
