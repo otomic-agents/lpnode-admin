@@ -17,6 +17,7 @@ import (
 	apiv1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
@@ -75,6 +76,7 @@ func (lpc *LpCluster) InitClient() error {
 			return err
 		}
 	} else {
+		log.Println("clusterType", clusterType)
 		var kubeconfig *string
 		if home := homedir.HomeDir(); home != "" {
 			kubeconfig = flag.String("kubeconfig", "/.kube/config", "(optional) absolute path to the kubeconfig file")
@@ -280,6 +282,34 @@ func (lpc *LpCluster) WaitDeploymentAvailable(namespace string, findName string,
 		return err
 	}
 	return nil
+}
+
+func (lpc *LpCluster) PathEnv(namespace string, deploymentName string, containersName string, key string, value string) (ret bool, err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	deploy, getErr := lpc.ClientSet.AppsV1().Deployments(namespace).Get(ctx, deploymentName, metav1.GetOptions{})
+	if getErr != nil {
+		err = getErr
+		return
+	}
+	if deploy.Name != "" {
+		log.Println(deploy.Name)
+		ctxApply, ctxCancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer ctxCancel()
+		patch := []byte(fmt.Sprintf(`{"spec":{"template":{"spec":{"containers":[{"name":"%s","env":[{"name":"%s","value":"%s"}]}]}}}}`, containersName, key, value))
+		_, pathErr := lpc.ClientSet.AppsV1().Deployments(namespace).Patch(ctxApply, deploymentName, types.StrategicMergePatchType, patch, metav1.PatchOptions{})
+		log.Println(pathErr)
+		if pathErr != nil {
+			err = pathErr
+			return
+		}
+		ret = true
+		return
+	}
+
+	ret = false
+	err = errors.WithMessage(utils.GetNoEmptyError(err), "PathEnv err")
+	return
 }
 
 func (lpc *LpCluster) GetPodStatus(pod *v1.Pod) string {

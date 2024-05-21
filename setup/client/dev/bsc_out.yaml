@@ -66,7 +66,7 @@ spec:
             - name: OS_SYSTEM_SERVER
               value: "{{.Deployment.OsSystemServer}}"
             - name: CONTRACT_ADDRESS
-              value: "0x9D18cc6cFC0614e05AF80355aB836E2cF945a91C"
+              value: "0xcb24e8aEDB15981F4C088214722D8E3809e817eB"
 
             - name: START_BLOCK
               value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}24345141{{ end }}"

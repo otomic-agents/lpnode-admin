@@ -21,7 +21,7 @@ func BuildListPayload(orderCenterListBody string) (*ordercenter.ListPayload, err
 	{
 		err = json.Unmarshal([]byte(orderCenterListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"page\": 3479140946085793721,\n      \"pageSize\": 6966645285770883686,\n      \"status\": 2603137450456952286\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"page\": 3348599141847740682,\n      \"pageSize\": 3174250165231091153,\n      \"status\": 8019147281767384093\n   }'")
 		}
 	}
 	v := &ordercenter.ListPayload{

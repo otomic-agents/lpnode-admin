@@ -44,5 +44,5 @@ spec:
             command:
             - /bin/sh
             - -c
-            - date; node dist/{{.ScriptPath}}
+            - date; node dist/m_c_execute.js --script={{.ScriptPath}}
           restartPolicy: Never

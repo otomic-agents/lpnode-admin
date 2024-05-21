@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: chain-client-evm-bsc-server-9006
+  name: chain-client-evm-eth-server-60
   namespace: "{{.Deployment.Namespace}}"
 spec:
   selector:
-    app: chain-client-evm-bsc-9006
+    app: chain-client-evm-eth-60
   type: ClusterIP
   ports:
     - protocol: TCP
-      name: chain-client-evm-bsc-api-9006
+      name: chain-client-evm-eth-api-60
       port: 9100
       targetPort: 9100
 ---
@@ -17,22 +17,22 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: chain-client-evm-bsc-9006
+  name: chain-client-evm-eth-60
   namespace: "{{.Deployment.Namespace}}"
   labels:
-    app: chain-client-evm-bsc-9006
+    app: chain-client-evm-eth-60
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chain-client-evm-bsc-9006
+      app: chain-client-evm-eth-60
   template:
     metadata:
       labels:
-        app: chain-client-evm-bsc-9006
+        app: chain-client-evm-eth-60
     spec:
       containers:
-        - name: chain-client-evm-bsc-9006
+        - name: chain-client-evm-eth-60
           image: "{{.Deployment.Image}}"
           ports:
             - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}9100{{ end }}
@@ -56,9 +56,9 @@ spec:
             - name: REDIS_PORT
               value: "{{.Deployment.RedisPort}}"
             - name: SYSTEM_CHAIN_ID
-              value: "9006"
+              value: "60"
             - name: CHAIN_ID
-              value: "56"
+              value: "1"
             - name: OS_API_KEY
               value: "{{.Deployment.OsApiKey}}"
             - name: OS_API_SECRET
@@ -66,11 +66,13 @@ spec:
             - name: OS_SYSTEM_SERVER
               value: "{{.Deployment.OsSystemServer}}"
             - name: CONTRACT_ADDRESS
-              value: "0xcb24e8aEDB15981F4C088214722D8E3809e817eB"
+              value: "0xD6b2815Dc445e69aFbA7924f9744875FF2509Db2"
             - name: START_BLOCK
-              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}38507611{{ end }}"
+              value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}19830464{{ end }}"
             - name: RPC_URL
-              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://bsc-dataseed.bnbchain.org{{ end }}"
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://eth.llamarpc.com{{ end }}"
+            - name: AUTO_START
+              value: "false"
 # START_BLOCK
 # RPC_URL
 # image

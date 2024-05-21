@@ -24,6 +24,7 @@ type ChainListRow struct {
 	ChainName   string              `bson:"chainName"`
 	Image       string              `bson:"image"`
 	ServiceName string              `bson:"serviceName"`
+	DeployName  string              `bson:"deployName"`
 	ChainType   string              `bson:"chainType"`
 	ChainId     int64               `bson:"chainId"`
 	EnvList     []map[string]string `bson:"envList"`
@@ -47,7 +48,7 @@ func InitInstall() (err error) {
 }
 func install_init_chain_client() (err error) {
 	var results []ChainListRow
-	opts := options.Find().SetSort(bson.D{{"_id", -1}})
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}})
 	err, cursor := database.FindAllOpt("main", "chainList", bson.M{}, opts)
 	if err != nil {
 		return
@@ -100,6 +101,7 @@ func install_init_chain_client_item(result ChainListRow) (err error) {
 		"chainType":      result.ChainType,
 		"chainId":        result.ChainId,
 		"name":           name,
+		"deployName":     result.DeployName,
 		"configStatus":   0,
 		"lastinstall":    time.Now().UnixNano() / 1e6,
 		"status":         1,
@@ -128,6 +130,7 @@ func install_init_amm_client() (err error) {
 	}
 	installContextJson := `{}`
 	name := "amm-01"
+	deployName := "amm-amm-01"
 	installType := "amm"
 	image := os.Getenv("AMM_APP_DISPLAY_IMAGE")
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.namespace", os.Getenv("POD_NAMESPACE"))
@@ -136,6 +139,7 @@ func install_init_amm_client() (err error) {
 	database.Insert("main", "install", bson.M{
 		"installType":  installType,
 		"name":         name,
+		"deployName":   deployName,
 		"configStatus": 0,
 		"lastinstall":  time.Now().UnixNano() / 1e6,
 		"status":       1,
@@ -165,6 +169,7 @@ func install_init_market_adapter() (err error) {
 	}
 	installContextJson := `{}`
 	name := "price"
+	deployName := "amm-market-price"
 	installType := "market"
 	image := os.Getenv("MARKET_APP_DISPLAY_IMAGE")
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.namespace", os.Getenv("POD_NAMESPACE"))
@@ -173,6 +178,7 @@ func install_init_market_adapter() (err error) {
 	database.Insert("main", "install", bson.M{
 		"installType":  installType,
 		"name":         "price",
+		"deployName":   deployName,
 		"configStatus": 0,
 		"lastinstall":  time.Now().UnixNano() / 1e6,
 		"status":       1,

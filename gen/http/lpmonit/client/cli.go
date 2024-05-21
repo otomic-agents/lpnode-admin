@@ -21,7 +21,7 @@ func BuildAddScriptPayload(lpmonitAddScriptBody string) (*lpmonit.AddScriptPaylo
 	{
 		err = json.Unmarshal([]byte(lpmonitAddScriptBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"cron\": \"Atque dolorem occaecati suscipit consectetur.\",\n      \"name\": \"Sunt quam illo laboriosam aperiam pariatur.\",\n      \"scriptBody\": \"Esse dolores repellendus laboriosam harum.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"cron\": \"Maiores odit porro consequatur voluptatibus et est.\",\n      \"name\": \"Necessitatibus impedit blanditiis enim exercitationem ab.\",\n      \"scriptBody\": \"Consectetur delectus saepe repellendus ut quis.\"\n   }'")
 		}
 	}
 	v := &lpmonit.AddScriptPayload{
@@ -41,7 +41,7 @@ func BuildDeleteScriptPayload(lpmonitDeleteScriptBody string) (*lpmonit.DeleteSc
 	{
 		err = json.Unmarshal([]byte(lpmonitDeleteScriptBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Sequi nostrum est ipsa quos iure.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Voluptas autem.\"\n   }'")
 		}
 	}
 	v := &lpmonit.DeleteScriptPayload{
@@ -59,7 +59,7 @@ func BuildRunScriptPayload(lpmonitRunScriptBody string) (*lpmonit.RunScriptPaylo
 	{
 		err = json.Unmarshal([]byte(lpmonitRunScriptBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"scriptContent\": \"Ad consequuntur nihil et quasi vitae.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"scriptContent\": \"Asperiores quaerat et fuga.\"\n   }'")
 		}
 	}
 	v := &lpmonit.RunScriptPayload{
@@ -77,7 +77,7 @@ func BuildRunResultPayload(lpmonitRunResultBody string) (*lpmonit.RunResultPaylo
 	{
 		err = json.Unmarshal([]byte(lpmonitRunResultBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"scriptName\": \"Et quas.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"scriptName\": \"Nisi consequatur maxime nobis.\"\n   }'")
 		}
 	}
 	v := &lpmonit.RunResultPayload{
