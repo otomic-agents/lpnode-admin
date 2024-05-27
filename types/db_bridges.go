@@ -37,6 +37,15 @@ type DBBridgeDstChainAggregateItem struct {
 	}
 }
 
+type DBBridgeWalletDetailsAggregateItem struct {
+	BridgeMongoId           primitive.ObjectID `bson:"_id"`
+	WalletMongoId           primitive.ObjectID `bson:"wallet_id"`
+	WalletDetailsName       string             `bson:"walletDetailsName"`
+	WalletDetailsPrivateKey string             `bson:"walletDetailsPrivateKey"`
+	WalletName              string             `bson:"walletName"`
+	MsmqName                string             `bson:"msmqName"`
+}
+
 type DBBridgeUniqDstTokenInfo struct {
 	Id           primitive.ObjectID `bson:"_id"`
 	Address      string

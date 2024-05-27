@@ -20,9 +20,28 @@ type mainLogicsrvc struct {
 // NewMainLogic returns the mainLogic service implementation.
 func NewMainLogic(logger *log.Logger) mainlogic.Service {
 	logger.Println("new Main.....")
+	MainLogic_RegisterLp()
+	MainLogic_RefreshLpWallet()
+	return &mainLogicsrvc{logger}
+}
+func MainLogic_RefreshLpWallet() {
+	index := 0
+	go func() {
+		if index == 0 {
+			time.Sleep(time.Second * 60 * 1) //Refresh for the first time with an interval of 1 minute.
+		} else {
+			time.Sleep(time.Second * 60 * 20)
+		}
+
+		log.Println("auto refresh lp wallet")
+		dwls := service.NewDexWalletLogicService()
+		dwls.RefreshLpWallet()
+	}()
+}
+func MainLogic_RegisterLp() {
 	go func() {
 		for {
-			time.Sleep(time.Second * 60 * 5) // automatically register lpnode every five minutes
+			time.Sleep(time.Second * 60 * 1) // automatically register lpnode every one minutes
 			cpls := service.NewCtrlPanelLogicService()
 			ret, err := cpls.GetInstallRowByInstallType("ammClient")
 			if err != nil {
@@ -49,7 +68,6 @@ func NewMainLogic(logger *log.Logger) mainlogic.Service {
 		}
 
 	}()
-	return &mainLogicsrvc{logger}
 }
 
 // MainLogic implements mainLogic.

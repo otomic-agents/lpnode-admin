@@ -3,7 +3,26 @@ package types
 import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type CenterOrder struct {
-	ID          primitive.ObjectID `bson:"_id"`
+	ID       primitive.ObjectID `bson:"_id"`
+	ViewInfo struct {
+		SrcChainName            string `json:"srcChainName"`
+		SrcChainPrecision       int64  `json:"SrcChainPrecision"`
+		SrcTokenName            string `json:"srcTokenName"`
+		SrcTokenPrecision       int64  `json:"srcTokenPrecision"`
+		DstChainName            string `json:"dstChainName"`
+		DstChainNativeTokenName string `json:"DstChainNativeTokenName"`
+		DstChainPrecision       int64  `json:"dstChainPrecision"`
+		DstTokenName            string `json:"dstTokenName"`
+		DstTokenPrecision       int64  `json:"dstTokenPrecision"`
+		ReceiverWallet          string `json:"receiverWallet"`
+		PaymentWallet           string `json:"paymentWallet"`
+		ReceiverAmount          string `json:"receiverAmount"`
+		PaymentAmount           string `json:"paymentAmount"`
+		PaymentNativeAmount     string `json:"paymentNativeAmount"`
+		QuoteTimestamp          int64  `json:"quoteTimestamp"`
+		SrcChainRpcTx           string `json:"srcChainRpcTx"`
+		DstChainRpcTx           string `json:"dstChainRpcTx"`
+	} `json:"ViewInfo"`
 	PreBusiness struct {
 		SwapAssetInformation struct {
 			BridgeName      string `bson:"bridge_name" json:"bridge_name"`
@@ -32,8 +51,11 @@ type CenterOrder struct {
 					LpNodeURI        string `bson:"lp_node_uri" json:"lp_node_uri"`
 					QuoteHash        string `bson:"quote_hash" json:"quote_hash"`
 				} `bson:"quote_base" json:"quote_base"`
+				QuoteName string `bson:"quote_name" json:"quote_name"`
+				Timestamp int64  `bson:"timestamp" json:"timestamp"`
 			} `bson:"quote" json:"quote"`
 			AppendInformation string `bson:"append_information" json:"append_information"`
+			Requestor         string `bson:"requestor"`
 		} `bson:"swap_asset_information" json:"swap_asset_information"`
 		Hash            string `bson:"hash" json:"hash"`
 		LpSalt          string `bson:"lp_salt" json:"lp_salt"`
@@ -97,8 +119,10 @@ type CenterOrder struct {
 }
 
 type AmmContext struct {
-	ID         primitive.ObjectID `bson:"_id" json:"_id"`
-	SystemInfo struct {
+	ID           primitive.ObjectID `bson:"_id" json:"_id"`
+	Summary      string             `bson:"summary" json:"summary"`
+	HedgeEnabled bool               `bson:"hedgeEnabled" json:"hedgeEnabled"`
+	SystemInfo   struct {
 		MsmqName string `bson:"msmqName" json:"msmqName"`
 	} `bson:"systemInfo" json:"systemInfo"`
 	WalletInfo struct {
@@ -108,6 +132,7 @@ type AmmContext struct {
 		Cid string `bson:"cid" json:"cid"`
 	} `bson:"AskInfo" json:"AskInfo"`
 	BaseInfo struct {
+		
 		SrcToken struct {
 			Precision    int    `bson:"precision" json:"precision"`
 			CexPrecision int    `bson:"cexPrecision" json:"cexPrecision"`

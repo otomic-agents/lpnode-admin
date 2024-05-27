@@ -28,7 +28,7 @@ func (ammocls *AmmOrderCenterLogicService) All(queryOption struct {
 		return
 	}
 
-	opts := options.Find().SetSort(bson.D{{"_id", -1}}).SetSkip(skip).SetLimit(queryOption.PageSize)
+	opts := options.Find().SetSort(bson.D{{Key: "_id", Value: -1}}).SetSkip(skip).SetLimit(queryOption.PageSize)
 	pageCount = count / queryOption.PageSize
 	if count%queryOption.PageSize != 0 {
 		pageCount++

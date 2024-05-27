@@ -10,6 +10,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/aws/smithy-go/ptr"
 	"github.com/pkg/errors"
@@ -75,14 +76,15 @@ func (s *tokenManagersrvc) TokenCreate(ctx context.Context, p *tokenmanager.Toke
 	}
 	dataSet := bson.M{
 		"$set": bson.M{
-			"tokenId":    p.TokenID, // Near only
-			"chainId":    p.ChainID,
-			"address":    p.Address,
-			"tokenName":  p.TokenName,
-			"marketName": p.MarketName,
-			"precision":  p.Precision,
-			"coinType":   p.CoinType,
-			"chainType":  chainRow.ChainType,
+			"tokenId":      p.TokenID, // Near only
+			"chainId":      p.ChainID,
+			"addressIndex": strings.ToLower(p.Address),
+			"address":      p.Address,
+			"tokenName":    p.TokenName,
+			"marketName":   p.MarketName,
+			"precision":    p.Precision,
+			"coinType":     p.CoinType,
+			"chainType":    chainRow.ChainType,
 		},
 	}
 	updateResult, err := database.FindOneAndUpdate("main", "tokens", filter, dataSet)

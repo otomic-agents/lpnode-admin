@@ -302,3 +302,40 @@ func (dwls *DexWalletLogicService) GetFromSecretVault(vaultName string) (res str
 	res = secretId
 	return
 }
+func (dwls *DexWalletLogicService) RefreshLpWallet() (ret bool, err error) {
+	ret = false
+	relayUrl := os.Getenv("RELAY_ACCESS_URL")
+	if relayUrl == "" {
+		err = errors.New("unable to get relay url")
+		return
+		// relayUrl = "http://localhost:18009"
+	}
+
+	url := fmt.Sprintf("%s/relay-admin-panel/lpnode_admin_panel/update_lp_wallet", relayUrl)
+	log.Println("request", url)
+	tobeSend := "{}"
+	tobeSend, _ = sjson.Set(tobeSend, "name", os.Getenv("LP_NAME"))
+	log.Println(tobeSend)
+	_, ok, requestError := utils.NewHttpCall().PostJsonCall(&utils.HttpCallRequestOption{
+		Header:  map[string]string{},
+		Url:     url,
+		Timeout: 1000 * 10,
+		JsonStr: tobeSend,
+		TestOKFun: func(bodyStr string) bool {
+			log.Println("bodyis:", bodyStr)
+			code := gjson.Get(bodyStr, "code").Int()
+			return code == 200
+		},
+	})
+	if requestError != nil {
+		log.Println(requestError)
+		err = requestError
+		return
+	}
+	if !ok {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "refresh failed, assert return error")
+		return
+	}
+	ret = true
+	return
+}
