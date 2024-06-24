@@ -51,6 +51,7 @@ func MainLogic_RegisterLp() {
 			log.Println("currently there are n clients that need to be registered", len(ret))
 			for _, item := range ret {
 				if item.RegisterClientStatus == 0 {
+					log.Println("item.Name, item.ChainType", item.Name, item.ChainType)
 					register, regErr := lprls.RegisterItemWithoutRestart(item.ID.Hex(), item.ServiceName, item.Name, item.ChainType, item.ChainId, item.Namespace)
 					if regErr != nil {
 						log.Println("register failed", regErr)

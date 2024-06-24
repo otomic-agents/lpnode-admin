@@ -8,7 +8,6 @@ import (
 	"admin-panel/types"
 	"admin-panel/utils"
 	"context"
-	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -16,7 +15,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mr-tron/base58"
 	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -166,12 +164,12 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		err = errors.New("cannot get correct DstClientUrl, cannot create bridge")
 		return
 	}
-	srcToken, err := bcls.GetHexAddress(srcTokenInfo.Address, srcChainInfo.ChainType)
+	srcToken, err := utils.GetHexAddress(srcTokenInfo.Address, srcChainInfo.ChainType)
 	if err != nil {
 		err = errors.WithMessage(err, "srcToken process error")
 		return
 	}
-	dstToken, err := bcls.GetHexAddress(dstTokenInfo.Address, dstChainInfo.ChainType)
+	dstToken, err := utils.GetHexAddress(dstTokenInfo.Address, dstChainInfo.ChainType)
 	if err != nil {
 		err = errors.WithMessage(err, "dstToken process error")
 		return
@@ -210,23 +208,6 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 	}
 	log.Println(mongoUpsert.UpsertedID, "🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️🚵‍♀️")
 	id = mongoUpsert.UpsertedID.(primitive.ObjectID).Hex()
-	return
-}
-func (bcls *BridgeConfigLogicService) GetHexAddress(address string, evmType string) (ret string, err error) {
-	ret = ""
-	if evmType == "near" {
-		tokenAddressHexByte, decodeErr := base58.Decode(address)
-		if decodeErr != nil {
-			err = errors.WithMessage(err, fmt.Sprintf("decode address error%s", address))
-		}
-		tokenAddressHexStrRaw := hex.EncodeToString(tokenAddressHexByte)
-		ret = fmt.Sprintf("0x%s", tokenAddressHexStrRaw)
-		return
-	}
-	ret = address
-	if !strings.HasPrefix(ret, "0x") {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "address format incorrect")
-	}
 	return
 }
 func (bcls *BridgeConfigLogicService) GetMsmqName(token0 string, token1 string, chain0 int64, chain1 int64) string {

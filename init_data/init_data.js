@@ -93,6 +93,24 @@ var init_data = {
             },
           ],
         },
+        {
+          chainId: 501,
+          chainName: "solana",
+          name: "Solana",
+          tokenName: "SOL",
+          tokenUsd: 300,
+          precision: 9,
+          chainType: "solana",
+          rpcTx: "https://solscan.io/tx/{tx}",
+          image: "otmoic/chainclient-evm:latest",
+          serviceName: "chain-client-solana-solana-server-501",
+          deployName: "chain-client-solana-solana-501",
+          envList: [
+            {
+              STATUS_KEY: "chain-client-status-report-solana",
+            },
+          ],
+        },
       ],
       filter: [
         {
