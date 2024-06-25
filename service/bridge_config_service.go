@@ -574,6 +574,7 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 			vaultSecertType := wallet.Get("vaultSecertType").String()
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.wallet_name", walletIndex), walletName)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign_712", walletIndex), true)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign", walletIndex), true)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.account_id", walletIndex), accountId)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.private_key", walletIndex), privateKey)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.address", walletIndex), address)
