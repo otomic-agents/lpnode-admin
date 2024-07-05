@@ -57,7 +57,7 @@ func (*RelayRequestService) RegisterAccount(name string, profile string) (res ty
 		err = errors.WithMessage(err, fmt.Sprintf("incorrect server status code response:%d", resp.StatusCode))
 		return
 	}
-
+	log.Println(body)
 	err = json.Unmarshal([]byte(body), &res)
 	if err != nil {
 		err = errors.WithMessage(err, "json unmarshal error:")
