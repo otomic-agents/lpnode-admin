@@ -4,6 +4,7 @@ import (
 	database "admin-panel/mongo_database"
 	"admin-panel/redis_database"
 	"admin-panel/types"
+	"admin-panel/utils"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -158,18 +159,29 @@ func (ocls *OrderCenterLogicService) orderRenderTokens(source []types.CenterOrde
 	log.Println(results)
 	tokenMap := make(map[string]types.DBTokenRow)
 	for _, result := range results {
-		tokenMap[result.Address] = result
+		if result.ChainId == 501 {
+			tokenHexAddress, convertErr := utils.Base58ToHexString(result.Address)
+			if convertErr != nil {
+				log.Println("convert error")
+				break
+			}
+			tokenMap[tokenHexAddress] = result
+		} else {
+			tokenMap[result.Address] = result
+		}
 	}
 
 	for i, order := range source {
 		if token, ok := tokenMap[order.PreBusiness.SwapAssetInformation.Quote.QuoteBase.Bridge.SrcToken]; ok {
-			log.Println("set view", "🚁🚁🚁🚁🚁", token.TokenName)
+			log.Println("set view", "🚁🚁🚁🚁🚁", token.TokenName, token.Precision)
 			order.ViewInfo.SrcTokenName = token.TokenName
 			order.ViewInfo.SrcTokenPrecision = token.Precision
 			source[i] = order
+		} else {
+			log.Println("not Found", order.PreBusiness.SwapAssetInformation.Quote.QuoteBase.Bridge.SrcToken)
 		}
 		if token, ok := tokenMap[order.PreBusiness.SwapAssetInformation.Quote.QuoteBase.Bridge.DstToken]; ok {
-			log.Println("set view", "🚁🚁🚁🚁🚁", token.TokenName)
+			log.Println("set view", "🚁🚁🚁🚁🚁", token.TokenName, token.Precision)
 			order.ViewInfo.DstTokenName = token.TokenName
 			order.ViewInfo.DstTokenPrecision = token.Precision
 			source[i] = order
@@ -282,7 +294,7 @@ func (ocls *OrderCenterLogicService) orderRenderViews(source []types.CenterOrder
 		inputAmount.SetString(v.PreBusiness.SwapAssetInformation.Amount)
 		srcPrecision := int(v.ViewInfo.SrcTokenPrecision)
 		v.ViewInfo.ReceiverAmount = new(big.Float).Quo(inputAmount, big.NewFloat(math.Pow10(srcPrecision))).String()
-		log.Println("🏍️🏍️🏍️🏍️🏍️",v.PreBusiness.SwapAssetInformation.Amount,srcPrecision,v.ViewInfo.ReceiverAmount)
+		log.Println(v.PreBusiness.SwapAssetInformation.Amount, srcPrecision, v.ViewInfo.ReceiverAmount)
 
 		sendAmount := new(big.Float)
 		sendAmount.SetString(v.PreBusiness.SwapAssetInformation.DstAmount)

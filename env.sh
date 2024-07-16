@@ -1,10 +1,10 @@
 export REDIS_HOST=redis-cluster-proxy.user-system-vaughnmedellins394
-export REDIS_PASS=EJtetarG2IAqYX8P
+export REDIS_PASS=Iqu7obyKqjuXKylq
 export MONGODB_HOST=mongo-cluster-mongos.user-system-vaughnmedellins394
 export MONGODB_PORT=27017
 export REDIS_PORT=6379
 export MONGODB_USER=root-vaughnmedellins394-otmoiclp
-export MONGODB_PASS=ANqAGivxFeLrEvgO
+export MONGODB_PASS=tnQ6USGBYDcuW8Ci
 export MONGODB_DBNAME_LP_STORE=otmoiclp-vaughnmedellins394_lp_store
 export MONGODB_DBNAME_BUSINESS_HISTORY=otmoiclp-vaughnmedellins394_businessHistory
 export POD_NAMESPACE=otmoiclp-vaughnmedellins394
