@@ -282,7 +282,7 @@ func (ocls *OrderCenterLogicService) orderRenderViews(source []types.CenterOrder
 		inputAmount.SetString(v.PreBusiness.SwapAssetInformation.Amount)
 		srcPrecision := int(v.ViewInfo.SrcTokenPrecision)
 		v.ViewInfo.ReceiverAmount = new(big.Float).Quo(inputAmount, big.NewFloat(math.Pow10(srcPrecision))).String()
-		log.Println(v.ViewInfo.ReceiverAmount)
+		log.Println("🏍️🏍️🏍️🏍️🏍️",v.PreBusiness.SwapAssetInformation.Amount,srcPrecision,v.ViewInfo.ReceiverAmount)
 
 		sendAmount := new(big.Float)
 		sendAmount.SetString(v.PreBusiness.SwapAssetInformation.DstAmount)
