@@ -16,13 +16,15 @@ import (
 // Client is the "baseData" service client.
 type Client struct {
 	ChainDataListEndpoint goa.Endpoint
+	GetLpInfoEndpoint     goa.Endpoint
 	RunTimeEnvEndpoint    goa.Endpoint
 }
 
 // NewClient initializes a "baseData" service client given the endpoints.
-func NewClient(chainDataList, runTimeEnv goa.Endpoint) *Client {
+func NewClient(chainDataList, getLpInfo, runTimeEnv goa.Endpoint) *Client {
 	return &Client{
 		ChainDataListEndpoint: chainDataList,
+		GetLpInfoEndpoint:     getLpInfo,
 		RunTimeEnvEndpoint:    runTimeEnv,
 	}
 }
@@ -35,6 +37,16 @@ func (c *Client) ChainDataList(ctx context.Context) (res *ChainDataListResult, e
 		return
 	}
 	return ires.(*ChainDataListResult), nil
+}
+
+// GetLpInfo calls the "getLpInfo" endpoint of the "baseData" service.
+func (c *Client) GetLpInfo(ctx context.Context) (res *GetLpInfoResult, err error) {
+	var ires interface{}
+	ires, err = c.GetLpInfoEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.(*GetLpInfoResult), nil
 }
 
 // RunTimeEnv calls the "runTimeEnv" endpoint of the "baseData" service.

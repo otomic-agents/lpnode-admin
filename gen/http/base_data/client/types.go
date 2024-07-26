@@ -20,6 +20,14 @@ type ChainDataListResponseBody struct {
 	Message *string                      `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
+// GetLpInfoResponseBody is the type of the "baseData" service "getLpInfo"
+// endpoint HTTP response body.
+type GetLpInfoResponseBody struct {
+	Code    *int64              `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	Result  *LpInfoResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Message *string             `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
 // RunTimeEnvResponseBody is the type of the "baseData" service "runTimeEnv"
 // endpoint HTTP response body.
 type RunTimeEnvResponseBody struct {
@@ -43,6 +51,12 @@ type ChainDataItemResponseBody struct {
 	TokenName *string `form:"tokenName,omitempty" json:"tokenName,omitempty" xml:"tokenName,omitempty"`
 }
 
+// LpInfoResponseBody is used to define fields on response body types.
+type LpInfoResponseBody struct {
+	Name    *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
+}
+
 // NewChainDataListResultOK builds a "baseData" service "chainDataList"
 // endpoint result from a HTTP "OK" response.
 func NewChainDataListResultOK(body *ChainDataListResponseBody) *basedata.ChainDataListResult {
@@ -55,6 +69,20 @@ func NewChainDataListResultOK(body *ChainDataListResponseBody) *basedata.ChainDa
 		for i, val := range body.Result {
 			v.Result[i] = unmarshalChainDataItemResponseBodyToBasedataChainDataItem(val)
 		}
+	}
+
+	return v
+}
+
+// NewGetLpInfoResultOK builds a "baseData" service "getLpInfo" endpoint result
+// from a HTTP "OK" response.
+func NewGetLpInfoResultOK(body *GetLpInfoResponseBody) *basedata.GetLpInfoResult {
+	v := &basedata.GetLpInfoResult{
+		Code:    body.Code,
+		Message: body.Message,
+	}
+	if body.Result != nil {
+		v.Result = unmarshalLpInfoResponseBodyToBasedataLpInfo(body.Result)
 	}
 
 	return v

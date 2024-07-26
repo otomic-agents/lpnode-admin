@@ -27,6 +27,18 @@ func EncodeChainDataListResponse(encoder func(context.Context, http.ResponseWrit
 	}
 }
 
+// EncodeGetLpInfoResponse returns an encoder for responses returned by the
+// baseData getLpInfo endpoint.
+func EncodeGetLpInfoResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*basedata.GetLpInfoResult)
+		enc := encoder(ctx, w)
+		body := NewGetLpInfoResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
 // EncodeRunTimeEnvResponse returns an encoder for responses returned by the
 // baseData runTimeEnv endpoint.
 func EncodeRunTimeEnvResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
@@ -51,6 +63,20 @@ func marshalBasedataChainDataItemToChainDataItemResponseBody(v *basedata.ChainDa
 		Name:      v.Name,
 		ChainName: v.ChainName,
 		TokenName: v.TokenName,
+	}
+
+	return res
+}
+
+// marshalBasedataLpInfoToLpInfoResponseBody builds a value of type
+// *LpInfoResponseBody from a value of type *basedata.LpInfo.
+func marshalBasedataLpInfoToLpInfoResponseBody(v *basedata.LpInfo) *LpInfoResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &LpInfoResponseBody{
+		Name:    v.Name,
+		Profile: v.Profile,
 	}
 
 	return res

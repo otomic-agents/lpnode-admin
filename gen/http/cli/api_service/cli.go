@@ -46,7 +46,7 @@ account-cex wallet-info
 account-dex wallet-info
 amm-order-center list
 authentication-limiter (get-authentication-limiter|set-authentication-limiter|del-authentication-limiter)
-base-data (chain-data-list|run-time-env)
+base-data (chain-data-list|get-lp-info|run-time-env)
 bridge-config (bridge-create|bridge-list|bridge-delete|bridge-test)
 chain-config (set-chain-list|del-chain-list|chain-list|set-chain-gas-usd|set-chain-client-config)
 config-resource (create-resource|get-resource|list-resource|delete-result|edit-result)
@@ -69,13 +69,13 @@ func UsageExamples() string {
 	return os.Args[0] + ` main-logic main-logic` + "\n" +
 		os.Args[0] + ` account-cex wallet-info` + "\n" +
 		os.Args[0] + ` account-dex wallet-info --body '{
-      "chainId": 6523664875020073430
+      "chainId": 4494789737521289910
    }'` + "\n" +
 		os.Args[0] + ` amm-order-center list --body '{
-      "ammName": "Veritatis praesentium quo ipsam atque cumque.",
-      "page": 841273005796704795,
-      "pageSize": 2327201063190673610,
-      "status": 6102245065395036856
+      "ammName": "Quibusdam inventore ad possimus non sit sit.",
+      "page": 2031005260904629279,
+      "pageSize": 5465095945942461027,
+      "status": 3051054241686735991
    }'` + "\n" +
 		os.Args[0] + ` authentication-limiter get-authentication-limiter` + "\n" +
 		""
@@ -123,6 +123,8 @@ func ParseEndpoint(
 		baseDataFlags = flag.NewFlagSet("base-data", flag.ContinueOnError)
 
 		baseDataChainDataListFlags = flag.NewFlagSet("chain-data-list", flag.ExitOnError)
+
+		baseDataGetLpInfoFlags = flag.NewFlagSet("get-lp-info", flag.ExitOnError)
 
 		baseDataRunTimeEnvFlags = flag.NewFlagSet("run-time-env", flag.ExitOnError)
 
@@ -303,6 +305,7 @@ func ParseEndpoint(
 
 	baseDataFlags.Usage = baseDataUsage
 	baseDataChainDataListFlags.Usage = baseDataChainDataListUsage
+	baseDataGetLpInfoFlags.Usage = baseDataGetLpInfoUsage
 	baseDataRunTimeEnvFlags.Usage = baseDataRunTimeEnvUsage
 
 	bridgeConfigFlags.Usage = bridgeConfigUsage
@@ -499,6 +502,9 @@ func ParseEndpoint(
 			switch epn {
 			case "chain-data-list":
 				epf = baseDataChainDataListFlags
+
+			case "get-lp-info":
+				epf = baseDataGetLpInfoFlags
 
 			case "run-time-env":
 				epf = baseDataRunTimeEnvFlags
@@ -774,6 +780,9 @@ func ParseEndpoint(
 			switch epn {
 			case "chain-data-list":
 				endpoint = c.ChainDataList()
+				data = nil
+			case "get-lp-info":
+				endpoint = c.GetLpInfo()
 				data = nil
 			case "run-time-env":
 				endpoint = c.RunTimeEnv()
@@ -1069,7 +1078,7 @@ WalletInfo implements walletInfo.
 
 Example:
     %[1]s account-dex wallet-info --body '{
-      "chainId": 6523664875020073430
+      "chainId": 4494789737521289910
    }'
 `, os.Args[0])
 }
@@ -1096,10 +1105,10 @@ List implements list.
 
 Example:
     %[1]s amm-order-center list --body '{
-      "ammName": "Veritatis praesentium quo ipsam atque cumque.",
-      "page": 841273005796704795,
-      "pageSize": 2327201063190673610,
-      "status": 6102245065395036856
+      "ammName": "Quibusdam inventore ad possimus non sit sit.",
+      "page": 2031005260904629279,
+      "pageSize": 5465095945942461027,
+      "status": 3051054241686735991
    }'
 `, os.Args[0])
 }
@@ -1138,7 +1147,7 @@ set limit information
 
 Example:
     %[1]s authentication-limiter set-authentication-limiter --body '{
-      "authenticationLimiter": "Omnis ea sint distinctio quasi doloremque dolores."
+      "authenticationLimiter": "Esse dolorum dolore."
    }'
 `, os.Args[0])
 }
@@ -1162,6 +1171,7 @@ Usage:
 
 COMMAND:
     chain-data-list: used to return basic chain data
+    get-lp-info: used to return basic chain data
     run-time-env: used to return runtime environment
 
 Additional help:
@@ -1175,6 +1185,16 @@ used to return basic chain data
 
 Example:
     %[1]s base-data chain-data-list
+`, os.Args[0])
+}
+
+func baseDataGetLpInfoUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] base-data get-lp-info
+
+used to return basic chain data
+
+Example:
+    %[1]s base-data get-lp-info
 `, os.Args[0])
 }
 
@@ -1213,16 +1233,16 @@ used to create cross-chain config
 
 Example:
     %[1]s bridge-config bridge-create --body '{
-      "ammName": "Possimus fuga in.",
-      "bridgeName": "Ut ipsam.",
-      "dstChainId": "Doloremque voluptatem id eligendi aut reprehenderit.",
-      "dstTokenId": "Odio totam.",
-      "enableHedge": false,
-      "enableLimiter": true,
-      "srcChainId": "Sequi laudantium dolore non ullam et.",
-      "srcTokenId": "Reiciendis odio voluptas quas alias dolorum quae.",
-      "srcWalletId": "Quod sint.",
-      "walletId": "Nesciunt exercitationem voluptatem sint."
+      "ammName": "Aperiam non omnis iste similique.",
+      "bridgeName": "Nesciunt exercitationem voluptatem sint.",
+      "dstChainId": "Possimus fuga in.",
+      "dstTokenId": "Eius omnis velit qui delectus doloribus sed.",
+      "enableHedge": true,
+      "enableLimiter": false,
+      "srcChainId": "Quod sint.",
+      "srcTokenId": "Non eum autem et.",
+      "srcWalletId": "Et nobis ad vero omnis aspernatur.",
+      "walletId": "Distinctio tempore quia vero consequatur qui."
    }'
 `, os.Args[0])
 }
@@ -1245,7 +1265,7 @@ BridgeDelete implements bridgeDelete.
 
 Example:
     %[1]s bridge-config bridge-delete --body '{
-      "id": "Aliquam sed hic ut."
+      "id": "Nemo est ipsa pariatur distinctio explicabo."
    }'
 `, os.Args[0])
 }
@@ -1258,7 +1278,7 @@ BridgeTest implements bridgeTest.
 
 Example:
     %[1]s bridge-config bridge-test --body '{
-      "id": "Ea et ut qui voluptatem expedita."
+      "id": "Officia dolor debitis."
    }'
 `, os.Args[0])
 }
@@ -1291,28 +1311,22 @@ Example:
     %[1]s chain-config set-chain-list --body '{
       "chainList": [
          {
-            "chainId": 6594204070087177167,
-            "chainName": "Nemo est ipsa pariatur distinctio explicabo.",
-            "name": "Cum accusamus reprehenderit totam saepe.",
-            "tokenName": "Aut modi officia."
+            "chainId": 7789314914467214335,
+            "chainName": "Qui veniam.",
+            "name": "Earum saepe et cumque.",
+            "tokenName": "Et est ipsum illum qui dolores vel."
          },
          {
-            "chainId": 6594204070087177167,
-            "chainName": "Nemo est ipsa pariatur distinctio explicabo.",
-            "name": "Cum accusamus reprehenderit totam saepe.",
-            "tokenName": "Aut modi officia."
+            "chainId": 7789314914467214335,
+            "chainName": "Qui veniam.",
+            "name": "Earum saepe et cumque.",
+            "tokenName": "Et est ipsum illum qui dolores vel."
          },
          {
-            "chainId": 6594204070087177167,
-            "chainName": "Nemo est ipsa pariatur distinctio explicabo.",
-            "name": "Cum accusamus reprehenderit totam saepe.",
-            "tokenName": "Aut modi officia."
-         },
-         {
-            "chainId": 6594204070087177167,
-            "chainName": "Nemo est ipsa pariatur distinctio explicabo.",
-            "name": "Cum accusamus reprehenderit totam saepe.",
-            "tokenName": "Aut modi officia."
+            "chainId": 7789314914467214335,
+            "chainName": "Qui veniam.",
+            "name": "Earum saepe et cumque.",
+            "tokenName": "Et est ipsum illum qui dolores vel."
          }
       ]
    }'
@@ -1327,8 +1341,8 @@ used to delete basic data for a chain
 
 Example:
     %[1]s chain-config del-chain-list --body '{
-      "_id": "Fuga aliquam quis.",
-      "chainId": 6050747442331256726
+      "_id": "Et qui quo voluptatum.",
+      "chainId": 5253304949477905062
    }'
 `, os.Args[0])
 }
@@ -1351,9 +1365,9 @@ SetChainGasUsd implements setChainGasUsd.
 
 Example:
     %[1]s chain-config set-chain-gas-usd --body '{
-      "_id": "Suscipit suscipit.",
-      "chainId": 8108772660725468005,
-      "usd": 7383788036554997550
+      "_id": "Sed quis eligendi eaque.",
+      "chainId": 5391058774612457702,
+      "usd": 4992886302341686153
    }'
 `, os.Args[0])
 }
@@ -1366,8 +1380,8 @@ SetChainClientConfig implements setChainClientConfig.
 
 Example:
     %[1]s chain-config set-chain-client-config --body '{
-      "chainData": "Sed quis eligendi eaque.",
-      "chainId": 5391058774612457702
+      "chainData": "Et qui et.",
+      "chainId": 4952715962936096736
    }'
 `, os.Args[0])
 }
@@ -1398,10 +1412,10 @@ CreateResource implements createResource.
 
 Example:
     %[1]s config-resource create-resource --body '{
-      "appName": "Qui vel et qui.",
-      "clientId": "Et dolor laboriosam unde beatae.",
-      "template": "Exercitationem aut.",
-      "version": "Incidunt sit iure."
+      "appName": "Laboriosam unde beatae culpa.",
+      "clientId": "Et sed.",
+      "template": "Et est laborum numquam et ut laudantium.",
+      "version": "Aut qui ex et porro saepe."
    }'
 `, os.Args[0])
 }
@@ -1414,7 +1428,7 @@ GetResource implements getResource.
 
 Example:
     %[1]s config-resource get-resource --body '{
-      "clientId": "Blanditiis adipisci cupiditate officiis."
+      "clientId": "Repudiandae dolores incidunt officia ipsum."
    }'
 `, os.Args[0])
 }
@@ -1447,12 +1461,12 @@ EditResult implements editResult.
 
 Example:
     %[1]s config-resource edit-result --body '{
-      "appName": "Sed odio ut ratione voluptates est.",
-      "clientId": "Soluta sapiente.",
-      "template": "Et sequi et quaerat voluptatem.",
-      "templateResult": "Officia fugit voluptatem iusto dolore aut omnis.",
-      "version": "Vitae odio officia neque possimus.",
-      "versionHash": "Voluptatem consequuntur excepturi omnis voluptatem."
+      "appName": "Vel mollitia veniam dolorem.",
+      "clientId": "Voluptatem consequuntur excepturi omnis voluptatem.",
+      "template": "Vitae odio officia neque possimus.",
+      "templateResult": "Qui sed odio ut ratione voluptates est.",
+      "version": "Numquam accusamus deleniti.",
+      "versionHash": "Eum velit."
    }'
 `, os.Args[0])
 }

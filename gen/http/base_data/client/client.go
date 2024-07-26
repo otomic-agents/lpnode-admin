@@ -21,6 +21,10 @@ type Client struct {
 	// chainDataList endpoint.
 	ChainDataListDoer goahttp.Doer
 
+	// GetLpInfo Doer is the HTTP client used to make requests to the getLpInfo
+	// endpoint.
+	GetLpInfoDoer goahttp.Doer
+
 	// RunTimeEnv Doer is the HTTP client used to make requests to the runTimeEnv
 	// endpoint.
 	RunTimeEnvDoer goahttp.Doer
@@ -46,6 +50,7 @@ func NewClient(
 ) *Client {
 	return &Client{
 		ChainDataListDoer:   doer,
+		GetLpInfoDoer:       doer,
 		RunTimeEnvDoer:      doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
@@ -69,6 +74,25 @@ func (c *Client) ChainDataList() goa.Endpoint {
 		resp, err := c.ChainDataListDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("baseData", "chainDataList", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetLpInfo returns an endpoint that makes HTTP requests to the baseData
+// service getLpInfo server.
+func (c *Client) GetLpInfo() goa.Endpoint {
+	var (
+		decodeResponse = DecodeGetLpInfoResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildGetLpInfoRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetLpInfoDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("baseData", "getLpInfo", err)
 		}
 		return decodeResponse(resp)
 	}
