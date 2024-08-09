@@ -21,7 +21,7 @@ type mainLogicsrvc struct {
 func NewMainLogic(logger *log.Logger) mainlogic.Service {
 	logger.Println("new Main.....")
 	MainLogic_RegisterLp()
-	MainLogic_RefreshLpWallet()
+	// MainLogic_RefreshLpWallet()
 	return &mainLogicsrvc{logger}
 }
 func MainLogic_RefreshLpWallet() {
