@@ -73,6 +73,7 @@ func (s *tokenManagersrvc) TokenCreate(ctx context.Context, p *tokenmanager.Toke
 	}
 	filter := bson.M{
 		"addressLower": uniqAddress,
+		"chainId":      p.ChainID,
 	}
 	dataSet := bson.M{
 		"$set": bson.M{
