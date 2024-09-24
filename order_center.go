@@ -27,6 +27,7 @@ func (s *orderCentersrvc) List(ctx context.Context, p *ordercenter.ListPayload) 
 	res = &ordercenter.ListResult{Result: &ordercenter.OrderCenterRetResult{}}
 	res.Result.List = make([]ordercenter.OrderCenterOrderItem, 0)
 
+	log.Println("00000000000000000000")
 	ocls := &service.OrderCenterLogicService{}
 	queryOption := struct {
 		Page     int64

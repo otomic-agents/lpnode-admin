@@ -26,12 +26,13 @@ func (s *lpRegistersrvc) RegisterAll(ctx context.Context) (res *lpregister.Regis
 	res = &lpregister.RegisterAllResult{}
 	cpls := service.NewCtrlPanelLogicService()
 	lprls := service.NewLpRegisterLogicService()
-	ret, err := cpls.GetInstallRowByInstallType("ammClient")
+	ret, err := cpls.GetInstallRowByInstallType("ammClient") // Get a list of all clients.
 	if err != nil {
 		return
 	}
 	log.Println("currently there are n clients that need to be registered", len(ret))
 	go func() {
+		//  Loop through and register all clients.
 		for _, item := range ret {
 			if item.RegisterClientStatus == 0 {
 				register, regErr := lprls.RegisterItem(item.ID.Hex(), item.ServiceName, item.Name, item.ChainType, item.ChainId, item.Namespace)

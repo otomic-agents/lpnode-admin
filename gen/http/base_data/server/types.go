@@ -20,6 +20,14 @@ type ChainDataListResponseBody struct {
 	Message *string                      `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
+// GetLpInfoResponseBody is the type of the "baseData" service "getLpInfo"
+// endpoint HTTP response body.
+type GetLpInfoResponseBody struct {
+	Code    *int64              `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	Result  *LpInfoResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Message *string             `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
 // RunTimeEnvResponseBody is the type of the "baseData" service "runTimeEnv"
 // endpoint HTTP response body.
 type RunTimeEnvResponseBody struct {
@@ -43,6 +51,12 @@ type ChainDataItemResponseBody struct {
 	TokenName *string `form:"tokenName,omitempty" json:"tokenName,omitempty" xml:"tokenName,omitempty"`
 }
 
+// LpInfoResponseBody is used to define fields on response body types.
+type LpInfoResponseBody struct {
+	Name    *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
+}
+
 // NewChainDataListResponseBody builds the HTTP response body from the result
 // of the "chainDataList" endpoint of the "baseData" service.
 func NewChainDataListResponseBody(res *basedata.ChainDataListResult) *ChainDataListResponseBody {
@@ -55,6 +69,19 @@ func NewChainDataListResponseBody(res *basedata.ChainDataListResult) *ChainDataL
 		for i, val := range res.Result {
 			body.Result[i] = marshalBasedataChainDataItemToChainDataItemResponseBody(val)
 		}
+	}
+	return body
+}
+
+// NewGetLpInfoResponseBody builds the HTTP response body from the result of
+// the "getLpInfo" endpoint of the "baseData" service.
+func NewGetLpInfoResponseBody(res *basedata.GetLpInfoResult) *GetLpInfoResponseBody {
+	body := &GetLpInfoResponseBody{
+		Code:    res.Code,
+		Message: res.Message,
+	}
+	if res.Result != nil {
+		body.Result = marshalBasedataLpInfoToLpInfoResponseBody(res.Result)
 	}
 	return body
 }

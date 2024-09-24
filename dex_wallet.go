@@ -10,12 +10,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"time"
-
-	"github.com/tidwall/gjson"
-	"github.com/tidwall/sjson"
 
 	"github.com/aws/smithy-go/ptr"
 	"github.com/pkg/errors"
@@ -249,37 +245,18 @@ func (s *dexWalletsrvc) VaultList(cxt context.Context) (res *dexwallet.VaultList
 }
 func (s *dexWalletsrvc) UpdateLpWallet(cxt context.Context) (res *dexwallet.UpdateLpWalletResult, err error) {
 	res = &dexwallet.UpdateLpWalletResult{}
-	relayUrl := os.Getenv("RELAY_ACCESS_URL")
-	if relayUrl == "" {
-		err = errors.New("unable to get relay url")
-		return
-		// relayUrl = "http://localhost:18009"
-	}
-	url := fmt.Sprintf("%s/relay-admin-panel/lpnode_admin_panel/update_lp_wallet", relayUrl)
-	tobeSend := "{}"
-	tobeSend, _ = sjson.Set(tobeSend, "name", os.Getenv("LP_NAME"))
-	log.Println(tobeSend)
-	body, ok, requestError := utils.NewHttpCall().PostJsonCall(&utils.HttpCallRequestOption{
-		Header:  map[string]string{},
-		Url:     url,
-		Timeout: 1000 * 10,
-		JsonStr: tobeSend,
-		TestOKFun: func(bodyStr string) bool {
-			log.Println("bodyis:", bodyStr)
-			code := gjson.Get(bodyStr, "code").Int()
-			return code == 200
-		},
-	})
-	if requestError != nil {
-		err = requestError
+
+	dwls := service.NewDexWalletLogicService()
+	update, err := dwls.RefreshLpWallet()
+	if err != nil {
 		return
 	}
-	if !ok {
-		err = errors.WithMessage(utils.GetNoEmptyError(err), "refresh failed, assert return error")
+	if !update {
+		err = errors.WithMessage(utils.GetNoEmptyError(err), "update error:")
 		return
 	}
 	res.Code = ptr.Int64(0)
-	res.Result = body
+	res.Result = ""
 	res.Message = ptr.String("")
 	logger.System.Debug("updateLpWallet")
 	return

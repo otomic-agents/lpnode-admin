@@ -11,6 +11,10 @@ var baseData_ChainDataItem = Type("ChainDataItem", func() {
 	Attribute("chainName", String, "full chain name")
 	Attribute("tokenName", String, "token name")
 })
+var baseData_Lpinfo = Type("LpInfo", func() {
+	Attribute("name", String)
+	Attribute("profile", String)
+})
 var _ = Service("baseData", func() {
 	Description("used to manage basic data")
 	Method("chainDataList", func() {
@@ -25,6 +29,20 @@ var _ = Service("baseData", func() {
 		})
 		HTTP(func() {
 			GET("/lpnode/lpnode_admin_panel/baseData/chainDataList")
+		})
+	})
+	Method("getLpInfo", func() {
+		Description("used to return basic chain data")
+		Payload(func() {
+
+		})
+		Result(func() {
+			Attribute("code", Int64, "")
+			Attribute("result", baseData_Lpinfo, "")
+			Attribute("message", String)
+		})
+		HTTP(func() {
+			GET("/lpnode/lpnode_admin_panel/baseData/getLpInfo")
 		})
 	})
 	Method("runTimeEnv", func() {

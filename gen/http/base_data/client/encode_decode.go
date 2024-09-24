@@ -69,6 +69,57 @@ func DecodeChainDataListResponse(decoder func(*http.Response) goahttp.Decoder, r
 	}
 }
 
+// BuildGetLpInfoRequest instantiates a HTTP request object with method and
+// path set to call the "baseData" service "getLpInfo" endpoint
+func (c *Client) BuildGetLpInfoRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetLpInfoBaseDataPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("baseData", "getLpInfo", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeGetLpInfoResponse returns a decoder for responses returned by the
+// baseData getLpInfo endpoint. restoreBody controls whether the response body
+// should be restored after having been read.
+func DecodeGetLpInfoResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body GetLpInfoResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("baseData", "getLpInfo", err)
+			}
+			res := NewGetLpInfoResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("baseData", "getLpInfo", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildRunTimeEnvRequest instantiates a HTTP request object with method and
 // path set to call the "baseData" service "runTimeEnv" endpoint
 func (c *Client) BuildRunTimeEnvRequest(ctx context.Context, v interface{}) (*http.Request, error) {
@@ -132,6 +183,20 @@ func unmarshalChainDataItemResponseBodyToBasedataChainDataItem(v *ChainDataItemR
 		Name:      v.Name,
 		ChainName: v.ChainName,
 		TokenName: v.TokenName,
+	}
+
+	return res
+}
+
+// unmarshalLpInfoResponseBodyToBasedataLpInfo builds a value of type
+// *basedata.LpInfo from a value of type *LpInfoResponseBody.
+func unmarshalLpInfoResponseBodyToBasedataLpInfo(v *LpInfoResponseBody) *basedata.LpInfo {
+	if v == nil {
+		return nil
+	}
+	res := &basedata.LpInfo{
+		Name:    v.Name,
+		Profile: v.Profile,
 	}
 
 	return res

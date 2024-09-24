@@ -9,6 +9,7 @@ type DBTokenRow struct {
 	Address      string             `bson:"address"`
 	TokenId      string             `bson:"tokenId"`
 	AddressLower string             `bson:"addressLower"`
+	AddressIndex string             `bson:"addressIndex"`
 	TokenName    string             `bson:"tokenName"`
 	MarketName   string             `bson:"marketName"`
 	Precision    int64              `bson:"precision"`

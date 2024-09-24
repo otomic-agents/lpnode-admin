@@ -60,3 +60,13 @@ func (s *baseDatasrvc) RunTimeEnv(ctx context.Context) (res *basedata.RunTimeEnv
 	}
 	return
 }
+func (s *baseDatasrvc) GetLpInfo(ctx context.Context) (res *basedata.GetLpInfoResult, err error) {
+	res = &basedata.GetLpInfoResult{Result: nil, Code: ptr.Int64(0), Message: ptr.String("")}
+	ret := &basedata.LpInfo{}
+	err = database.FindOne("main", "relayAccounts", bson.M{}, ret)
+	if err != nil {
+		return
+	}
+	res.Result = ret
+	return
+}

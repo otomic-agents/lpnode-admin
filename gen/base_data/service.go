@@ -15,6 +15,8 @@ import (
 type Service interface {
 	// used to return basic chain data
 	ChainDataList(context.Context) (res *ChainDataListResult, err error)
+	// used to return basic chain data
+	GetLpInfo(context.Context) (res *GetLpInfoResult, err error)
 	// used to return runtime environment
 	RunTimeEnv(context.Context) (res *RunTimeEnvResult, err error)
 }
@@ -27,7 +29,7 @@ const ServiceName = "baseData"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [2]string{"chainDataList", "runTimeEnv"}
+var MethodNames = [3]string{"chainDataList", "getLpInfo", "runTimeEnv"}
 
 type ChainDataItem struct {
 	// chain id in the database
@@ -49,6 +51,18 @@ type ChainDataListResult struct {
 	// list
 	Result  []*ChainDataItem
 	Message *string
+}
+
+// GetLpInfoResult is the result type of the baseData service getLpInfo method.
+type GetLpInfoResult struct {
+	Code    *int64
+	Result  *LpInfo
+	Message *string
+}
+
+type LpInfo struct {
+	Name    *string
+	Profile *string
 }
 
 // RunTimeEnvResult is the result type of the baseData service runTimeEnv
