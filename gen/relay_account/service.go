@@ -56,7 +56,8 @@ type ListAccountResult struct {
 // RegisterAccountPayload is the payload type of the relayAccount service
 // registerAccount method.
 type RegisterAccountPayload struct {
-	Profile *string
+	RelayURL string
+	Profile  string
 }
 
 // RegisterAccountResult is the result type of the relayAccount service

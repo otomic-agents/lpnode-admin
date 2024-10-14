@@ -16,7 +16,8 @@ import (
 // RegisterAccountRequestBody is the type of the "relayAccount" service
 // "registerAccount" endpoint HTTP request body.
 type RegisterAccountRequestBody struct {
-	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
+	RelayURL string `form:"relayUrl" json:"relayUrl" xml:"relayUrl"`
+	Profile  string `form:"profile" json:"profile" xml:"profile"`
 }
 
 // DeleteAccountRequestBody is the type of the "relayAccount" service
@@ -63,7 +64,8 @@ type RelayAccountItemResponseBody struct {
 // of the "registerAccount" endpoint of the "relayAccount" service.
 func NewRegisterAccountRequestBody(p *relayaccount.RegisterAccountPayload) *RegisterAccountRequestBody {
 	body := &RegisterAccountRequestBody{
-		Profile: p.Profile,
+		RelayURL: p.RelayURL,
+		Profile:  p.Profile,
 	}
 	return body
 }

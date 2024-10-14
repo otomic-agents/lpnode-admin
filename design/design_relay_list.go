@@ -4,14 +4,6 @@ import (
 	. "goa.design/goa/v3/dsl"
 )
 
-var relayAccount_AccountItem = Type("relayAccountItem", func() {
-	Attribute("id", String)
-	Attribute("name", String)
-	Attribute("profile", String)
-	Attribute("lpIdFake", String)
-	Attribute("lpNodeApiKey", String)
-	Attribute("relayApiKey", String)
-})
 var _ = Service("relayAccount", func() {
 	Description("used to manage lp account on relay")
 	Method("listAccount", func() {

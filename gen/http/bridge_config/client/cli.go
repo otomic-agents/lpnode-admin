@@ -21,7 +21,7 @@ func BuildBridgeCreatePayload(bridgeConfigBridgeCreateBody string) (*bridgeconfi
 	{
 		err = json.Unmarshal([]byte(bridgeConfigBridgeCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"ammName\": \"Aperiam non omnis iste similique.\",\n      \"bridgeName\": \"Nesciunt exercitationem voluptatem sint.\",\n      \"dstChainId\": \"Possimus fuga in.\",\n      \"dstTokenId\": \"Eius omnis velit qui delectus doloribus sed.\",\n      \"enableHedge\": true,\n      \"enableLimiter\": false,\n      \"srcChainId\": \"Quod sint.\",\n      \"srcTokenId\": \"Non eum autem et.\",\n      \"srcWalletId\": \"Et nobis ad vero omnis aspernatur.\",\n      \"walletId\": \"Distinctio tempore quia vero consequatur qui.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"ammName\": \"Consequatur qui.\",\n      \"bridgeName\": \"Quas alias.\",\n      \"dstChainId\": \"Voluptatem sint architecto.\",\n      \"dstTokenId\": \"Eum autem.\",\n      \"enableHedge\": true,\n      \"enableLimiter\": false,\n      \"relayApiKey\": \"Et nobis ad vero omnis aspernatur.\",\n      \"relayUri\": \"Aperiam non omnis iste similique.\",\n      \"srcChainId\": \"Quae accusantium odio totam molestiae nesciunt.\",\n      \"srcTokenId\": \"Sint consequatur possimus fuga in aut.\",\n      \"srcWalletId\": \"Sed veniam distinctio tempore quia.\",\n      \"walletId\": \"Ut eius omnis velit qui delectus.\"\n   }'")
 		}
 	}
 	v := &bridgeconfig.BridgeItem{
@@ -33,6 +33,8 @@ func BuildBridgeCreatePayload(bridgeConfigBridgeCreateBody string) (*bridgeconfi
 		WalletID:      body.WalletID,
 		SrcWalletID:   body.SrcWalletID,
 		AmmName:       body.AmmName,
+		RelayAPIKey:   body.RelayAPIKey,
+		RelayURI:      body.RelayURI,
 		EnableHedge:   body.EnableHedge,
 		EnableLimiter: body.EnableLimiter,
 	}

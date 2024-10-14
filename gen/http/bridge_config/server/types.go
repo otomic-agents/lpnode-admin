@@ -31,7 +31,11 @@ type BridgeCreateRequestBody struct {
 	// mongodb primary key, from walletlist
 	SrcWalletID *string `form:"srcWalletId,omitempty" json:"srcWalletId,omitempty" xml:"srcWalletId,omitempty"`
 	// amm name at install
-	AmmName       *string `form:"ammName,omitempty" json:"ammName,omitempty" xml:"ammName,omitempty"`
+	AmmName *string `form:"ammName,omitempty" json:"ammName,omitempty" xml:"ammName,omitempty"`
+	// relay api key
+	RelayAPIKey *string `form:"relayApiKey,omitempty" json:"relayApiKey,omitempty" xml:"relayApiKey,omitempty"`
+	// relayUri
+	RelayURI      *string `form:"relayUri,omitempty" json:"relayUri,omitempty" xml:"relayUri,omitempty"`
 	EnableHedge   *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
 	EnableLimiter *bool   `form:"enableLimiter,omitempty" json:"enableLimiter,omitempty" xml:"enableLimiter,omitempty"`
 }
@@ -162,6 +166,8 @@ func NewBridgeCreateBridgeItem(body *BridgeCreateRequestBody) *bridgeconfig.Brid
 		WalletID:    *body.WalletID,
 		SrcWalletID: *body.SrcWalletID,
 		AmmName:     *body.AmmName,
+		RelayAPIKey: *body.RelayAPIKey,
+		RelayURI:    *body.RelayURI,
 	}
 	if body.EnableHedge != nil {
 		v.EnableHedge = *body.EnableHedge
@@ -225,6 +231,12 @@ func ValidateBridgeCreateRequestBody(body *BridgeCreateRequestBody) (err error) 
 	}
 	if body.AmmName == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("ammName", "body"))
+	}
+	if body.RelayAPIKey == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("relayApiKey", "body"))
+	}
+	if body.RelayURI == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("relayUri", "body"))
 	}
 	return
 }

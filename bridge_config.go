@@ -207,12 +207,13 @@ func (s *bridgeConfigsrvc) BridgeTest(ctx context.Context, p *bridgeconfig.Bridg
 	// return
 	flag, err := bcls.ConfigLp()
 	fmt.Println(flag)
-	bcls.ConfigClient()
+	fmt.Println(err)
+	// bcls.ConfigClient()
 	//bcls.ConfigClient()
 
 	// log.Println(flag)
 	// _, err = bcls.ConfigAllClient()
-	log.Print(err)
+	
 	if err != nil {
 		return
 	}

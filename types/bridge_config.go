@@ -18,6 +18,7 @@ type BridgeConfigLpConfigItem struct {
 	SrcClientUri      string `json:"src_client_uri"`
 	DstClientUri      string `json:"dst_client_uri"`
 	RelayApiKey       string `json:"relay_api_key"`
+	RelayURI          string `json:"relay_uri"`
 	EnableLimiter     bool   `json:"enableLimiter"`
 }
 

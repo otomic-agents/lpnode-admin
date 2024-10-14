@@ -16,7 +16,8 @@ import (
 // RegisterAccountRequestBody is the type of the "relayAccount" service
 // "registerAccount" endpoint HTTP request body.
 type RegisterAccountRequestBody struct {
-	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
+	RelayURL *string `form:"relayUrl,omitempty" json:"relayUrl,omitempty" xml:"relayUrl,omitempty"`
+	Profile  *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
 }
 
 // DeleteAccountRequestBody is the type of the "relayAccount" service
@@ -103,7 +104,8 @@ func NewDeleteAccountResponseBody(res *relayaccount.DeleteAccountResult) *Delete
 // endpoint payload.
 func NewRegisterAccountPayload(body *RegisterAccountRequestBody) *relayaccount.RegisterAccountPayload {
 	v := &relayaccount.RegisterAccountPayload{
-		Profile: body.Profile,
+		RelayURL: *body.RelayURL,
+		Profile:  *body.Profile,
 	}
 
 	return v
@@ -117,6 +119,18 @@ func NewDeleteAccountPayload(body *DeleteAccountRequestBody) *relayaccount.Delet
 	}
 
 	return v
+}
+
+// ValidateRegisterAccountRequestBody runs the validations defined on
+// RegisterAccountRequestBody
+func ValidateRegisterAccountRequestBody(body *RegisterAccountRequestBody) (err error) {
+	if body.RelayURL == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("relayUrl", "body"))
+	}
+	if body.Profile == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("profile", "body"))
+	}
+	return
 }
 
 // ValidateDeleteAccountRequestBody runs the validations defined on

@@ -69,7 +69,11 @@ type BridgeItem struct {
 	// mongodb primary key, from walletlist
 	SrcWalletID string
 	// amm name at install
-	AmmName       string
+	AmmName string
+	// relay api key
+	RelayAPIKey string
+	// relayUri
+	RelayURI      string
 	EnableHedge   bool
 	EnableLimiter bool
 }

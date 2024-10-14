@@ -21,6 +21,7 @@ type DBBridgeRow struct {
 	SrcClientUri      string             `bson:"srcClientUri"`
 	DstClientUri      string             `bson:"dstClientUri"`
 	RelayApiKey       string             `bson:"relayApiKey"`
+	RelayURI          string             `bson:"relayUri"`
 	AmmName           string             `bson:"ammName"`
 	EnableHedge       bool               `bson:"enableHedge"`
 	EnableLimiter     bool               `bson:"enableLimiter"`

@@ -14,13 +14,15 @@ var BridgeConfig_bridgeItem = Type("bridgeItem", func() {
 	Attribute("walletId", String, "mongodb primary key, from walletlist")    // payment wallet info
 	Attribute("srcWalletId", String, "mongodb primary key, from walletlist") // receiving wallet info
 	Attribute("ammName", String, "amm name at install")
+	Attribute("relayApiKey", String, "relay api key")
+	Attribute("relayUri", String, "relayUri")
 	Attribute("enableHedge", Boolean, func() { // enable hedging for token pair
 		Default(true)
 	})
 	Attribute("enableLimiter", Boolean, func() { // enable trade limit
 		Default(true)
 	})
-	Required("bridgeName", "srcChainId", "dstChainId", "srcTokenId", "dstTokenId", "srcWalletId", "walletId", "ammName")
+	Required("bridgeName", "srcChainId", "dstChainId", "srcTokenId", "dstTokenId", "srcWalletId", "walletId", "ammName", "relayApiKey","relayUri")
 })
 var BridgeConfig_listItem = Type("listBridgeItem", func() {
 	Attribute("_id", String)

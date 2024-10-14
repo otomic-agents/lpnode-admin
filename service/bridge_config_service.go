@@ -197,6 +197,8 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 			"dstClientUri":      clientUrl,
 			"createdAt":         time.Now().UnixNano() / 1e6,
 			"ammName":           ammInfo.Name,
+			"relayApiKey":       p.RelayAPIKey,
+			"relayUri":          p.RelayURI,
 		},
 	})
 	if err != nil {
@@ -280,6 +282,8 @@ func (bcls *BridgeConfigLogicService) GetConfigLpStruct() (res []types.BridgeCon
 			DstClientUri:      result.DstClientUri,
 			SrcClientUri:      result.SrcClientUri,
 			EnableLimiter:     result.EnableLimiter, // whether enable permission limit
+			RelayApiKey:       result.RelayApiKey,
+			RelayURI:          result.RelayURI,
 		})
 	}
 	return
@@ -475,11 +479,6 @@ func (bcls *BridgeConfigLogicService) GetUniqDstToken(dstChainId int64, walletNa
 func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) {
 	lprs := NewLpRegisterLogicService()
 	als := NewAuthenticationLimiterService()
-	relayApiKey, err := lprs.GetRelayApiKey()
-	if err != nil {
-		err = errors.WithMessage(err, "get relayApiKey error, lp may not register account yet")
-		return
-	}
 	lpName, err := lprs.GetLpName()
 	if err != nil {
 		err = errors.WithMessage(err, "get lpname error, lp may not register account yet")
@@ -507,7 +506,8 @@ func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) 
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.msmq_name", i), v.MsmqName)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.src_client_uri", i), v.SrcClientUri)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.dst_client_uri", i), v.DstClientUri)
-		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.relay_api_key", i), relayApiKey)
+		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.relay_api_key", i), v.RelayApiKey)
+		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.relay_uri", i), v.RelayURI)
 		jsonStr, _ = sjson.Set(jsonStr, fmt.Sprintf("data.%d.lp_id", i), lpName)
 		if limiterConf.Data == "" {
 			limiterConf.Data = "{}"

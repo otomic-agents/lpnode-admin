@@ -29,7 +29,11 @@ type BridgeCreateRequestBody struct {
 	// mongodb primary key, from walletlist
 	SrcWalletID string `form:"srcWalletId" json:"srcWalletId" xml:"srcWalletId"`
 	// amm name at install
-	AmmName       string `form:"ammName" json:"ammName" xml:"ammName"`
+	AmmName string `form:"ammName" json:"ammName" xml:"ammName"`
+	// relay api key
+	RelayAPIKey string `form:"relayApiKey" json:"relayApiKey" xml:"relayApiKey"`
+	// relayUri
+	RelayURI      string `form:"relayUri" json:"relayUri" xml:"relayUri"`
 	EnableHedge   bool   `form:"enableHedge" json:"enableHedge" xml:"enableHedge"`
 	EnableLimiter bool   `form:"enableLimiter" json:"enableLimiter" xml:"enableLimiter"`
 }
@@ -113,6 +117,8 @@ func NewBridgeCreateRequestBody(p *bridgeconfig.BridgeItem) *BridgeCreateRequest
 		WalletID:      p.WalletID,
 		SrcWalletID:   p.SrcWalletID,
 		AmmName:       p.AmmName,
+		RelayAPIKey:   p.RelayAPIKey,
+		RelayURI:      p.RelayURI,
 		EnableHedge:   p.EnableHedge,
 		EnableLimiter: p.EnableLimiter,
 	}
