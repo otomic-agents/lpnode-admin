@@ -23,7 +23,7 @@ func BuildTokenCreatePayload(tokenManagerTokenCreateBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Qui eum doloremque voluptatibus amet est.\",\n      \"address\": \"Dolor commodi commodi est est blanditiis tempore.\",\n      \"chainId\": 5928935964696232345,\n      \"chainType\": \"Aut et.\",\n      \"coinType\": \"coin\",\n      \"marketName\": \"Neque possimus libero.\",\n      \"precision\": 11,\n      \"tokenId\": \"Maiores ullam neque quia voluptas occaecati.\",\n      \"tokenName\": \"Ut aut magni odit.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Eveniet provident magnam suscipit rerum voluptatem.\",\n      \"address\": \"Ex ut est earum sit rem omnis.\",\n      \"chainId\": 4374543503038424126,\n      \"chainType\": \"Dolorem itaque sint minima ut aut omnis.\",\n      \"coinType\": \"stable_coin\",\n      \"marketName\": \"Eum blanditiis vel.\",\n      \"precision\": 14,\n      \"tokenId\": \"Voluptates rerum officia nulla quos id.\",\n      \"tokenName\": \"Occaecati necessitatibus quo ex mollitia.\"\n   }'")
 		}
 		if body.Precision < 6 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.precision", body.Precision, 6, true))
@@ -61,7 +61,7 @@ func BuildTokenDeletePayload(tokenManagerTokenDeleteBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenDeleteBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Explicabo aut repellat sed temporibus cupiditate saepe.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Accusamus ratione a nihil ut.\"\n   }'")
 		}
 	}
 	v := &tokenmanager.DeleteTokenFilter{

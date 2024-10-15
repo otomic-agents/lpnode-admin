@@ -140,7 +140,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		err = errors.WithMessage(utils.GetNoEmptyError(err), "wallet not belong to source chain, please check config")
 		return
 	}
-	bridgeExist := bcls.HasBridge(srcTokenInfo.Address, dstTokenInfo.Address, srcChainInfo.ChainId, dstChainInfo.ChainId, ammInfo.Name)
+	bridgeExist := bcls.HasBridge(srcTokenInfo.Address, dstTokenInfo.Address, srcChainInfo.ChainId, dstChainInfo.ChainId, ammInfo.Name, p.RelayAPIKey)
 	if bridgeExist {
 		err = utils.GetNoEmptyError(err)
 		err = errors.WithMessage(err, "bridge already exist")
@@ -179,6 +179,7 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 		"dstChain_id": dstChainInfo.ID,
 		"srcToken_id": srcTokenInfo.ID,
 		"dstToken_id": dstTokenInfo.ID,
+		"relayApiKey": p.RelayAPIKey,
 	}, bson.M{
 		"$set": bson.M{
 			"enableLimiter":     p.EnableLimiter,
@@ -215,13 +216,14 @@ func (bcls *BridgeConfigLogicService) CreateBridge(p *bridgeconfig.BridgeItem, i
 func (bcls *BridgeConfigLogicService) GetMsmqName(token0 string, token1 string, chain0 int64, chain1 int64) string {
 	return fmt.Sprintf("%s/%s_%d_%d", token0, token1, chain0, chain1)
 }
-func (bcls *BridgeConfigLogicService) HasBridge(srcToken string, dstToken string, srcChainId int64, dstChainId int64, ammName string) bool {
+func (bcls *BridgeConfigLogicService) HasBridge(srcToken string, dstToken string, srcChainId int64, dstChainId int64, ammName string, relayApiKey string) bool {
 	filter := bson.M{
-		"srcChainId": srcChainId,
-		"dstChainId": dstChainId,
-		"srcToken":   srcToken,
-		"dstToken":   dstToken,
-		"ammName":    ammName,
+		"srcChainId":  srcChainId,
+		"dstChainId":  dstChainId,
+		"srcToken":    srcToken,
+		"dstToken":    dstToken,
+		"ammName":     ammName,
+		"relayApiKey": relayApiKey,
 	}
 	log.Println(filter)
 	hasBridge, err := database.MatchOne("main", "bridges", filter)

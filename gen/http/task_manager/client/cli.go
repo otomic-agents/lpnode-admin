@@ -21,7 +21,7 @@ func BuildTaskDeployPayload(taskManagerTaskDeployBody string) (*taskmanager.Task
 	{
 		err = json.Unmarshal([]byte(taskManagerTaskDeployBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Consequuntur unde quasi molestiae commodi amet non.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Tempore ea ut aut.\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskDeploy2{
@@ -39,7 +39,7 @@ func BuildUnDeployPayload(taskManagerUnDeployBody string) (*taskmanager.TaskDepl
 	{
 		err = json.Unmarshal([]byte(taskManagerUnDeployBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Nisi aut.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Dolores aut et recusandae omnis non.\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskDeploy2{
@@ -57,7 +57,7 @@ func BuildTaskCreatePayload(taskManagerTaskCreateBody string) (*taskmanager.Task
 	{
 		err = json.Unmarshal([]byte(taskManagerTaskCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Molestiae qui sed quia et.\",\n      \"deployMessage\": \"Aut explicabo sint est voluptas natus eum.\",\n      \"deployed\": true,\n      \"schedule\": \"Quos deleniti vero ipsa.\",\n      \"scriptBody\": \"Dignissimos sequi ratione dicta id quam.\",\n      \"scriptPath\": \"Aut qui autem qui.\",\n      \"taskType\": \"customize\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Consequatur ullam.\",\n      \"deployMessage\": \"Eius ipsum reprehenderit ab consequuntur.\",\n      \"deployed\": false,\n      \"schedule\": \"Maxime harum ut.\",\n      \"scriptBody\": \"Accusantium blanditiis.\",\n      \"scriptPath\": \"Sunt temporibus ex.\",\n      \"taskType\": \"customize\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskItem{

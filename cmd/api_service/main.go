@@ -18,6 +18,7 @@ import (
 	mainlogic "admin-panel/gen/main_logic"
 	ordercenter "admin-panel/gen/order_center"
 	relayaccount "admin-panel/gen/relay_account"
+	relaylist "admin-panel/gen/relay_list"
 	settings "admin-panel/gen/settings"
 	statuslist "admin-panel/gen/status_list"
 	taskmanager "admin-panel/gen/task_manager"
@@ -72,6 +73,7 @@ func main() {
 		orderCenterSvc           ordercenter.Service
 		lpRegisterSvc            lpregister.Service
 		relayAccountSvc          relayaccount.Service
+		relayListSvc             relaylist.Service
 		settingsSvc              settings.Service
 		statusListSvc            statuslist.Service
 		taskManagerSvc           taskmanager.Service
@@ -94,6 +96,7 @@ func main() {
 		orderCenterSvc = adminapiservice.NewOrderCenter(logger)
 		lpRegisterSvc = adminapiservice.NewLpRegister(logger)
 		relayAccountSvc = adminapiservice.NewRelayAccount(logger)
+		relayListSvc = adminapiservice.NewRelayList(logger)
 		settingsSvc = adminapiservice.NewSettings(logger)
 		statusListSvc = adminapiservice.NewStatusList(logger)
 		taskManagerSvc = adminapiservice.NewTaskManager(logger)
@@ -119,6 +122,7 @@ func main() {
 		orderCenterEndpoints           *ordercenter.Endpoints
 		lpRegisterEndpoints            *lpregister.Endpoints
 		relayAccountEndpoints          *relayaccount.Endpoints
+		relayListEndpoints             *relaylist.Endpoints
 		settingsEndpoints              *settings.Endpoints
 		statusListEndpoints            *statuslist.Endpoints
 		taskManagerEndpoints           *taskmanager.Endpoints
@@ -141,6 +145,7 @@ func main() {
 		orderCenterEndpoints = ordercenter.NewEndpoints(orderCenterSvc)
 		lpRegisterEndpoints = lpregister.NewEndpoints(lpRegisterSvc)
 		relayAccountEndpoints = relayaccount.NewEndpoints(relayAccountSvc)
+		relayListEndpoints = relaylist.NewEndpoints(relayListSvc)
 		settingsEndpoints = settings.NewEndpoints(settingsSvc)
 		statusListEndpoints = statuslist.NewEndpoints(statusListSvc)
 		taskManagerEndpoints = taskmanager.NewEndpoints(taskManagerSvc)
@@ -186,7 +191,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, hedgeEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, hedgeEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

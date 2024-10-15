@@ -200,6 +200,7 @@ func initIndex() (err error) {
 			{"srcToken_id", -1},
 			{"dstToken_id", -1},
 			{"ammName", -1},
+			{"relayApiKey", -1},
 		},
 		Options: options.Index().SetUnique(true),
 	}
