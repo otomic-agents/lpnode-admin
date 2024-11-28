@@ -1535,17 +1535,18 @@ CreateDexWallet implements createDexWallet.
 Example:
     %[1]s dex-wallet create-dex-wallet --body '{
       "accountId": "Occaecati rerum eum voluptas commodi qui enim.",
-      "address": "Et nihil fugiat et quia dolore ex.",
+      "address": "Nihil fugiat et quia dolore ex.",
       "chainId": 4019562491470982516,
       "chainType": "Ut voluptatem.",
-      "id": "Odio pariatur neque eius.",
-      "privateKey": "Sequi temporibus tempora assumenda.",
+      "id": "Enim culpa omnis.",
+      "privateKey": "Tempora assumenda itaque.",
+      "signServiceEndpoint": "Quod perspiciatis doloremque.",
       "storeId": "Cum quibusdam.",
       "vaultHostType": "Quisquam commodi tenetur dolor.",
       "vaultName": "Hic et quibusdam tempora.",
       "vaultSecertType": "Ratione sapiente quas impedit explicabo consectetur.",
-      "walletName": "Porro enim culpa omnis sunt autem.",
-      "walletType": "storeId"
+      "walletName": "Autem sapiente sequi.",
+      "walletType": "privateKey"
    }'
 `, os.Args[0])
 }
@@ -1558,7 +1559,7 @@ DeleteDexWallet implements deleteDexWallet.
 
 Example:
     %[1]s dex-wallet delete-dex-wallet --body '{
-      "id": "Eveniet nihil."
+      "id": "Sint dolores."
    }'
 `, os.Args[0])
 }

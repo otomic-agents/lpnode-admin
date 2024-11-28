@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"log"
 	"strings"
-	"time"
 
 	"github.com/aws/smithy-go/ptr"
 	"github.com/pkg/errors"
@@ -53,6 +52,7 @@ func (s *dexWalletsrvc) ListDexWallet(ctx context.Context) (res *dexwallet.ListD
 			Address:   ptr.String(v.Address),
 			AccountID: ptr.String(v.AccountId),
 			// PrivateKey: v.PrivateKey,
+			SignServiceEndpoint: ptr.String(v.SignServiceEndpoint),
 			WalletType:      v.WalletType,
 			WalletName:      v.WalletName,
 			VaultHostType:   ptr.String(v.VaultHostType),
@@ -73,8 +73,8 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 
 	address := ""
 	vaultHostType := ""
-	vaultName := ""
 	vaultSecertType := ""
+	vaultName:=""
 	storeId := ptr.ToString(p.StoreID)
 	dwls := service.NewDexWalletLogicService()
 	if p.WalletType == "storeId" {
@@ -98,14 +98,11 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 	}
 
 	if p.WalletType == "privateKey" {
-		if ptr.ToString(p.PrivateKey) == "" {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "privateKey cannot be empty")
-			return
-		}
 		if ptr.ToString(p.Address) == "" {
 			err = errors.WithMessage(utils.GetNoEmptyError(err), "address cannot be empty")
 			return
 		}
+		vaultName = ""
 		address = ptr.ToString(p.Address)
 	}
 	if p.WalletType == "privateKey" {
@@ -142,33 +139,22 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 		err = errors.New("wallet is already exist")
 		return
 	}
-	if p.WalletType == "secretVault" { // save to secret vault
-		privatePrivateKey := ptr.ToString(p.PrivateKey)
-		p.PrivateKey = ptr.String(fmt.Sprintf("%d", time.Now().UnixNano()))
-		storeWalletName := fmt.Sprintf("%s_%d", strings.ToLower(address), time.Now().UnixNano())
 
-		storedName, storeErr := dwls.StoreToSecretVault(storeWalletName, privatePrivateKey)
-		if storeErr != nil {
-			err = errors.WithMessage(storeErr, "save to secret vault failed")
-			return
-		}
-		vaultName = storedName
-
-	}
 	createData := &types.DBWalletRow{
-		ID:              primitive.NewObjectID(),
-		WalletName:      p.WalletName,
-		PrivateKey:      ptr.ToString(p.PrivateKey),
-		Address:         address,
-		ChainType:       p.ChainType,
-		ChainId:         p.ChainID,
-		AccountId:       ptr.ToString(p.AccountID),
-		AddressLower:    strings.ToLower(address),
-		StoreId:         ptr.ToString(p.StoreID),
-		WalletType:      p.WalletType,
-		VaultHostType:   vaultHostType,
-		VaultName:       vaultName,
-		VaultSecertType: vaultSecertType,
+		ID:                  primitive.NewObjectID(),
+		WalletName:          p.WalletName,
+		PrivateKey:          ptr.ToString(p.PrivateKey),
+		SignServiceEndpoint: ptr.ToString(p.SignServiceEndpoint),
+		Address:             address,
+		ChainType:           p.ChainType,
+		ChainId:             p.ChainID,
+		AccountId:           ptr.ToString(p.AccountID),
+		AddressLower:        strings.ToLower(address),
+		StoreId:             ptr.ToString(p.StoreID),
+		WalletType:          p.WalletType,
+		VaultHostType:       vaultHostType,
+		VaultName:           vaultName,
+		VaultSecertType:     vaultSecertType,
 	}
 	err = dwls.CreateByBsonMap(createData)
 	if err != nil {

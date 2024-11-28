@@ -2228,13 +2228,13 @@ definitions:
         properties:
             key:
                 type: string
-                example: Omnis velit quis suscipit in distinctio.
+                example: Nisi dolor sed asperiores consequuntur.
             value:
                 type: string
-                example: Nisi dolor sed asperiores consequuntur.
+                example: Voluptatem voluptatem doloremque excepturi sequi magni a.
         example:
-            key: Voluptatem voluptatem doloremque excepturi sequi magni a.
-            value: Omnis nam.
+            key: Omnis nam.
+            value: Aperiam recusandae vero.
     DeploymentSetupConfigRequestBody:
         title: DeploymentSetupConfigRequestBody
         type: object
@@ -2344,6 +2344,9 @@ definitions:
             privateKey:
                 type: string
                 example: Quos facere in rerum dolores.
+            signServiceEndpoint:
+                type: string
+                example: Et et illum pariatur dolores.
             storeId:
                 type: string
                 example: Assumenda repellat aut ipsa aut.
@@ -2361,23 +2364,24 @@ definitions:
                 example: Cumque id aut aut reiciendis quia veritatis.
             walletType:
                 type: string
-                example: privateKey
+                example: storeId
                 enum:
                     - privateKey
                     - storeId
         example:
-            accountId: Est nulla est nam magni.
-            address: Consequatur voluptas ratione non nemo sit.
-            chainId: 4972969143354594346
-            chainType: Omnis magnam perferendis sint asperiores accusamus.
-            id: Et illum pariatur.
-            privateKey: Ea animi autem excepturi.
-            storeId: Quia beatae ut.
-            vaultHostType: Quia id eum illum pariatur ut minima.
-            vaultName: Quas architecto similique voluptates sunt eos suscipit.
-            vaultSecertType: Distinctio modi.
-            walletName: Natus ratione.
-            walletType: privateKey
+            accountId: Ut maxime quia.
+            address: Est nulla est nam magni.
+            chainId: 376050385840691306
+            chainType: Ea quia.
+            id: Necessitatibus ea animi autem excepturi.
+            privateKey: Omnis magnam perferendis sint asperiores accusamus.
+            signServiceEndpoint: Quia porro sunt cupiditate iusto et.
+            storeId: Illum pariatur ut minima.
+            vaultHostType: Quas architecto similique voluptates sunt eos suscipit.
+            vaultName: Distinctio modi.
+            vaultSecertType: Autem commodi voluptatem iure et.
+            walletName: Consequatur voluptas ratione non nemo sit.
+            walletType: storeId
         required:
             - walletName
             - chainId
@@ -2389,7 +2393,7 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 5866673473211195861
+                example: 185885592725462512
                 format: int64
             message:
                 type: string
@@ -2399,7 +2403,7 @@ definitions:
                 properties:
                     _id:
                         type: string
-                        example: Pariatur sapiente esse odio.
+                        example: Sapiente esse odio.
                 example:
                     _id: Porro ea cumque atque facere natus molestiae.
         example:
@@ -2414,9 +2418,9 @@ definitions:
             id:
                 type: string
                 description: mongodb primary key
-                example: Iure et facilis quaerat.
+                example: Aliquid exercitationem ut nulla quaerat.
         example:
-            id: Molestias vel voluptates enim optio architecto.
+            id: Occaecati sint numquam expedita aut.
         required:
             - id
     DexWalletDeleteDexWalletResponseBody:
@@ -2425,20 +2429,20 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 2584742678502006596
+                example: 5902660999012013412
                 format: int64
             message:
                 type: string
-                example: Iure et sit quia.
+                example: Et iure et facilis quaerat quia molestias.
             result:
                 type: integer
                 description: result
-                example: 8989587788932793619
+                example: 6610198201452342832
                 format: int64
         example:
-            code: 2881818891299974949
-            message: Iusto et omnis officiis est nobis.
-            result: 4935231048696876058
+            code: 225446684581772246
+            message: Optio architecto aut rerum laboriosam omnis similique.
+            result: 5112624281828223425
     DexWalletListDexWalletResponseBody:
         title: DexWalletListDexWalletResponseBody
         type: object
@@ -2449,7 +2453,7 @@ definitions:
                 format: int64
             message:
                 type: string
-                example: Sed praesentium ut omnis.
+                example: Animi distinctio.
             result:
                 type: array
                 items:
@@ -2462,6 +2466,7 @@ definitions:
                       chainType: Autem corrupti perspiciatis.
                       id: Enim consectetur corporis.
                       privateKey: Sed quidem eius numquam natus.
+                      signServiceEndpoint: Quia assumenda rerum sed.
                       storeId: Maxime tempore.
                       vaultHostType: Et rem ut quam cumque odit.
                       vaultName: Voluptas quo omnis.
@@ -2474,6 +2479,7 @@ definitions:
                       chainType: Autem corrupti perspiciatis.
                       id: Enim consectetur corporis.
                       privateKey: Sed quidem eius numquam natus.
+                      signServiceEndpoint: Quia assumenda rerum sed.
                       storeId: Maxime tempore.
                       vaultHostType: Et rem ut quam cumque odit.
                       vaultName: Voluptas quo omnis.
@@ -2481,8 +2487,8 @@ definitions:
                       walletName: At id quis neque ad dolorem.
                       walletType: storeId
         example:
-            code: 5481325378848245381
-            message: Repudiandae temporibus earum odit omnis dicta consequuntur.
+            code: 6078926216955651775
+            message: Earum odit omnis dicta consequuntur ad.
             result:
                 - accountId: Molestias repudiandae suscipit qui nemo dolores ipsa.
                   address: Iste nihil explicabo quia.
@@ -2490,6 +2496,7 @@ definitions:
                   chainType: Autem corrupti perspiciatis.
                   id: Enim consectetur corporis.
                   privateKey: Sed quidem eius numquam natus.
+                  signServiceEndpoint: Quia assumenda rerum sed.
                   storeId: Maxime tempore.
                   vaultHostType: Et rem ut quam cumque odit.
                   vaultName: Voluptas quo omnis.
@@ -2502,6 +2509,7 @@ definitions:
                   chainType: Autem corrupti perspiciatis.
                   id: Enim consectetur corporis.
                   privateKey: Sed quidem eius numquam natus.
+                  signServiceEndpoint: Quia assumenda rerum sed.
                   storeId: Maxime tempore.
                   vaultHostType: Et rem ut quam cumque odit.
                   vaultName: Voluptas quo omnis.
@@ -2514,19 +2522,19 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 6719939538873629101
+                example: 5427832567091643221
                 format: int64
             message:
                 type: string
-                example: Unde quis autem totam.
+                example: Est eaque enim ratione eos.
             result:
                 type: string
                 description: list
-                example: Eaque culpa nulla et.
+                example: Quasi dolore.
         example:
-            code: 7387101495810239211
-            message: Quam et doloribus et.
-            result: Et ut blanditiis sunt molestiae aliquid fugiat.
+            code: 6521035437263419180
+            message: Minus consectetur.
+            result: Molestiae fugit.
         required:
             - result
     DexWalletVaultListResponseBody:
@@ -2535,43 +2543,48 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 2442385493694756390
+                example: 7234833398817750915
                 format: int64
             message:
                 type: string
-                example: Necessitatibus commodi.
+                example: Et ut blanditiis sunt molestiae aliquid fugiat.
             result:
                 type: array
                 items:
                     $ref: '#/definitions/vaultRowResponseBody'
                 description: list
                 example:
-                    - address: In numquam et.
-                      hostType: Amet in quos architecto doloremque odio.
+                    - address: Numquam et velit amet.
+                      hostType: Quos architecto doloremque odio.
                       id: Iusto perspiciatis pariatur repellendus commodi.
                       name: Possimus laboriosam omnis sit.
                       secertType: Et vel dolor aut adipisci cupiditate.
-                    - address: In numquam et.
-                      hostType: Amet in quos architecto doloremque odio.
-                      id: Iusto perspiciatis pariatur repellendus commodi.
-                      name: Possimus laboriosam omnis sit.
-                      secertType: Et vel dolor aut adipisci cupiditate.
-                    - address: In numquam et.
-                      hostType: Amet in quos architecto doloremque odio.
+                    - address: Numquam et velit amet.
+                      hostType: Quos architecto doloremque odio.
                       id: Iusto perspiciatis pariatur repellendus commodi.
                       name: Possimus laboriosam omnis sit.
                       secertType: Et vel dolor aut adipisci cupiditate.
         example:
-            code: 6583457107512293787
-            message: Sed asperiores animi.
+            code: 1081760324405451050
+            message: Doloribus et saepe.
             result:
-                - address: In numquam et.
-                  hostType: Amet in quos architecto doloremque odio.
+                - address: Numquam et velit amet.
+                  hostType: Quos architecto doloremque odio.
                   id: Iusto perspiciatis pariatur repellendus commodi.
                   name: Possimus laboriosam omnis sit.
                   secertType: Et vel dolor aut adipisci cupiditate.
-                - address: In numquam et.
-                  hostType: Amet in quos architecto doloremque odio.
+                - address: Numquam et velit amet.
+                  hostType: Quos architecto doloremque odio.
+                  id: Iusto perspiciatis pariatur repellendus commodi.
+                  name: Possimus laboriosam omnis sit.
+                  secertType: Et vel dolor aut adipisci cupiditate.
+                - address: Numquam et velit amet.
+                  hostType: Quos architecto doloremque odio.
+                  id: Iusto perspiciatis pariatur repellendus commodi.
+                  name: Possimus laboriosam omnis sit.
+                  secertType: Et vel dolor aut adipisci cupiditate.
+                - address: Numquam et velit amet.
+                  hostType: Quos architecto doloremque odio.
                   id: Iusto perspiciatis pariatur repellendus commodi.
                   name: Possimus laboriosam omnis sit.
                   secertType: Et vel dolor aut adipisci cupiditate.
@@ -2584,29 +2597,29 @@ definitions:
             id:
                 type: string
                 description: primary key
-                example: Est quaerat.
+                example: Et autem voluptatem eum vel repudiandae.
         example:
-            id: Eum eum autem.
+            id: Tenetur qui dolores aperiam atque laborum.
     HedgeDelResponseBody:
         title: HedgeDelResponseBody
         type: object
         properties:
             code:
                 type: integer
-                example: 5057851436060882780
+                example: 2332765952254777249
                 format: int64
             data:
                 type: integer
                 description: result
-                example: 422093385008702201
+                example: 1165898407345221092
                 format: int64
             message:
                 type: string
-                example: Repellat sequi modi qui est atque in.
+                example: Eum eum autem.
         example:
-            code: 6111336890075118965
-            data: 4437298414509537071
-            message: Ab est molestias.
+            code: 1996395229150103184
+            data: 4072394625421206944
+            message: Laborum et eum explicabo voluptas quo veritatis.
     HedgeEditRequestBody:
         title: HedgeEditRequestBody
         type: object
@@ -2623,53 +2636,53 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 6194246060634690019
+                example: 7909705742366489616
                 format: int64
             data:
                 type: integer
                 description: result
-                example: 403690771946853794
+                example: 4829526803404231955
                 format: int64
             message:
                 type: string
-                example: Aliquid deserunt molestias ea eum.
+                example: Amet perspiciatis.
         example:
-            code: 579463194306066248
-            data: 3727696853128615589
-            message: Non et veritatis neque sunt consequuntur.
+            code: 2631774651446312991
+            data: 270626616608618730
+            message: Ad fugit aspernatur amet enim sunt.
     HedgeItemRequestBody:
         title: HedgeItemRequestBody
         type: object
         properties:
             hedgeType:
                 type: string
-                example: Perspiciatis facilis necessitatibus vel ad fugit.
+                example: Fugiat quam repellat sequi modi.
             id:
                 type: string
-                example: Rerum aut voluptatibus accusamus.
+                example: Error similique dolorem est dolor dolor quos.
         example:
-            hedgeType: Dolorem est dolor dolor quos.
-            id: Amet enim sunt aut error.
+            hedgeType: Molestias dicta.
+            id: Est atque in earum autem corrupti ab.
     HedgeItemResponseBody:
         title: HedgeItemResponseBody
         type: object
         properties:
             hedgeType:
                 type: string
-                example: Cumque est eaque.
+                example: Dolorum voluptas quibusdam est ducimus est sed.
             id:
                 type: string
-                example: Voluptas quasi.
+                example: Ut corrupti et aperiam ea blanditiis et.
         example:
-            hedgeType: Consectetur impedit voluptatem ut.
-            id: Ratione eos dolorem provident molestiae fugit ratione.
+            hedgeType: Tempora ut consequatur aliquid.
+            id: Consequatur molestiae.
     HedgeListResponseBody:
         title: HedgeListResponseBody
         type: object
         properties:
             code:
                 type: integer
-                example: 4221296992698607426
+                example: 7983978723995579748
                 format: int64
             data:
                 type: array
@@ -2681,17 +2694,19 @@ definitions:
                       id: Non aut quaerat aut voluptas et est.
                     - hedgeType: A nulla ipsa.
                       id: Non aut quaerat aut voluptas et est.
+                    - hedgeType: A nulla ipsa.
+                      id: Non aut quaerat aut voluptas et est.
             message:
                 type: string
-                example: Aperiam ea blanditiis et dolor dolorum.
+                example: Ea eum quos facere qui.
         example:
-            code: 7822537308163848505
+            code: 7295369186498393174
             data:
                 - hedgeType: A nulla ipsa.
                   id: Non aut quaerat aut voluptas et est.
                 - hedgeType: A nulla ipsa.
                   id: Non aut quaerat aut voluptas et est.
-            message: Ducimus est sed iusto consequatur molestiae illum.
+            message: Neque sunt consequuntur enim rerum.
     InstallCtrlPanelInstallDeploymentRequestBody:
         title: InstallCtrlPanelInstallDeploymentRequestBody
         type: object
@@ -2771,35 +2786,35 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 4292121409233113786
+                example: 6813876455990663614
                 format: int64
             message:
                 type: string
-                example: Totam exercitationem incidunt dicta dolorem consequatur.
+                example: Eos quia.
             result:
                 type: object
                 properties:
                     CmdStderr:
                         type: string
-                        example: Id et.
+                        example: Necessitatibus enim voluptas dolor consequuntur porro.
                     CmdStdout:
                         type: string
-                        example: Aspernatur cumque iusto iure dolore in voluptatum.
+                        example: Incidunt eos et.
                     Template:
                         type: string
                         description: rendered template content
-                        example: Aut tenetur.
+                        example: Est id et.
                 example:
-                    CmdStderr: Harum deserunt laborum fuga et quis.
-                    CmdStdout: Necessitatibus enim voluptas dolor consequuntur porro.
-                    Template: Incidunt eos et.
+                    CmdStderr: Facere animi in velit et aspernatur.
+                    CmdStdout: Totam exercitationem incidunt dicta dolorem consequatur.
+                    Template: Harum deserunt laborum fuga et quis.
         example:
-            code: 6626274705433687512
-            message: Autem ut iste.
+            code: 2919543639700112926
+            message: Omnis velit quis suscipit in distinctio.
             result:
-                CmdStderr: Quo aut dolores quia labore.
-                CmdStdout: Quia est nemo omnis exercitationem eos.
-                Template: Animi in velit et aspernatur quia.
+                CmdStderr: Autem ut iste.
+                CmdStdout: Quo aut dolores quia labore.
+                Template: Omnis exercitationem eos.
     InstallCtrlPanelListInstallRequestBody:
         title: InstallCtrlPanelListInstallRequestBody
         type: object
@@ -2807,9 +2822,9 @@ definitions:
             installType:
                 type: string
                 description: type of service installed
-                example: Sed rem sunt rerum aliquam.
+                example: Accusamus aut tenetur omnis aspernatur cumque.
         example:
-            installType: Sunt minima omnis et possimus tenetur est.
+            installType: Iure dolore.
         required:
             - installType
     InstallCtrlPanelListInstallResponseBody:
@@ -2818,11 +2833,11 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 1996395229150103184
+                example: 3064254957923492660
                 format: int64
             message:
                 type: string
-                example: Libero aut illum sequi eveniet natus rem.
+                example: Consectetur sunt.
             result:
                 type: array
                 items:
@@ -2839,20 +2854,20 @@ definitions:
                       name: Ullam incidunt labore rem quibusdam.
                       status: 586109839416585253
                       yaml: Debitis fugiat dolores asperiores velit illo harum.
-                    - installContext: Illum recusandae ut in ratione labore.
-                      installType: Rerum repellendus qui vel.
-                      name: Ullam incidunt labore rem quibusdam.
-                      status: 586109839416585253
-                      yaml: Debitis fugiat dolores asperiores velit illo harum.
-                    - installContext: Illum recusandae ut in ratione labore.
-                      installType: Rerum repellendus qui vel.
-                      name: Ullam incidunt labore rem quibusdam.
-                      status: 586109839416585253
-                      yaml: Debitis fugiat dolores asperiores velit illo harum.
         example:
-            code: 5787465792444358409
-            message: Omnis aut.
+            code: 1084102853133028814
+            message: Possimus tenetur est.
             result:
+                - installContext: Illum recusandae ut in ratione labore.
+                  installType: Rerum repellendus qui vel.
+                  name: Ullam incidunt labore rem quibusdam.
+                  status: 586109839416585253
+                  yaml: Debitis fugiat dolores asperiores velit illo harum.
+                - installContext: Illum recusandae ut in ratione labore.
+                  installType: Rerum repellendus qui vel.
+                  name: Ullam incidunt labore rem quibusdam.
+                  status: 586109839416585253
+                  yaml: Debitis fugiat dolores asperiores velit illo harum.
                 - installContext: Illum recusandae ut in ratione labore.
                   installType: Rerum repellendus qui vel.
                   name: Ullam incidunt labore rem quibusdam.
@@ -4089,25 +4104,25 @@ definitions:
         properties:
             awsAccessKeyId:
                 type: string
-                example: Commodi velit.
+                example: Aut ea et.
             awsSecretAccessKey:
                 type: string
-                example: Qui assumenda corrupti.
+                example: Corporis voluptate perferendis.
             connectionExplorerurl:
                 type: string
-                example: Ut enim sint et.
+                example: Commodi velit.
             connectionHelperurl:
                 type: string
-                example: Dolore cumque et amet atque provident temporibus.
+                example: Ut enim sint et.
             connectionNodeurl:
                 type: string
-                example: Adipisci a enim fuga.
+                example: Culpa aliquid dolorem dolor fugiat.
             connectionWalleturl:
                 type: string
-                example: Culpa aliquid dolorem dolor fugiat.
+                example: Dolore cumque et amet atque provident temporibus.
             containerPort:
                 type: string
-                example: Aut ea et.
+                example: Qui assumenda corrupti.
             customEnv:
                 type: array
                 items:
@@ -4122,28 +4137,28 @@ definitions:
             deploymentName:
                 type: string
                 description: deploymentName
-                example: Ipsa in placeat.
+                example: Placeat corporis iure nemo ea enim maiores.
             imageRepository:
                 type: string
                 description: imageRepository
-                example: Recusandae vero at a.
+                example: Ut quod maiores.
             install:
                 type: boolean
                 example: true
             rpcUrl:
                 type: string
-                example: Nisi deleniti est voluptatem vero minus eveniet.
+                example: Adipisci a enim fuga.
             serviceName:
                 type: string
                 description: serviceName
-                example: Quod maiores vero.
+                example: Neque ipsa.
             startBlock:
                 type: string
-                example: Earum ad laboriosam.
+                example: Nisi deleniti est voluptatem vero minus eveniet.
             type:
                 type: string
                 description: type
-                example: Iure nemo ea enim maiores.
+                example: Earum ad laboriosam.
         example:
             awsAccessKeyId: Sed deserunt voluptatibus aut adipisci.
             awsSecretAccessKey: In quia id nam itaque sed.
@@ -4162,7 +4177,7 @@ definitions:
                 - key: Ipsa et iusto ab.
                   value: Dignissimos cupiditate.
             deploymentName: Dolor repudiandae nesciunt.
-            imageRepository: Perferendis assumenda voluptatibus facilis quod id quo.
+            imageRepository: Quod id quo.
             install: false
             rpcUrl: Officiis quis at.
             serviceName: Ea facilis enim et quia voluptatem.
@@ -4266,30 +4281,30 @@ definitions:
             installContext:
                 type: string
                 description: install context
-                example: Autem voluptatem eum.
+                example: Aut est sed sunt et et.
             installType:
                 type: string
                 description: install type
-                example: Minus laborum et.
+                example: Soluta voluptatibus reprehenderit.
             name:
                 type: string
                 description: name
-                example: Explicabo voluptas quo veritatis.
+                example: Illo consequatur.
             status:
                 type: integer
                 description: install status
-                example: 4019829212725988694
+                example: 4274620676952108976
                 format: int64
             yaml:
                 type: string
                 description: yaml
-                example: Repudiandae consequuntur tenetur qui dolores aperiam.
+                example: Harum error odio et doloremque debitis.
         example:
-            installContext: Aut est sed sunt et et.
-            installType: Laborum ut voluptates soluta voluptatibus.
-            name: Id illo consequatur.
-            status: 4274620676952108976
-            yaml: Harum error odio et doloremque debitis.
+            installContext: Dolores omnis.
+            installType: Sapiente libero.
+            name: Illum sequi eveniet natus rem.
+            status: 5787465792444358409
+            yaml: Quo sed rem sunt.
     installDeploymentDataResultResponseBody:
         title: installDeploymentDataResultResponseBody
         type: object
@@ -4515,29 +4530,29 @@ definitions:
             address:
                 type: string
                 description: address
-                example: Laboriosam omnis.
+                example: Sunt quos et hic occaecati in.
             hostType:
                 type: string
                 description: host type
-                example: Iusto aliquid.
+                example: Aut dolor expedita rem.
             id:
                 type: string
                 description: storeId
-                example: Ut nulla quaerat commodi occaecati sint.
+                example: Autem aut ut.
             name:
                 type: string
                 description: store name
-                example: Expedita aut omnis molestiae.
+                example: Rerum id molestiae omnis enim sed.
             secertType:
                 type: string
                 description: store secert type
-                example: Quos et hic.
+                example: Reiciendis molestiae ea accusamus rerum.
         example:
-            address: In odit aut dolor expedita.
-            hostType: Et autem aut ut ut.
-            id: Id molestiae omnis enim sed molestias.
-            name: Molestiae ea.
-            secertType: Rerum reprehenderit sapiente quo tenetur.
+            address: Sapiente quo tenetur.
+            hostType: Minima necessitatibus.
+            id: Consequatur et et sed asperiores.
+            name: Expedita sapiente eaque culpa nulla et ut.
+            secertType: Quis autem totam.
     walletRowResponseBody:
         title: walletRowResponseBody
         type: object
@@ -4564,6 +4579,9 @@ definitions:
             privateKey:
                 type: string
                 example: Repudiandae nobis facilis ducimus molestiae.
+            signServiceEndpoint:
+                type: string
+                example: Velit nulla saepe dolorem quasi.
             storeId:
                 type: string
                 example: Totam odit consequatur repellendus aut tempora.
@@ -4581,22 +4599,23 @@ definitions:
                 example: Cupiditate et odio ipsam labore.
             walletType:
                 type: string
-                example: privateKey
+                example: storeId
                 enum:
                     - privateKey
                     - storeId
         example:
-            accountId: Autem perspiciatis rem qui facilis earum.
-            address: Et doloremque.
-            chainId: 6335649278427728930
-            chainType: Et voluptas sed omnis iste.
-            id: Nulla saepe dolorem.
-            privateKey: Qui veniam expedita odit labore.
-            storeId: Qui est odio qui suscipit expedita.
-            vaultHostType: Voluptatem incidunt magni.
-            vaultName: Harum nam totam pariatur molestiae voluptatum.
-            vaultSecertType: Autem magni voluptatem minima suscipit possimus illum.
-            walletName: Ut harum omnis dolorem fugiat aliquam et.
+            accountId: Aut qui est odio qui suscipit expedita.
+            address: Et voluptas sed omnis iste.
+            chainId: 4834317680451187366
+            chainType: Autem perspiciatis rem qui facilis earum.
+            id: Omnis dolorem fugiat.
+            privateKey: Veniam expedita odit labore nam et doloremque.
+            signServiceEndpoint: Dolorem adipisci laborum sed.
+            storeId: Incidunt magni quod harum nam totam.
+            vaultHostType: Molestiae voluptatum officia.
+            vaultName: Magni voluptatem.
+            vaultSecertType: Suscipit possimus.
+            walletName: Et saepe.
             walletType: privateKey
         required:
             - walletName

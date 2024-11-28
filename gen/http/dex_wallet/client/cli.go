@@ -23,7 +23,7 @@ func BuildCreateDexWalletPayload(dexWalletCreateDexWalletBody string) (*dexwalle
 	{
 		err = json.Unmarshal([]byte(dexWalletCreateDexWalletBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"accountId\": \"Occaecati rerum eum voluptas commodi qui enim.\",\n      \"address\": \"Et nihil fugiat et quia dolore ex.\",\n      \"chainId\": 4019562491470982516,\n      \"chainType\": \"Ut voluptatem.\",\n      \"id\": \"Odio pariatur neque eius.\",\n      \"privateKey\": \"Sequi temporibus tempora assumenda.\",\n      \"storeId\": \"Cum quibusdam.\",\n      \"vaultHostType\": \"Quisquam commodi tenetur dolor.\",\n      \"vaultName\": \"Hic et quibusdam tempora.\",\n      \"vaultSecertType\": \"Ratione sapiente quas impedit explicabo consectetur.\",\n      \"walletName\": \"Porro enim culpa omnis sunt autem.\",\n      \"walletType\": \"storeId\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"accountId\": \"Occaecati rerum eum voluptas commodi qui enim.\",\n      \"address\": \"Nihil fugiat et quia dolore ex.\",\n      \"chainId\": 4019562491470982516,\n      \"chainType\": \"Ut voluptatem.\",\n      \"id\": \"Enim culpa omnis.\",\n      \"privateKey\": \"Tempora assumenda itaque.\",\n      \"signServiceEndpoint\": \"Quod perspiciatis doloremque.\",\n      \"storeId\": \"Cum quibusdam.\",\n      \"vaultHostType\": \"Quisquam commodi tenetur dolor.\",\n      \"vaultName\": \"Hic et quibusdam tempora.\",\n      \"vaultSecertType\": \"Ratione sapiente quas impedit explicabo consectetur.\",\n      \"walletName\": \"Autem sapiente sequi.\",\n      \"walletType\": \"privateKey\"\n   }'")
 		}
 		if !(body.WalletType == "privateKey" || body.WalletType == "storeId") {
 			err = goa.MergeErrors(err, goa.InvalidEnumValueError("body.walletType", body.WalletType, []interface{}{"privateKey", "storeId"}))
@@ -33,18 +33,19 @@ func BuildCreateDexWalletPayload(dexWalletCreateDexWalletBody string) (*dexwalle
 		}
 	}
 	v := &dexwallet.WalletRow{
-		ID:              body.ID,
-		WalletName:      body.WalletName,
-		PrivateKey:      body.PrivateKey,
-		Address:         body.Address,
-		ChainType:       body.ChainType,
-		AccountID:       body.AccountID,
-		ChainID:         body.ChainID,
-		StoreID:         body.StoreID,
-		VaultHostType:   body.VaultHostType,
-		VaultName:       body.VaultName,
-		VaultSecertType: body.VaultSecertType,
-		WalletType:      body.WalletType,
+		ID:                  body.ID,
+		WalletName:          body.WalletName,
+		PrivateKey:          body.PrivateKey,
+		Address:             body.Address,
+		ChainType:           body.ChainType,
+		AccountID:           body.AccountID,
+		ChainID:             body.ChainID,
+		StoreID:             body.StoreID,
+		VaultHostType:       body.VaultHostType,
+		VaultName:           body.VaultName,
+		VaultSecertType:     body.VaultSecertType,
+		SignServiceEndpoint: body.SignServiceEndpoint,
+		WalletType:          body.WalletType,
 	}
 
 	return v, nil
@@ -58,7 +59,7 @@ func BuildDeleteDexWalletPayload(dexWalletDeleteDexWalletBody string) (*dexwalle
 	{
 		err = json.Unmarshal([]byte(dexWalletDeleteDexWalletBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Eveniet nihil.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Sint dolores.\"\n   }'")
 		}
 	}
 	v := &dexwallet.DeleteFilter{

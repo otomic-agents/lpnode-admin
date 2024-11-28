@@ -25,12 +25,13 @@ type CreateDexWalletRequestBody struct {
 	// wallet
 	AccountID *string `form:"accountId,omitempty" json:"accountId,omitempty" xml:"accountId,omitempty"`
 	// chain Id
-	ChainID         *int64  `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
-	StoreID         *string `form:"storeId,omitempty" json:"storeId,omitempty" xml:"storeId,omitempty"`
-	VaultHostType   *string `form:"vaultHostType,omitempty" json:"vaultHostType,omitempty" xml:"vaultHostType,omitempty"`
-	VaultName       *string `form:"vaultName,omitempty" json:"vaultName,omitempty" xml:"vaultName,omitempty"`
-	VaultSecertType *string `form:"vaultSecertType,omitempty" json:"vaultSecertType,omitempty" xml:"vaultSecertType,omitempty"`
-	WalletType      *string `form:"walletType,omitempty" json:"walletType,omitempty" xml:"walletType,omitempty"`
+	ChainID             *int64  `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
+	StoreID             *string `form:"storeId,omitempty" json:"storeId,omitempty" xml:"storeId,omitempty"`
+	VaultHostType       *string `form:"vaultHostType,omitempty" json:"vaultHostType,omitempty" xml:"vaultHostType,omitempty"`
+	VaultName           *string `form:"vaultName,omitempty" json:"vaultName,omitempty" xml:"vaultName,omitempty"`
+	VaultSecertType     *string `form:"vaultSecertType,omitempty" json:"vaultSecertType,omitempty" xml:"vaultSecertType,omitempty"`
+	SignServiceEndpoint *string `form:"signServiceEndpoint,omitempty" json:"signServiceEndpoint,omitempty" xml:"signServiceEndpoint,omitempty"`
+	WalletType          *string `form:"walletType,omitempty" json:"walletType,omitempty" xml:"walletType,omitempty"`
 }
 
 // DeleteDexWalletRequestBody is the type of the "dexWallet" service
@@ -97,12 +98,13 @@ type WalletRowResponseBody struct {
 	// wallet
 	AccountID *string `form:"accountId,omitempty" json:"accountId,omitempty" xml:"accountId,omitempty"`
 	// chain Id
-	ChainID         int64   `form:"chainId" json:"chainId" xml:"chainId"`
-	StoreID         *string `form:"storeId,omitempty" json:"storeId,omitempty" xml:"storeId,omitempty"`
-	VaultHostType   *string `form:"vaultHostType,omitempty" json:"vaultHostType,omitempty" xml:"vaultHostType,omitempty"`
-	VaultName       *string `form:"vaultName,omitempty" json:"vaultName,omitempty" xml:"vaultName,omitempty"`
-	VaultSecertType *string `form:"vaultSecertType,omitempty" json:"vaultSecertType,omitempty" xml:"vaultSecertType,omitempty"`
-	WalletType      string  `form:"walletType" json:"walletType" xml:"walletType"`
+	ChainID             int64   `form:"chainId" json:"chainId" xml:"chainId"`
+	StoreID             *string `form:"storeId,omitempty" json:"storeId,omitempty" xml:"storeId,omitempty"`
+	VaultHostType       *string `form:"vaultHostType,omitempty" json:"vaultHostType,omitempty" xml:"vaultHostType,omitempty"`
+	VaultName           *string `form:"vaultName,omitempty" json:"vaultName,omitempty" xml:"vaultName,omitempty"`
+	VaultSecertType     *string `form:"vaultSecertType,omitempty" json:"vaultSecertType,omitempty" xml:"vaultSecertType,omitempty"`
+	SignServiceEndpoint *string `form:"signServiceEndpoint,omitempty" json:"signServiceEndpoint,omitempty" xml:"signServiceEndpoint,omitempty"`
+	WalletType          string  `form:"walletType" json:"walletType" xml:"walletType"`
 }
 
 // VaultRowResponseBody is used to define fields on response body types.
@@ -194,18 +196,19 @@ func NewUpdateLpWalletResponseBody(res *dexwallet.UpdateLpWalletResult) *UpdateL
 // endpoint payload.
 func NewCreateDexWalletWalletRow(body *CreateDexWalletRequestBody) *dexwallet.WalletRow {
 	v := &dexwallet.WalletRow{
-		ID:              body.ID,
-		WalletName:      *body.WalletName,
-		PrivateKey:      body.PrivateKey,
-		Address:         body.Address,
-		ChainType:       *body.ChainType,
-		AccountID:       body.AccountID,
-		ChainID:         *body.ChainID,
-		StoreID:         body.StoreID,
-		VaultHostType:   body.VaultHostType,
-		VaultName:       body.VaultName,
-		VaultSecertType: body.VaultSecertType,
-		WalletType:      *body.WalletType,
+		ID:                  body.ID,
+		WalletName:          *body.WalletName,
+		PrivateKey:          body.PrivateKey,
+		Address:             body.Address,
+		ChainType:           *body.ChainType,
+		AccountID:           body.AccountID,
+		ChainID:             *body.ChainID,
+		StoreID:             body.StoreID,
+		VaultHostType:       body.VaultHostType,
+		VaultName:           body.VaultName,
+		VaultSecertType:     body.VaultSecertType,
+		SignServiceEndpoint: body.SignServiceEndpoint,
+		WalletType:          *body.WalletType,
 	}
 
 	return v

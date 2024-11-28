@@ -112,10 +112,11 @@ type WalletRow struct {
 	// wallet
 	AccountID *string
 	// chain Id
-	ChainID         int64
-	StoreID         *string
-	VaultHostType   *string
-	VaultName       *string
-	VaultSecertType *string
-	WalletType      string
+	ChainID             int64
+	StoreID             *string
+	VaultHostType       *string
+	VaultName           *string
+	VaultSecertType     *string
+	SignServiceEndpoint *string
+	WalletType          string
 }

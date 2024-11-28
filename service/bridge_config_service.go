@@ -402,6 +402,7 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.walletName", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.WalletName)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.accountId", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.AccountId)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.privateKey", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.PrivateKey)
+		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.signServiceEndpoint", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.SignServiceEndpoint)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.walletType", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.WalletType)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.storeId", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.StoreId)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.address", result.SrcChainId, srcWalletInfo.ID.Hex()), srcWalletInfo.Address)
@@ -412,6 +413,7 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.walletName", result.DstChainId, dstWalletInfo.ID.Hex()), dstWalletInfo.WalletName)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.accountId", result.DstChainId, dstWalletInfo.ID.Hex()), dstWalletInfo.AccountId)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.privateKey", result.DstChainId, dstWalletInfo.ID.Hex()), dstWalletInfo.PrivateKey)
+		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.signServiceEndpoint", result.DstChainId, dstWalletInfo.ID.Hex()), dstWalletInfo.SignServiceEndpoint)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.walletType", result.DstChainId, dstWalletInfo.ID.Hex()), dstWalletInfo.WalletType)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.storeId", result.DstChainId, dstWalletInfo.ID.Hex()), dstWalletInfo.StoreId)
 		baseJson, _ = sjson.Set(baseJson, fmt.Sprintf("%d.walletInfo.%s.address", result.DstChainId, dstWalletInfo.ID.Hex()), dstWalletInfo.Address)
@@ -426,6 +428,7 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 		baseJson, _ = sjson.SetRaw(baseJson, fmt.Sprintf("%d.walletInfo.%s.tokenInfo.%s", result.DstChainId, dstWalletInfo.ID.Hex(), "0x0000000000000000000000000000000000000000"), nativeTokenBase)
 	}
 	res = baseJson
+	logger.System.Debug(baseJson)
 	logger.System.Debug("got configJson", "\r\n", gjson.Get(baseJson, "@pretty").String())
 	return
 }
@@ -573,6 +576,7 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 			storeId := wallet.Get("storeId").String()
 			vaultHostType := wallet.Get("vaultHostType").String()
 			vaultName := wallet.Get("vaultName").String()
+			signatureServiceAddress := wallet.Get("signServiceEndpoint").String()
 			vaultSecertType := wallet.Get("vaultSecertType").String()
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.wallet_name", walletIndex), walletName)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign_712", walletIndex), true)
@@ -580,6 +584,7 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.account_id", walletIndex), accountId)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.private_key", walletIndex), privateKey)
 			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.address", walletIndex), address)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.signature_service_address", walletIndex), signatureServiceAddress)
 			isTypeSet := false
 			if walletType == "storeId" {
 				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "vault")

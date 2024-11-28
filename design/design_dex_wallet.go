@@ -16,6 +16,7 @@ var DexWallet_WalletRow = Type("walletRow", func() {
 	Attribute("vaultHostType", String)
 	Attribute("vaultName", String)
 	Attribute("vaultSecertType", String)
+	Attribute("signServiceEndpoint",String)
 	Attribute("walletType", String, func() {
 		Enum("privateKey", "storeId")
 	})

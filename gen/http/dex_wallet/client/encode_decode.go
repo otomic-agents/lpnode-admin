@@ -324,18 +324,19 @@ func unmarshalWalletRowResponseBodyToDexwalletWalletRow(v *WalletRowResponseBody
 		return nil
 	}
 	res := &dexwallet.WalletRow{
-		ID:              v.ID,
-		WalletName:      *v.WalletName,
-		PrivateKey:      v.PrivateKey,
-		Address:         v.Address,
-		ChainType:       *v.ChainType,
-		AccountID:       v.AccountID,
-		ChainID:         *v.ChainID,
-		StoreID:         v.StoreID,
-		VaultHostType:   v.VaultHostType,
-		VaultName:       v.VaultName,
-		VaultSecertType: v.VaultSecertType,
-		WalletType:      *v.WalletType,
+		ID:                  v.ID,
+		WalletName:          *v.WalletName,
+		PrivateKey:          v.PrivateKey,
+		Address:             v.Address,
+		ChainType:           *v.ChainType,
+		AccountID:           v.AccountID,
+		ChainID:             *v.ChainID,
+		StoreID:             v.StoreID,
+		VaultHostType:       v.VaultHostType,
+		VaultName:           v.VaultName,
+		VaultSecertType:     v.VaultSecertType,
+		SignServiceEndpoint: v.SignServiceEndpoint,
+		WalletType:          *v.WalletType,
 	}
 
 	return res
