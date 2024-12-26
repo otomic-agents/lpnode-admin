@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/aws/smithy-go/ptr"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -53,11 +54,11 @@ func (s *dexWalletsrvc) ListDexWallet(ctx context.Context) (res *dexwallet.ListD
 			AccountID: ptr.String(v.AccountId),
 			// PrivateKey: v.PrivateKey,
 			SignServiceEndpoint: ptr.String(v.SignServiceEndpoint),
-			WalletType:      v.WalletType,
-			WalletName:      v.WalletName,
-			VaultHostType:   ptr.String(v.VaultHostType),
-			VaultName:       ptr.String(v.VaultName),
-			VaultSecertType: ptr.String(v.VaultSecertType),
+			WalletType:          v.WalletType,
+			WalletName:          v.WalletName,
+			VaultHostType:       ptr.String(v.VaultHostType),
+			VaultName:           ptr.String(v.VaultName),
+			VaultSecertType:     ptr.String(v.VaultSecertType),
 		})
 	}
 
@@ -74,7 +75,7 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 	address := ""
 	vaultHostType := ""
 	vaultSecertType := ""
-	vaultName:=""
+	vaultName := ""
 	storeId := ptr.ToString(p.StoreID)
 	dwls := service.NewDexWalletLogicService()
 	if p.WalletType == "storeId" {
@@ -145,16 +146,21 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 		WalletName:          p.WalletName,
 		PrivateKey:          ptr.ToString(p.PrivateKey),
 		SignServiceEndpoint: ptr.ToString(p.SignServiceEndpoint),
-		Address:             address,
-		ChainType:           p.ChainType,
-		ChainId:             p.ChainID,
-		AccountId:           ptr.ToString(p.AccountID),
-		AddressLower:        strings.ToLower(address),
-		StoreId:             ptr.ToString(p.StoreID),
-		WalletType:          p.WalletType,
-		VaultHostType:       vaultHostType,
-		VaultName:           vaultName,
-		VaultSecertType:     vaultSecertType,
+		Address: func() string {
+			if p.ChainType == "evm" {
+				return common.HexToAddress(address).Hex() // 这会返回经过checksum的地址
+			}
+			return address
+		}(),
+		ChainType:       p.ChainType,
+		ChainId:         p.ChainID,
+		AccountId:       ptr.ToString(p.AccountID),
+		AddressLower:    strings.ToLower(address),
+		StoreId:         ptr.ToString(p.StoreID),
+		WalletType:      p.WalletType,
+		VaultHostType:   vaultHostType,
+		VaultName:       vaultName,
+		VaultSecertType: vaultSecertType,
 	}
 	err = dwls.CreateByBsonMap(createData)
 	if err != nil {
