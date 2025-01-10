@@ -9,7 +9,16 @@ package server
 
 import (
 	basedata "admin-panel/gen/base_data"
+
+	goa "goa.design/goa/v3/pkg"
 )
+
+// GetWalletAndTokensRequestBody is the type of the "baseData" service
+// "getWalletAndTokens" endpoint HTTP request body.
+type GetWalletAndTokensRequestBody struct {
+	// Chain ID
+	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
+}
 
 // ChainDataListResponseBody is the type of the "baseData" service
 // "chainDataList" endpoint HTTP response body.
@@ -37,11 +46,22 @@ type RunTimeEnvResponseBody struct {
 	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
+// GetWalletAndTokensResponseBody is the type of the "baseData" service
+// "getWalletAndTokens" endpoint HTTP response body.
+type GetWalletAndTokensResponseBody struct {
+	// response code
+	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	// wallet list with tokens
+	Result []*WalletItemResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	// response message
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
 // ChainDataItemResponseBody is used to define fields on response body types.
 type ChainDataItemResponseBody struct {
-	// chain id in the database
+	// Chain ID in the database
 	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
-	// chain Id
+	// Chain ID
 	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
 	// chain name
 	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
@@ -55,6 +75,34 @@ type ChainDataItemResponseBody struct {
 type LpInfoResponseBody struct {
 	Name    *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
 	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
+}
+
+// WalletItemResponseBody is used to define fields on response body types.
+type WalletItemResponseBody struct {
+	// wallet name
+	WalletName *string `form:"wallet_name,omitempty" json:"wallet_name,omitempty" xml:"wallet_name,omitempty"`
+	// wallet address
+	Address *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
+	// whether can sign
+	CanSign *bool `form:"can_sign,omitempty" json:"can_sign,omitempty" xml:"can_sign,omitempty"`
+	// whether can sign 712
+	CanSign712 *bool `form:"can_sign_712,omitempty" json:"can_sign_712,omitempty" xml:"can_sign_712,omitempty"`
+	// wallet type
+	Type *string `form:"type,omitempty" json:"type,omitempty" xml:"type,omitempty"`
+	// signature service address
+	SignatureServiceAddress *string `form:"signature_service_address,omitempty" json:"signature_service_address,omitempty" xml:"signature_service_address,omitempty"`
+	// token list
+	Tokens []*WalletTokenItemResponseBody `form:"tokens,omitempty" json:"tokens,omitempty" xml:"tokens,omitempty"`
+}
+
+// WalletTokenItemResponseBody is used to define fields on response body types.
+type WalletTokenItemResponseBody struct {
+	// token address
+	Address *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
+	// token symbol
+	Symbol *string `form:"symbol,omitempty" json:"symbol,omitempty" xml:"symbol,omitempty"`
+	// token decimals
+	Decimals *int32 `form:"decimals,omitempty" json:"decimals,omitempty" xml:"decimals,omitempty"`
 }
 
 // NewChainDataListResponseBody builds the HTTP response body from the result
@@ -95,4 +143,39 @@ func NewRunTimeEnvResponseBody(res *basedata.RunTimeEnvResult) *RunTimeEnvRespon
 		Message: res.Message,
 	}
 	return body
+}
+
+// NewGetWalletAndTokensResponseBody builds the HTTP response body from the
+// result of the "getWalletAndTokens" endpoint of the "baseData" service.
+func NewGetWalletAndTokensResponseBody(res *basedata.GetWalletAndTokensResult) *GetWalletAndTokensResponseBody {
+	body := &GetWalletAndTokensResponseBody{
+		Code:    res.Code,
+		Message: res.Message,
+	}
+	if res.Result != nil {
+		body.Result = make([]*WalletItemResponseBody, len(res.Result))
+		for i, val := range res.Result {
+			body.Result[i] = marshalBasedataWalletItemToWalletItemResponseBody(val)
+		}
+	}
+	return body
+}
+
+// NewGetWalletAndTokensPayload builds a baseData service getWalletAndTokens
+// endpoint payload.
+func NewGetWalletAndTokensPayload(body *GetWalletAndTokensRequestBody) *basedata.GetWalletAndTokensPayload {
+	v := &basedata.GetWalletAndTokensPayload{
+		ChainID: *body.ChainID,
+	}
+
+	return v
+}
+
+// ValidateGetWalletAndTokensRequestBody runs the validations defined on
+// GetWalletAndTokensRequestBody
+func ValidateGetWalletAndTokensRequestBody(body *GetWalletAndTokensRequestBody) (err error) {
+	if body.ChainID == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("chainId", "body"))
+	}
+	return
 }

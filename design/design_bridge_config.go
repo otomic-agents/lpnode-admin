@@ -22,7 +22,7 @@ var BridgeConfig_bridgeItem = Type("bridgeItem", func() {
 	Attribute("enableLimiter", Boolean, func() { // enable trade limit
 		Default(true)
 	})
-	Required("bridgeName", "srcChainId", "dstChainId", "srcTokenId", "dstTokenId", "srcWalletId", "walletId", "ammName", "relayApiKey","relayUri")
+	Required("bridgeName", "srcChainId", "dstChainId", "srcTokenId", "dstTokenId", "srcWalletId", "walletId", "ammName", "relayApiKey", "relayUri")
 })
 var BridgeConfig_listItem = Type("listBridgeItem", func() {
 	Attribute("_id", String)
@@ -42,6 +42,18 @@ var BridgeConfig_listItem = Type("listBridgeItem", func() {
 	Attribute("walletName", String)
 	Attribute("walletId", String)
 	Attribute("enableHedge", Boolean)
+	Attribute("srcTokenBalance", String, "Source chain token balance", func() {
+		Default("0")
+	})
+	Attribute("dstTokenBalance", String, "Destination chain token balance", func() {
+		Default("0")
+	})
+	Attribute("srcTokenDecimals", Int64, "Source token decimals", func() {
+		Default(18)
+	})
+	Attribute("dstTokenDecimals", Int64, "Destination token decimals", func() {
+		Default(18)
+	})
 })
 var BridgeConfig_DeleteBridgeFilter = Type("deleteBridgeFilter", func() {
 	Attribute("id", String, "mongodb primary key")

@@ -296,6 +296,30 @@ func unmarshalListBridgeItemResponseBodyToBridgeconfigListBridgeItem(v *ListBrid
 		WalletID:          v.WalletID,
 		EnableHedge:       v.EnableHedge,
 	}
+	if v.SrcTokenBalance != nil {
+		res.SrcTokenBalance = *v.SrcTokenBalance
+	}
+	if v.DstTokenBalance != nil {
+		res.DstTokenBalance = *v.DstTokenBalance
+	}
+	if v.SrcTokenDecimals != nil {
+		res.SrcTokenDecimals = *v.SrcTokenDecimals
+	}
+	if v.DstTokenDecimals != nil {
+		res.DstTokenDecimals = *v.DstTokenDecimals
+	}
+	if v.SrcTokenBalance == nil {
+		res.SrcTokenBalance = "0"
+	}
+	if v.DstTokenBalance == nil {
+		res.DstTokenBalance = "0"
+	}
+	if v.SrcTokenDecimals == nil {
+		res.SrcTokenDecimals = 18
+	}
+	if v.DstTokenDecimals == nil {
+		res.DstTokenDecimals = 18
+	}
 
 	return res
 }

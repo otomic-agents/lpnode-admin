@@ -10,9 +10,11 @@ package server
 import (
 	basedata "admin-panel/gen/base_data"
 	"context"
+	"io"
 	"net/http"
 
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
 
 // EncodeChainDataListResponse returns an encoder for responses returned by the
@@ -51,6 +53,43 @@ func EncodeRunTimeEnvResponse(encoder func(context.Context, http.ResponseWriter)
 	}
 }
 
+// EncodeGetWalletAndTokensResponse returns an encoder for responses returned
+// by the baseData getWalletAndTokens endpoint.
+func EncodeGetWalletAndTokensResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*basedata.GetWalletAndTokensResult)
+		enc := encoder(ctx, w)
+		body := NewGetWalletAndTokensResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetWalletAndTokensRequest returns a decoder for requests sent to the
+// baseData getWalletAndTokens endpoint.
+func DecodeGetWalletAndTokensRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body GetWalletAndTokensRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateGetWalletAndTokensRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewGetWalletAndTokensPayload(&body)
+
+		return payload, nil
+	}
+}
+
 // marshalBasedataChainDataItemToChainDataItemResponseBody builds a value of
 // type *ChainDataItemResponseBody from a value of type *basedata.ChainDataItem.
 func marshalBasedataChainDataItemToChainDataItemResponseBody(v *basedata.ChainDataItem) *ChainDataItemResponseBody {
@@ -77,6 +116,46 @@ func marshalBasedataLpInfoToLpInfoResponseBody(v *basedata.LpInfo) *LpInfoRespon
 	res := &LpInfoResponseBody{
 		Name:    v.Name,
 		Profile: v.Profile,
+	}
+
+	return res
+}
+
+// marshalBasedataWalletItemToWalletItemResponseBody builds a value of type
+// *WalletItemResponseBody from a value of type *basedata.WalletItem.
+func marshalBasedataWalletItemToWalletItemResponseBody(v *basedata.WalletItem) *WalletItemResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &WalletItemResponseBody{
+		WalletName:              v.WalletName,
+		Address:                 v.Address,
+		CanSign:                 v.CanSign,
+		CanSign712:              v.CanSign712,
+		Type:                    v.Type,
+		SignatureServiceAddress: v.SignatureServiceAddress,
+	}
+	if v.Tokens != nil {
+		res.Tokens = make([]*WalletTokenItemResponseBody, len(v.Tokens))
+		for i, val := range v.Tokens {
+			res.Tokens[i] = marshalBasedataWalletTokenItemToWalletTokenItemResponseBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalBasedataWalletTokenItemToWalletTokenItemResponseBody builds a value
+// of type *WalletTokenItemResponseBody from a value of type
+// *basedata.WalletTokenItem.
+func marshalBasedataWalletTokenItemToWalletTokenItemResponseBody(v *basedata.WalletTokenItem) *WalletTokenItemResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &WalletTokenItemResponseBody{
+		Address:  v.Address,
+		Symbol:   v.Symbol,
+		Decimals: v.Decimals,
 	}
 
 	return res

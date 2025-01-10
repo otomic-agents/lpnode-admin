@@ -103,6 +103,14 @@ type ListBridgeItemResponseBody struct {
 	WalletName        *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
 	WalletID          *string `form:"walletId,omitempty" json:"walletId,omitempty" xml:"walletId,omitempty"`
 	EnableHedge       *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	// Source chain token balance
+	SrcTokenBalance *string `form:"srcTokenBalance,omitempty" json:"srcTokenBalance,omitempty" xml:"srcTokenBalance,omitempty"`
+	// Destination chain token balance
+	DstTokenBalance *string `form:"dstTokenBalance,omitempty" json:"dstTokenBalance,omitempty" xml:"dstTokenBalance,omitempty"`
+	// Source token decimals
+	SrcTokenDecimals *int64 `form:"srcTokenDecimals,omitempty" json:"srcTokenDecimals,omitempty" xml:"srcTokenDecimals,omitempty"`
+	// Destination token decimals
+	DstTokenDecimals *int64 `form:"dstTokenDecimals,omitempty" json:"dstTokenDecimals,omitempty" xml:"dstTokenDecimals,omitempty"`
 }
 
 // NewBridgeCreateRequestBody builds the HTTP request body from the payload of

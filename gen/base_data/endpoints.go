@@ -15,17 +15,19 @@ import (
 
 // Endpoints wraps the "baseData" service endpoints.
 type Endpoints struct {
-	ChainDataList goa.Endpoint
-	GetLpInfo     goa.Endpoint
-	RunTimeEnv    goa.Endpoint
+	ChainDataList      goa.Endpoint
+	GetLpInfo          goa.Endpoint
+	RunTimeEnv         goa.Endpoint
+	GetWalletAndTokens goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "baseData" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		ChainDataList: NewChainDataListEndpoint(s),
-		GetLpInfo:     NewGetLpInfoEndpoint(s),
-		RunTimeEnv:    NewRunTimeEnvEndpoint(s),
+		ChainDataList:      NewChainDataListEndpoint(s),
+		GetLpInfo:          NewGetLpInfoEndpoint(s),
+		RunTimeEnv:         NewRunTimeEnvEndpoint(s),
+		GetWalletAndTokens: NewGetWalletAndTokensEndpoint(s),
 	}
 }
 
@@ -34,6 +36,7 @@ func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.ChainDataList = m(e.ChainDataList)
 	e.GetLpInfo = m(e.GetLpInfo)
 	e.RunTimeEnv = m(e.RunTimeEnv)
+	e.GetWalletAndTokens = m(e.GetWalletAndTokens)
 }
 
 // NewChainDataListEndpoint returns an endpoint function that calls the method
@@ -57,5 +60,14 @@ func NewGetLpInfoEndpoint(s Service) goa.Endpoint {
 func NewRunTimeEnvEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		return s.RunTimeEnv(ctx)
+	}
+}
+
+// NewGetWalletAndTokensEndpoint returns an endpoint function that calls the
+// method "getWalletAndTokens" of service "baseData".
+func NewGetWalletAndTokensEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*GetWalletAndTokensPayload)
+		return s.GetWalletAndTokens(ctx, p)
 	}
 }

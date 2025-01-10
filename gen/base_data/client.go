@@ -15,17 +15,19 @@ import (
 
 // Client is the "baseData" service client.
 type Client struct {
-	ChainDataListEndpoint goa.Endpoint
-	GetLpInfoEndpoint     goa.Endpoint
-	RunTimeEnvEndpoint    goa.Endpoint
+	ChainDataListEndpoint      goa.Endpoint
+	GetLpInfoEndpoint          goa.Endpoint
+	RunTimeEnvEndpoint         goa.Endpoint
+	GetWalletAndTokensEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "baseData" service client given the endpoints.
-func NewClient(chainDataList, getLpInfo, runTimeEnv goa.Endpoint) *Client {
+func NewClient(chainDataList, getLpInfo, runTimeEnv, getWalletAndTokens goa.Endpoint) *Client {
 	return &Client{
-		ChainDataListEndpoint: chainDataList,
-		GetLpInfoEndpoint:     getLpInfo,
-		RunTimeEnvEndpoint:    runTimeEnv,
+		ChainDataListEndpoint:      chainDataList,
+		GetLpInfoEndpoint:          getLpInfo,
+		RunTimeEnvEndpoint:         runTimeEnv,
+		GetWalletAndTokensEndpoint: getWalletAndTokens,
 	}
 }
 
@@ -57,4 +59,15 @@ func (c *Client) RunTimeEnv(ctx context.Context) (res *RunTimeEnvResult, err err
 		return
 	}
 	return ires.(*RunTimeEnvResult), nil
+}
+
+// GetWalletAndTokens calls the "getWalletAndTokens" endpoint of the "baseData"
+// service.
+func (c *Client) GetWalletAndTokens(ctx context.Context, p *GetWalletAndTokensPayload) (res *GetWalletAndTokensResult, err error) {
+	var ires interface{}
+	ires, err = c.GetWalletAndTokensEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*GetWalletAndTokensResult), nil
 }

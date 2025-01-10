@@ -29,6 +29,10 @@ type Client struct {
 	// endpoint.
 	RunTimeEnvDoer goahttp.Doer
 
+	// GetWalletAndTokens Doer is the HTTP client used to make requests to the
+	// getWalletAndTokens endpoint.
+	GetWalletAndTokensDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -49,14 +53,15 @@ func NewClient(
 	restoreBody bool,
 ) *Client {
 	return &Client{
-		ChainDataListDoer:   doer,
-		GetLpInfoDoer:       doer,
-		RunTimeEnvDoer:      doer,
-		RestoreResponseBody: restoreBody,
-		scheme:              scheme,
-		host:                host,
-		decoder:             dec,
-		encoder:             enc,
+		ChainDataListDoer:      doer,
+		GetLpInfoDoer:          doer,
+		RunTimeEnvDoer:         doer,
+		GetWalletAndTokensDoer: doer,
+		RestoreResponseBody:    restoreBody,
+		scheme:                 scheme,
+		host:                   host,
+		decoder:                dec,
+		encoder:                enc,
 	}
 }
 
@@ -112,6 +117,30 @@ func (c *Client) RunTimeEnv() goa.Endpoint {
 		resp, err := c.RunTimeEnvDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("baseData", "runTimeEnv", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetWalletAndTokens returns an endpoint that makes HTTP requests to the
+// baseData service getWalletAndTokens server.
+func (c *Client) GetWalletAndTokens() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeGetWalletAndTokensRequest(c.encoder)
+		decodeResponse = DecodeGetWalletAndTokensResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildGetWalletAndTokensRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetWalletAndTokensDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("baseData", "getWalletAndTokens", err)
 		}
 		return decodeResponse(resp)
 	}

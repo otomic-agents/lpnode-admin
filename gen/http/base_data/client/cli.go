@@ -6,3 +6,27 @@
 // $ goa gen admin-panel/design
 
 package client
+
+import (
+	basedata "admin-panel/gen/base_data"
+	"encoding/json"
+	"fmt"
+)
+
+// BuildGetWalletAndTokensPayload builds the payload for the baseData
+// getWalletAndTokens endpoint from CLI flags.
+func BuildGetWalletAndTokensPayload(baseDataGetWalletAndTokensBody string) (*basedata.GetWalletAndTokensPayload, error) {
+	var err error
+	var body GetWalletAndTokensRequestBody
+	{
+		err = json.Unmarshal([]byte(baseDataGetWalletAndTokensBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainId\": 5585753511314906542\n   }'")
+		}
+	}
+	v := &basedata.GetWalletAndTokensPayload{
+		ChainID: body.ChainID,
+	}
+
+	return v, nil
+}

@@ -171,6 +171,74 @@ func DecodeRunTimeEnvResponse(decoder func(*http.Response) goahttp.Decoder, rest
 	}
 }
 
+// BuildGetWalletAndTokensRequest instantiates a HTTP request object with
+// method and path set to call the "baseData" service "getWalletAndTokens"
+// endpoint
+func (c *Client) BuildGetWalletAndTokensRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetWalletAndTokensBaseDataPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("baseData", "getWalletAndTokens", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeGetWalletAndTokensRequest returns an encoder for requests sent to the
+// baseData getWalletAndTokens server.
+func EncodeGetWalletAndTokensRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*basedata.GetWalletAndTokensPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("baseData", "getWalletAndTokens", "*basedata.GetWalletAndTokensPayload", v)
+		}
+		body := NewGetWalletAndTokensRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("baseData", "getWalletAndTokens", err)
+		}
+		return nil
+	}
+}
+
+// DecodeGetWalletAndTokensResponse returns a decoder for responses returned by
+// the baseData getWalletAndTokens endpoint. restoreBody controls whether the
+// response body should be restored after having been read.
+func DecodeGetWalletAndTokensResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body GetWalletAndTokensResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("baseData", "getWalletAndTokens", err)
+			}
+			res := NewGetWalletAndTokensResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("baseData", "getWalletAndTokens", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // unmarshalChainDataItemResponseBodyToBasedataChainDataItem builds a value of
 // type *basedata.ChainDataItem from a value of type *ChainDataItemResponseBody.
 func unmarshalChainDataItemResponseBodyToBasedataChainDataItem(v *ChainDataItemResponseBody) *basedata.ChainDataItem {
@@ -197,6 +265,46 @@ func unmarshalLpInfoResponseBodyToBasedataLpInfo(v *LpInfoResponseBody) *basedat
 	res := &basedata.LpInfo{
 		Name:    v.Name,
 		Profile: v.Profile,
+	}
+
+	return res
+}
+
+// unmarshalWalletItemResponseBodyToBasedataWalletItem builds a value of type
+// *basedata.WalletItem from a value of type *WalletItemResponseBody.
+func unmarshalWalletItemResponseBodyToBasedataWalletItem(v *WalletItemResponseBody) *basedata.WalletItem {
+	if v == nil {
+		return nil
+	}
+	res := &basedata.WalletItem{
+		WalletName:              v.WalletName,
+		Address:                 v.Address,
+		CanSign:                 v.CanSign,
+		CanSign712:              v.CanSign712,
+		Type:                    v.Type,
+		SignatureServiceAddress: v.SignatureServiceAddress,
+	}
+	if v.Tokens != nil {
+		res.Tokens = make([]*basedata.WalletTokenItem, len(v.Tokens))
+		for i, val := range v.Tokens {
+			res.Tokens[i] = unmarshalWalletTokenItemResponseBodyToBasedataWalletTokenItem(val)
+		}
+	}
+
+	return res
+}
+
+// unmarshalWalletTokenItemResponseBodyToBasedataWalletTokenItem builds a value
+// of type *basedata.WalletTokenItem from a value of type
+// *WalletTokenItemResponseBody.
+func unmarshalWalletTokenItemResponseBodyToBasedataWalletTokenItem(v *WalletTokenItemResponseBody) *basedata.WalletTokenItem {
+	if v == nil {
+		return nil
+	}
+	res := &basedata.WalletTokenItem{
+		Address:  v.Address,
+		Symbol:   v.Symbol,
+		Decimals: v.Decimals,
 	}
 
 	return res

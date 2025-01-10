@@ -1,0 +1,2525 @@
+[/home/coder/lpnode-admin/cmd/api_service/init.go:51::] 2025-01-08 04:05:57[37m [I] [M:System] [0mLink
+[/home/coder/lpnode-admin/cmd/api_service/init.go:57::] 2025-01-08 04:05:57[36m [D] [M:System] [0mpreparing db connection [businessHistory]...
+[/home/coder/lpnode-admin/cmd/api_service/init.go:32::] 2025-01-08 04:05:57[37m [I] [M:System] [0mLink
+[/home/coder/lpnode-admin/cmd/api_service/init.go:38::] 2025-01-08 04:05:57[36m [D] [M:System] [0mpreparing db connection [lp_store]...
+[/home/coder/lpnode-admin/cmd/api_service/init.go:69::] 2025-01-08 04:05:57[36m [D] [M:System] [0mdatabase connection completed...
+fish....... map[chainType:evm deployName:chain-client-evm-bsc-9006 envList:[map[STATUS_KEY:chain-client-status-report-bsc]] image:otmoic/chainclient-evm:latest name:bsc smart chain precision:18 rpcTx:https://testnet.bscscan.com/tx/{tx} serviceName:chain-client-evm-bsc-server-9006 tokenName:BNB tokenUsd:300]
+fish....... map[chainType:evm deployName:chain-client-evm-avax-9000 envList:[map[STATUS_KEY:chain-client-status-report-avax]] image:otmoic/chainclient-evm:latest name:avax chain precision:18 rpcTx:https://testnet.snowtrace.io/tx/{tx} serviceName:chain-client-evm-avax-server-9000 tokenName:AVAX tokenUsd:300]
+fish....... map[chainType:evm deployName:chain-client-evm-eth-60 envList:[map[STATUS_KEY:chain-client-status-report-eth]] image:otmoic/chainclient-evm:latest name:eth chain precision:18 rpcTx:https://goerli.etherscan.io/tx/{tx} serviceName:chain-client-evm-eth-server-60 tokenName:ETH tokenUsd:300]
+fish....... map[chainType:evm deployName:chain-client-evm-polygon-966 envList:[map[STATUS_KEY:chain-client-status-report-polygon]] image:otmoic/chainclient-evm:latest name:polygon chain precision:18 rpcTx:https://mumbai.polygonscan.com/tx/{tx} serviceName:chain-client-evm-polygon-server-966 tokenName:MATIC tokenUsd:300]
+fish....... map[chainType:evm deployName:chain-client-evm-op-614 envList:[map[STATUS_KEY:chain-client-status-report-op]] image:otmoic/chainclient-evm:latest name:OP Mainnet precision:18 rpcTx: serviceName:chain-client-evm-op-server-614 tokenName:ETH tokenUsd:300]
+fish....... map[chainType:solana deployName:chain-client-solana-solana-501 envList:[map[STATUS_KEY:chain-client-status-report-solana]] image:otmoic/chainclient-evm:latest name:Solana precision:9 rpcTx:https://solscan.io/tx/{tx} serviceName:chain-client-solana-solana-server-501 tokenName:SOL tokenUsd:300]
+fish....... map[cron:0,5,10,15,20,25,30,35,40,45,50,55 * * * * script_path:./m_s_block_timestamp.js task_type:system]
+[/home/coder/lpnode-admin/cmd/api_service/init_task.go:79::] 2025-01-08 04:05:57[36m [D] [M:System] [0m{ObjectID("67053bd8a176b30b64c2d14d") 0,5,10,15,20,25,30,35,40,45,50,55 * * * * block-timestamp-monit ./m_s_block_timestamp.js system cronjob.batch/block-timestamp-monit unchanged
+ 0}
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:68::] 2025-01-08 04:05:58[37m [I] [M:System] [0msetup client rowpolygon966
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:80::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe ammClient program already exists,chainName:polygon
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:68::] 2025-01-08 04:05:58[37m [I] [M:System] [0msetup client rowsolana501
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:80::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe ammClient program already exists,chainName:solana
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:68::] 2025-01-08 04:05:58[37m [I] [M:System] [0msetup client rowop614
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:80::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe ammClient program already exists,chainName:op
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:68::] 2025-01-08 04:05:58[37m [I] [M:System] [0msetup client roweth60
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:80::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe ammClient program already exists,chainName:eth
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:68::] 2025-01-08 04:05:58[37m [I] [M:System] [0msetup client rowAVAX9000
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:80::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe ammClient program already exists,chainName:avax
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:68::] 2025-01-08 04:05:58[37m [I] [M:System] [0msetup client rowBSC9006
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:80::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe ammClient program already exists,chainName:bsc
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:41::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe market program already exists
+[/home/coder/lpnode-admin/cmd/api_service/init_install.go:45::] 2025-01-08 04:05:58[36m [W] [M:System] [0mthe amm program already exists
+[/home/coder/lpnode-admin/install_ctrl_panel.go:217::] 2025-01-08 04:06:07[36m [D] [M:System] [0mlist installed
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.52878000 ETH -0.00000155 BNB -0.00034739 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+ETH +0.00004435 BNB -0.00069483 USDT +0.32596000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.52000000 BNB -0.00067432 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00069511 UGG +15.00000000 USDT -29.49000000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+[/home/coder/lpnode-admin/install_ctrl_panel.go:217::] 2025-01-08 04:06:30[36m [D] [M:System] [0mlist installed
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+ETH -0.00000155 BNB -0.00034739 USDT +0.52878000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00069483 USDT +0.32596000 ETH +0.00004435 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -29.52000000 BNB -0.00067432 UGG +15.00000000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -29.49000000 BNB -0.00069511 UGG +15.00000000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28089135
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15991533
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28089135} {Amount:0.00022260 Symbol:BNB USD:0.15991533}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0x1505a, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86106.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040298 BNB, usd=0.28978010
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0xbf7f, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49023.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022254 BNB, usd=0.16003197
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00040298 Symbol:BNB USD:0.28978010} {Amount:0.00022254 Symbol:BNB USD:0.16003197}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00062552 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03810243} {Amount:0.00008143 Symbol:SOL USD:0.01745538}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00025919 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03808465} {Amount:0.00015504 Symbol:SOL USD:0.03321689}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033280 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22155555556)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.15555556 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.155555556}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03740987} {Amount:0.00016404 Symbol:SOL USD:0.03541908}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.15555556 SOL -0.00033730 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00016876 Symbol:SOL USD:0.03604165} {Amount:0.00015504 Symbol:SOL USD:0.03311147}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00032380 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1580280000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00158028 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 704
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35143680
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00158028}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35143680}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00158028 BNB -0.00049920 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03612603} {Amount:0.00016404 Symbol:SOL USD:0.03420356}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033730 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577340000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157734 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 712.4
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35563008
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00157734}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35563008}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+ETH -0.00157734 BNB -0.00049920 USDT +6.00000000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1575480000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157548 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1576500000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157650 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1576740000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157674 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03617454} {Amount:0.00016404 Symbol:SOL USD:0.03424949}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033730 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577280000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157728 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00018676 Symbol:SOL USD:0.03896519} {Amount:0.00015504 Symbol:SOL USD:0.03234713}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00034180 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577760000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157776 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 712.5
+gasUsed is missing or not a string in transferInfo
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00157776}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00000000 Symbol:BNB USD:0.00000000}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00157776 BNB 0.00000000 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00018676 Symbol:SOL USD:0.03700423} {Amount:0.00015504 Symbol:SOL USD:0.03071923}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00034180 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00034739 USDT +0.52878000 ETH -0.00000155 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.32596000 ETH +0.00004435 BNB -0.00069483 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.52000000 BNB -0.00067432 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.49000000 BNB -0.00069511 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+[/home/coder/lpnode-admin/install_ctrl_panel.go:217::] 2025-01-08 04:07:01[36m [D] [M:System] [0mlist installed
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00034739 USDT +0.52878000 ETH -0.00000155 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.32596000 ETH +0.00004435 BNB -0.00069483 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.52000000 BNB -0.00067432 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00069511 UGG +15.00000000 USDT -29.49000000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28089135
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15991533
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28089135} {Amount:0.00022260 Symbol:BNB USD:0.15991533}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0x1505a, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86106.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040298 BNB, usd=0.28978010
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0xbf7f, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49023.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022254 BNB, usd=0.16003197
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00040298 Symbol:BNB USD:0.28978010} {Amount:0.00022254 Symbol:BNB USD:0.16003197}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00062552 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03810243} {Amount:0.00008143 Symbol:SOL USD:0.01745538}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00025919 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03808465} {Amount:0.00015504 Symbol:SOL USD:0.03321689}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033280 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22155555556)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.15555556 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.155555556}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03740987} {Amount:0.00016404 Symbol:SOL USD:0.03541908}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.15555556 SOL -0.00033730 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00016876 Symbol:SOL USD:0.03604165} {Amount:0.00015504 Symbol:SOL USD:0.03311147}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00032380 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1580280000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00158028 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 704
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35143680
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00158028}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35143680}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00049920 USDT +6.00000000 ETH -0.00158028 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03612603} {Amount:0.00016404 Symbol:SOL USD:0.03420356}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033730 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577340000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157734 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 712.4
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35563008
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00157734}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35563008}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00157734 BNB -0.00049920 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1575480000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157548 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1576500000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157650 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1576740000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157674 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03617454} {Amount:0.00016404 Symbol:SOL USD:0.03424949}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00033730 USDT -2.13333333 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577280000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157728 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00018676 Symbol:SOL USD:0.03896519} {Amount:0.00015504 Symbol:SOL USD:0.03234713}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00034180 USDT -2.13333333 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+ETH -0.00000155 BNB -0.00034739 USDT +0.52878000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+ETH +0.00004435 BNB -0.00069483 USDT +0.32596000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.52000000 BNB -0.00067432 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.49000000 BNB -0.00069511 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28089135
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15991533
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28089135} {Amount:0.00022260 Symbol:BNB USD:0.15991533}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0x1505a, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86106.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040298 BNB, usd=0.28978010
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0xbf7f, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49023.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022254 BNB, usd=0.16003197
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00040298 Symbol:BNB USD:0.28978010} {Amount:0.00022254 Symbol:BNB USD:0.16003197}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00062552 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03810243} {Amount:0.00008143 Symbol:SOL USD:0.01745538}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00025919 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03808465} {Amount:0.00015504 Symbol:SOL USD:0.03321689}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033280 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22155555556)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.15555556 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.155555556}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03740987} {Amount:0.00016404 Symbol:SOL USD:0.03541908}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.15555556 SOL -0.00033730 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00016876 Symbol:SOL USD:0.03604165} {Amount:0.00015504 Symbol:SOL USD:0.03311147}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00032380 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1580280000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00158028 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 704
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35143680
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00158028}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35143680}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00158028 BNB -0.00049920 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03612603} {Amount:0.00016404 Symbol:SOL USD:0.03420356}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033730 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577340000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157734 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 712.4
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35563008
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00157734}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35563008}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00157734 BNB -0.00049920 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1575480000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157548 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28089135
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15991533
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28089135} {Amount:0.00022260 Symbol:BNB USD:0.15991533}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0x1505a, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86106.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040298 BNB, usd=0.28978010
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0xbf7f, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49023.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022254 BNB, usd=0.16003197
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00040298 Symbol:BNB USD:0.28978010} {Amount:0.00022254 Symbol:BNB USD:0.16003197}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00062552 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03810243} {Amount:0.00008143 Symbol:SOL USD:0.01745538}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00025919 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03808465} {Amount:0.00015504 Symbol:SOL USD:0.03321689}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033280 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22155555556)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.15555556 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.155555556}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03740987} {Amount:0.00016404 Symbol:SOL USD:0.03541908}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.15555556 SOL -0.00033730 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.52878000 ETH -0.00000155 BNB -0.00034739 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.32596000 ETH +0.00004435 BNB -0.00069483 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00067432 UGG +15.00000000 USDT -29.52000000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -29.49000000 BNB -0.00069511 UGG +15.00000000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.52878000 ETH -0.00000155 BNB -0.00034739 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.32596000 ETH +0.00004435 BNB -0.00069483 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.52000000 BNB -0.00067432 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.49000000 BNB -0.00069511 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+[/home/coder/lpnode-admin/install_ctrl_panel.go:217::] 2025-01-08 05:20:20[36m [D] [M:System] [0mlist installed
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28089135
+nativeTokenUsdtPrice 718.4
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15991533
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28089135} {Amount:0.00022260 Symbol:BNB USD:0.15991533}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0x1505a, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86106.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040298 BNB, usd=0.28978010
+nativeTokenUsdtPrice 719.1
+Raw Values: gasUsed=0xbf7f, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49023.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022254 BNB, usd=0.16003197
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00040298 Symbol:BNB USD:0.28978010} {Amount:0.00022254 Symbol:BNB USD:0.16003197}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00062552 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03810243} {Amount:0.00008143 Symbol:SOL USD:0.01745538}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00025919 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017776 Symbol:SOL USD:0.03808465} {Amount:0.00015504 Symbol:SOL USD:0.03321689}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033280 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22155555556)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.15555556 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.155555556}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03740987} {Amount:0.00016404 Symbol:SOL USD:0.03541908}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.15555556 SOL -0.00033730 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00016876 Symbol:SOL USD:0.03604165} {Amount:0.00015504 Symbol:SOL USD:0.03311147}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+SOL -0.00032380 USDT -2.13333333 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1580280000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00158028 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 704
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35143680
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00158028}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35143680}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00158028 BNB -0.00049920 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03612603} {Amount:0.00016404 Symbol:SOL USD:0.03420356}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033730 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577340000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157734 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 712.4
+Raw Values: gasUsed=99840, effectiveGasPrice=0x12a05f200
+Converted Values: gasUsed=99840.000000, effectiveGasPrice=5000000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00049920 BNB, usd=0.35563008
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00157734}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00049920 Symbol:BNB USD:0.35563008}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00157734 BNB -0.00049920 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1575480000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157548 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1576500000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157650 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1576740000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157674 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00017326 Symbol:SOL USD:0.03617454} {Amount:0.00016404 Symbol:SOL USD:0.03424949}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00033730 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577280000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157728 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: []
+
+📊 Total Asset Changes Summary (including Gas fees):
+
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00018676 Symbol:SOL USD:0.03896519} {Amount:0.00015504 Symbol:SOL USD:0.03234713}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00034180 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (6000000000000000000)
+📤 Output: ETH (1577760000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +6.00000000 ETH -0.00157776 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 712.5
+gasUsed is missing or not a string in transferInfo
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:6} {Symbol:ETH Amount:-0.00157776}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00000000 Symbol:BNB USD:0.00000000}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +6.00000000 ETH -0.00157776 BNB 0.00000000 
+🔗 Processing chain ID: 501
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (20000000000000000000)
+📤 Output: USDT (22133333334)
+
+📊 DEX Asset Changes Summary:
+USDT +20.00000000 USDT -22.13333333 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:20} {Symbol:USDT Amount:-22.133333334}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00018676 Symbol:SOL USD:0.03700423} {Amount:0.00015504 Symbol:SOL USD:0.03071923}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT -2.13333333 SOL -0.00034180 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.52878000 ETH -0.00000155 BNB -0.00034739 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.32596000 ETH +0.00004435 BNB -0.00069483 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.52000000 BNB -0.00067432 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.49000000 BNB -0.00069511 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (4301550000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00430155 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00430000 CEX_USDT -14.47122000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00020146 BNB, usd=0.14080037
+nativeTokenUsdtPrice 698.9
+Raw Values: gasUsed=0xf39a, effectiveGasPrice=0x8b799100
+Converted Values: gasUsed=62362.000000, effectiveGasPrice=2340000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00014593 BNB, usd=0.10198844
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00430155}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.0043} {Symbol:CEX_USDT Amount:-14.47122}]
+Gas Fees: [{Amount:0.00020146 Symbol:BNB USD:0.14080037} {Amount:0.00014593 Symbol:BNB USD:0.10198844}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+ETH -0.00000155 BNB -0.00034739 USDT +0.52878000 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: USDT (15000000000000000000)
+📤 Output: ETH (3955650000000000)
+
+📊 DEX Asset Changes Summary:
+USDT +15.00000000 ETH -0.00395565 
+✅ DEX swap processed successfully
+
+📊 CEX Asset Changes Summary:
+CEX_ETH +0.00400000 CEX_USDT -14.67404000 
+✅ Successfully processed 1 out of 1 orders
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0x1504e, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86094.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040292 BNB, usd=0.29382129
+nativeTokenUsdtPrice 729.23
+Raw Values: gasUsed=0xf3a6, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62374.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029191 BNB, usd=0.21286976
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:USDT Amount:15} {Symbol:ETH Amount:-0.00395565}]
+CEX Changes: [{Symbol:CEX_ETH Amount:0.004} {Symbol:CEX_USDT Amount:-14.674040000000002}]
+Gas Fees: [{Amount:0.00040292 Symbol:BNB USD:0.29382129} {Amount:0.00029191 Symbol:BNB USD:0.21286976}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+USDT +0.32596000 ETH +0.00004435 BNB -0.00069483 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29519999999999999574)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.52000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28104774
+nativeTokenUsdtPrice 718.8
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00028332 BNB, usd=0.20364785
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.52}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28104774} {Amount:0.00028332 Symbol:BNB USD:0.20364785}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.52000000 BNB -0.00067432 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0x15066, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=86118.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00040303 BNB, usd=0.28986079
+nativeTokenUsdtPrice 719.2
+Raw Values: gasUsed=0xf3ca, effectiveGasPrice=0x116f32200
+Converted Values: gasUsed=62410.000000, effectiveGasPrice=4680000000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00029208 BNB, usd=0.21006307
+
+🔍 Debug Info:
+DEX Changes: [{Symbol:UGG Amount:15} {Symbol:USDT Amount:-29.49}]
+CEX Changes: []
+Gas Fees: [{Amount:0.00040303 Symbol:BNB USD:0.28986079} {Amount:0.00029208 Symbol:BNB USD:0.21006307}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+UGG +15.00000000 USDT -29.49000000 BNB -0.00069511 
+🔗 Processing chain ID: 9006
+
+🔄 Processing DEX Swap:
+📥 Input: UGG (15000000000000000000)
+📤 Output: USDT (29489999999999998437)
+
+📊 DEX Asset Changes Summary:
+UGG +15.00000000 USDT -29.49000000 
+✅ DEX swap processed successfully
+⚠️ No hedge results to process
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0x15072, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=86130.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00039100 BNB, usd=0.28093044
+nativeTokenUsdtPrice 718.5
+Raw Values: gasUsed=0xbf8b, effectiveGasPrice=0x10e94cc80
+Converted Values: gasUsed=49035.000000, effectiveGasPrice=4539600000.000000 (wei), effectiveGasPrice=0.000000 (BNB)
+Calculated Gas Fee: amount=0.00022260 BNB, usd=0.15993759
+
+🔍 Debug Info:
+DEX Changes: []
+CEX Changes: []
+Gas Fees: [{Amount:0.00039100 Symbol:BNB USD:0.28093044} {Amount:0.00022260 Symbol:BNB USD:0.15993759}]
+
+📊 Total Asset Changes Summary (including Gas fees):
+BNB -0.00061360 
+[/home/coder/lpnode-admin/install_ctrl_panel.go:217::] 2025-01-08 05:24:44[36m [D] [M:System] [0mlist installed

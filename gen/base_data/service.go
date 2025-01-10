@@ -19,6 +19,8 @@ type Service interface {
 	GetLpInfo(context.Context) (res *GetLpInfoResult, err error)
 	// used to return runtime environment
 	RunTimeEnv(context.Context) (res *RunTimeEnvResult, err error)
+	// Get wallet list with their associated tokens
+	GetWalletAndTokens(context.Context, *GetWalletAndTokensPayload) (res *GetWalletAndTokensResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -29,12 +31,12 @@ const ServiceName = "baseData"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [3]string{"chainDataList", "getLpInfo", "runTimeEnv"}
+var MethodNames = [4]string{"chainDataList", "getLpInfo", "runTimeEnv", "getWalletAndTokens"}
 
 type ChainDataItem struct {
-	// chain id in the database
+	// Chain ID in the database
 	ID *string
-	// chain Id
+	// Chain ID
 	ChainID *int64
 	// chain name
 	Name *string
@@ -60,6 +62,24 @@ type GetLpInfoResult struct {
 	Message *string
 }
 
+// GetWalletAndTokensPayload is the payload type of the baseData service
+// getWalletAndTokens method.
+type GetWalletAndTokensPayload struct {
+	// Chain ID
+	ChainID int64
+}
+
+// GetWalletAndTokensResult is the result type of the baseData service
+// getWalletAndTokens method.
+type GetWalletAndTokensResult struct {
+	// response code
+	Code *int64
+	// wallet list with tokens
+	Result []*WalletItem
+	// response message
+	Message *string
+}
+
 type LpInfo struct {
 	Name    *string
 	Profile *string
@@ -72,4 +92,30 @@ type RunTimeEnvResult struct {
 	// list
 	Result  *string
 	Message *string
+}
+
+type WalletItem struct {
+	// wallet name
+	WalletName *string
+	// wallet address
+	Address *string
+	// whether can sign
+	CanSign *bool
+	// whether can sign 712
+	CanSign712 *bool
+	// wallet type
+	Type *string
+	// signature service address
+	SignatureServiceAddress *string
+	// token list
+	Tokens []*WalletTokenItem
+}
+
+type WalletTokenItem struct {
+	// token address
+	Address *string
+	// token symbol
+	Symbol *string
+	// token decimals
+	Decimals *int32
 }

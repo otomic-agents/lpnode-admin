@@ -161,6 +161,34 @@ func marshalBridgeconfigListBridgeItemToListBridgeItemResponseBody(v *bridgeconf
 		WalletName:        v.WalletName,
 		WalletID:          v.WalletID,
 		EnableHedge:       v.EnableHedge,
+		SrcTokenBalance:   v.SrcTokenBalance,
+		DstTokenBalance:   v.DstTokenBalance,
+		SrcTokenDecimals:  v.SrcTokenDecimals,
+		DstTokenDecimals:  v.DstTokenDecimals,
+	}
+	{
+		var zero string
+		if res.SrcTokenBalance == zero {
+			res.SrcTokenBalance = "0"
+		}
+	}
+	{
+		var zero string
+		if res.DstTokenBalance == zero {
+			res.DstTokenBalance = "0"
+		}
+	}
+	{
+		var zero int64
+		if res.SrcTokenDecimals == zero {
+			res.SrcTokenDecimals = 18
+		}
+	}
+	{
+		var zero int64
+		if res.DstTokenDecimals == zero {
+			res.DstTokenDecimals = 18
+		}
 	}
 
 	return res

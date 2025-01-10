@@ -47,7 +47,7 @@ account-cex wallet-info
 account-dex wallet-info
 amm-order-center list
 authentication-limiter (get-authentication-limiter|set-authentication-limiter|del-authentication-limiter)
-base-data (chain-data-list|get-lp-info|run-time-env)
+base-data (chain-data-list|get-lp-info|run-time-env|get-wallet-and-tokens)
 bridge-config (bridge-create|bridge-list|bridge-delete|bridge-test)
 chain-config (set-chain-list|del-chain-list|chain-list|set-chain-gas-usd|set-chain-client-config)
 config-resource (create-resource|get-resource|list-resource|delete-result|edit-result)
@@ -71,13 +71,13 @@ func UsageExamples() string {
 	return os.Args[0] + ` main-logic main-logic` + "\n" +
 		os.Args[0] + ` account-cex wallet-info` + "\n" +
 		os.Args[0] + ` account-dex wallet-info --body '{
-      "chainId": 3051054241686735991
+      "chainId": 6418992234028039074
    }'` + "\n" +
 		os.Args[0] + ` amm-order-center list --body '{
-      "ammName": "Repellendus odio nobis adipisci ipsa et quidem.",
-      "page": 686207206643006600,
-      "pageSize": 6482265581595056374,
-      "status": 4336913129249921493
+      "ammName": "Adipisci suscipit eum aliquam.",
+      "page": 1600390740666236035,
+      "pageSize": 6144641646432185358,
+      "status": 6764355684817960098
    }'` + "\n" +
 		os.Args[0] + ` authentication-limiter get-authentication-limiter` + "\n" +
 		""
@@ -129,6 +129,9 @@ func ParseEndpoint(
 		baseDataGetLpInfoFlags = flag.NewFlagSet("get-lp-info", flag.ExitOnError)
 
 		baseDataRunTimeEnvFlags = flag.NewFlagSet("run-time-env", flag.ExitOnError)
+
+		baseDataGetWalletAndTokensFlags    = flag.NewFlagSet("get-wallet-and-tokens", flag.ExitOnError)
+		baseDataGetWalletAndTokensBodyFlag = baseDataGetWalletAndTokensFlags.String("body", "REQUIRED", "")
 
 		bridgeConfigFlags = flag.NewFlagSet("bridge-config", flag.ContinueOnError)
 
@@ -313,6 +316,7 @@ func ParseEndpoint(
 	baseDataChainDataListFlags.Usage = baseDataChainDataListUsage
 	baseDataGetLpInfoFlags.Usage = baseDataGetLpInfoUsage
 	baseDataRunTimeEnvFlags.Usage = baseDataRunTimeEnvUsage
+	baseDataGetWalletAndTokensFlags.Usage = baseDataGetWalletAndTokensUsage
 
 	bridgeConfigFlags.Usage = bridgeConfigUsage
 	bridgeConfigBridgeCreateFlags.Usage = bridgeConfigBridgeCreateUsage
@@ -519,6 +523,9 @@ func ParseEndpoint(
 
 			case "run-time-env":
 				epf = baseDataRunTimeEnvFlags
+
+			case "get-wallet-and-tokens":
+				epf = baseDataGetWalletAndTokensFlags
 
 			}
 
@@ -805,6 +812,9 @@ func ParseEndpoint(
 			case "run-time-env":
 				endpoint = c.RunTimeEnv()
 				data = nil
+			case "get-wallet-and-tokens":
+				endpoint = c.GetWalletAndTokens()
+				data, err = basedatac.BuildGetWalletAndTokensPayload(*baseDataGetWalletAndTokensBodyFlag)
 			}
 		case "bridge-config":
 			c := bridgeconfigc.NewClient(scheme, host, doer, enc, dec, restore)
@@ -1103,7 +1113,7 @@ WalletInfo implements walletInfo.
 
 Example:
     %[1]s account-dex wallet-info --body '{
-      "chainId": 3051054241686735991
+      "chainId": 6418992234028039074
    }'
 `, os.Args[0])
 }
@@ -1130,10 +1140,10 @@ List implements list.
 
 Example:
     %[1]s amm-order-center list --body '{
-      "ammName": "Repellendus odio nobis adipisci ipsa et quidem.",
-      "page": 686207206643006600,
-      "pageSize": 6482265581595056374,
-      "status": 4336913129249921493
+      "ammName": "Adipisci suscipit eum aliquam.",
+      "page": 1600390740666236035,
+      "pageSize": 6144641646432185358,
+      "status": 6764355684817960098
    }'
 `, os.Args[0])
 }
@@ -1172,7 +1182,7 @@ set limit information
 
 Example:
     %[1]s authentication-limiter set-authentication-limiter --body '{
-      "authenticationLimiter": "Id ut ipsam consequatur."
+      "authenticationLimiter": "Dolore non ullam et consequatur doloremque."
    }'
 `, os.Args[0])
 }
@@ -1198,6 +1208,7 @@ COMMAND:
     chain-data-list: used to return basic chain data
     get-lp-info: used to return basic chain data
     run-time-env: used to return runtime environment
+    get-wallet-and-tokens: Get wallet list with their associated tokens
 
 Additional help:
     %[1]s base-data COMMAND --help
@@ -1233,6 +1244,19 @@ Example:
 `, os.Args[0])
 }
 
+func baseDataGetWalletAndTokensUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] base-data get-wallet-and-tokens -body JSON
+
+Get wallet list with their associated tokens
+    -body JSON: 
+
+Example:
+    %[1]s base-data get-wallet-and-tokens --body '{
+      "chainId": 5585753511314906542
+   }'
+`, os.Args[0])
+}
+
 // bridge-configUsage displays the usage of the bridge-config command and its
 // subcommands.
 func bridgeConfigUsage() {
@@ -1258,18 +1282,18 @@ used to create cross-chain config
 
 Example:
     %[1]s bridge-config bridge-create --body '{
-      "ammName": "Et alias eum nostrum.",
-      "bridgeName": "Asperiores sequi ea ad inventore.",
-      "dstChainId": "Non aut.",
-      "dstTokenId": "Laboriosam eaque aut aut aut quas et.",
+      "ammName": "Explicabo sit cum accusamus reprehenderit totam saepe.",
+      "bridgeName": "Voluptas consectetur vitae ut.",
+      "dstChainId": "Enim ea magni fuga magni.",
+      "dstTokenId": "Quia ea et ut.",
       "enableHedge": true,
-      "enableLimiter": true,
-      "relayApiKey": "Quam nostrum pariatur error.",
-      "relayUri": "Repellat voluptas consectetur vitae ut aliquam sed.",
-      "srcChainId": "Ut tempora perspiciatis nemo.",
-      "srcTokenId": "Ex sit et voluptatem.",
-      "srcWalletId": "Neque provident quam necessitatibus.",
-      "walletId": "Natus doloremque a quae."
+      "enableLimiter": false,
+      "relayApiKey": "Aut modi officia.",
+      "relayUri": "Debitis quae voluptate illum.",
+      "srcChainId": "Sed hic.",
+      "srcTokenId": "Vitae corporis omnis.",
+      "srcWalletId": "Est ipsa pariatur.",
+      "walletId": "Voluptatem expedita quibusdam ut explicabo officiis."
    }'
 `, os.Args[0])
 }
@@ -1292,7 +1316,7 @@ BridgeDelete implements bridgeDelete.
 
 Example:
     %[1]s bridge-config bridge-delete --body '{
-      "id": "Et quam qui et."
+      "id": "Vitae nulla harum perferendis."
    }'
 `, os.Args[0])
 }
@@ -1305,7 +1329,7 @@ BridgeTest implements bridgeTest.
 
 Example:
     %[1]s bridge-config bridge-test --body '{
-      "id": "Fugit excepturi in."
+      "id": "Consequuntur ipsam dicta sunt molestias provident dolore."
    }'
 `, os.Args[0])
 }
@@ -1338,22 +1362,16 @@ Example:
     %[1]s chain-config set-chain-list --body '{
       "chainList": [
          {
-            "chainId": 4952715962936096736,
-            "chainName": "Et qui et.",
-            "name": "Sit iure eaque et dolor.",
-            "tokenName": "Unde beatae culpa exercitationem aut."
+            "chainId": 7348474596581095218,
+            "chainName": "Itaque voluptatem maxime voluptatem.",
+            "name": "Voluptatem occaecati neque qui in.",
+            "tokenName": "Nam totam adipisci."
          },
          {
-            "chainId": 4952715962936096736,
-            "chainName": "Et qui et.",
-            "name": "Sit iure eaque et dolor.",
-            "tokenName": "Unde beatae culpa exercitationem aut."
-         },
-         {
-            "chainId": 4952715962936096736,
-            "chainName": "Et qui et.",
-            "name": "Sit iure eaque et dolor.",
-            "tokenName": "Unde beatae culpa exercitationem aut."
+            "chainId": 7348474596581095218,
+            "chainName": "Itaque voluptatem maxime voluptatem.",
+            "name": "Voluptatem occaecati neque qui in.",
+            "tokenName": "Nam totam adipisci."
          }
       ]
    }'
@@ -1368,8 +1386,8 @@ used to delete basic data for a chain
 
 Example:
     %[1]s chain-config del-chain-list --body '{
-      "_id": "Cupiditate officiis.",
-      "chainId": 7537181740576685783
+      "_id": "Sapiente qui sed odio ut ratione.",
+      "chainId": 1008534645703636779
    }'
 `, os.Args[0])
 }
@@ -1392,9 +1410,9 @@ SetChainGasUsd implements setChainGasUsd.
 
 Example:
     %[1]s chain-config set-chain-gas-usd --body '{
-      "_id": "Consequuntur ipsam dicta sunt molestias provident dolore.",
-      "chainId": 5254038589548486004,
-      "usd": 282408788454420441
+      "_id": "Quod numquam accusamus deleniti cumque eum velit.",
+      "chainId": 3733714128795416598,
+      "usd": 1019364508561785870
    }'
 `, os.Args[0])
 }
@@ -1407,8 +1425,8 @@ SetChainClientConfig implements setChainClientConfig.
 
 Example:
     %[1]s chain-config set-chain-client-config --body '{
-      "chainData": "Occaecati neque qui in officiis nam.",
-      "chainId": 2619098533045497503
+      "chainData": "Et facilis deleniti ea sit praesentium.",
+      "chainId": 7571469164774561754
    }'
 `, os.Args[0])
 }
@@ -1439,10 +1457,10 @@ CreateResource implements createResource.
 
 Example:
     %[1]s config-resource create-resource --body '{
-      "appName": "Dolorem eum beatae molestias.",
-      "clientId": "Dolore aut.",
-      "template": "Et et sequi et quaerat.",
-      "version": "Quam officia fugit voluptatem."
+      "appName": "Pariatur eaque.",
+      "clientId": "Nisi non dolore quidem.",
+      "template": "Voluptas doloremque quasi.",
+      "version": "Quidem officiis ipsam distinctio ducimus ipsum."
    }'
 `, os.Args[0])
 }
@@ -1455,7 +1473,7 @@ GetResource implements getResource.
 
 Example:
     %[1]s config-resource get-resource --body '{
-      "clientId": "Voluptatem consequuntur excepturi omnis voluptatem."
+      "clientId": "Repellendus aut vitae repellendus."
    }'
 `, os.Args[0])
 }
@@ -1488,12 +1506,12 @@ EditResult implements editResult.
 
 Example:
     %[1]s config-resource edit-result --body '{
-      "appName": "Accusamus maxime blanditiis cumque.",
-      "clientId": "Voluptas doloremque quasi.",
-      "template": "Dolore quidem.",
-      "templateResult": "Distinctio ducimus ipsum voluptate nisi.",
-      "version": "Autem harum ullam ut dicta rerum eveniet.",
-      "versionHash": "Assumenda voluptas ullam culpa."
+      "appName": "Eius consequuntur porro.",
+      "clientId": "Repellat molestiae ut odio pariatur.",
+      "template": "Rerum sed dolores dolorem.",
+      "templateResult": "Reprehenderit unde porro quam aliquid suscipit quia.",
+      "version": "Culpa omnis sunt autem.",
+      "versionHash": "Sequi temporibus tempora assumenda."
    }'
 `, os.Args[0])
 }
@@ -1534,19 +1552,19 @@ CreateDexWallet implements createDexWallet.
 
 Example:
     %[1]s dex-wallet create-dex-wallet --body '{
-      "accountId": "Occaecati rerum eum voluptas commodi qui enim.",
-      "address": "Nihil fugiat et quia dolore ex.",
-      "chainId": 4019562491470982516,
-      "chainType": "Ut voluptatem.",
-      "id": "Enim culpa omnis.",
-      "privateKey": "Tempora assumenda itaque.",
-      "signServiceEndpoint": "Quod perspiciatis doloremque.",
-      "storeId": "Cum quibusdam.",
-      "vaultHostType": "Quisquam commodi tenetur dolor.",
-      "vaultName": "Hic et quibusdam tempora.",
-      "vaultSecertType": "Ratione sapiente quas impedit explicabo consectetur.",
-      "walletName": "Autem sapiente sequi.",
-      "walletType": "privateKey"
+      "accountId": "Voluptas et.",
+      "address": "Excepturi qui explicabo sit expedita fugit.",
+      "chainId": 7078845938374597277,
+      "chainType": "Qui quisquam illum non aut quaerat.",
+      "id": "Et vel dolor aut adipisci cupiditate.",
+      "privateKey": "Corrupti veritatis.",
+      "signServiceEndpoint": "Inventore voluptas officiis sed voluptates recusandae.",
+      "storeId": "A nulla ipsa.",
+      "vaultHostType": "Reprehenderit aut.",
+      "vaultName": "Repellat laudantium iure impedit nesciunt ut rerum.",
+      "vaultSecertType": "Aut et iusto voluptatem debitis earum voluptatem.",
+      "walletName": "Sint exercitationem quas debitis.",
+      "walletType": "storeId"
    }'
 `, os.Args[0])
 }
@@ -1559,7 +1577,7 @@ DeleteDexWallet implements deleteDexWallet.
 
 Example:
     %[1]s dex-wallet delete-dex-wallet --body '{
-      "id": "Sint dolores."
+      "id": "Aut rerum repellendus."
    }'
 `, os.Args[0])
 }
@@ -1618,8 +1636,8 @@ Edit implements edit.
 Example:
     %[1]s hedge edit --body '{
       "hedge": {
-         "hedgeType": "Et iusto voluptatem debitis.",
-         "id": "Nesciunt ut rerum sed."
+         "hedgeType": "Veniam sint neque quia esse fugit.",
+         "id": "Perferendis ut unde voluptatibus."
       }
    }'
 `, os.Args[0])
@@ -1633,7 +1651,7 @@ Del implements del.
 
 Example:
     %[1]s hedge del --body '{
-      "id": "Et ex."
+      "id": "Aliquam vel dolorem deleniti magnam et."
    }'
 `, os.Args[0])
 }
@@ -1665,7 +1683,7 @@ ListInstall implements listInstall.
 
 Example:
     %[1]s install-ctrl-panel list-install --body '{
-      "installType": "Omnis modi."
+      "installType": "Nisi officia laboriosam saepe voluptatum aliquid voluptas."
    }'
 `, os.Args[0])
 }
@@ -1679,30 +1697,38 @@ InstallLpClient implements installLpClient.
 Example:
     %[1]s install-ctrl-panel install-lp-client --body '{
       "setupConfig": {
-         "awsAccessKeyId": "Aliquam vel dolorem deleniti magnam et.",
-         "awsSecretAccessKey": "Neque voluptatem nihil debitis et magnam nisi.",
-         "connectionExplorerurl": "Quia sunt quam.",
-         "connectionHelperurl": "Laboriosam tenetur numquam.",
-         "connectionNodeurl": "Perferendis ut unde voluptatibus.",
-         "connectionWalleturl": "Veniam sint neque quia esse fugit.",
-         "containerPort": "Sint dolorem.",
+         "awsAccessKeyId": "Illo porro beatae et aut facere.",
+         "awsSecretAccessKey": "Exercitationem ab labore maiores odit porro.",
+         "connectionExplorerurl": "Ex sunt quidem dolores est.",
+         "connectionHelperurl": "Totam voluptatem.",
+         "connectionNodeurl": "Atque dolorem occaecati suscipit consectetur.",
+         "connectionWalleturl": "Esse dolores repellendus laboriosam harum.",
+         "containerPort": "Ut necessitatibus impedit blanditiis.",
          "customEnv": [
             {
-               "key": "Ipsa et iusto ab.",
-               "value": "Dignissimos cupiditate."
+               "key": "Itaque et quasi est.",
+               "value": "Est quam vel modi."
             },
             {
-               "key": "Ipsa et iusto ab.",
-               "value": "Dignissimos cupiditate."
+               "key": "Itaque et quasi est.",
+               "value": "Est quam vel modi."
+            },
+            {
+               "key": "Itaque et quasi est.",
+               "value": "Est quam vel modi."
+            },
+            {
+               "key": "Itaque et quasi est.",
+               "value": "Est quam vel modi."
             }
          ],
-         "deploymentName": "Sint asperiores error nulla quo sunt.",
-         "imageRepository": "Est magnam sed.",
-         "install": true,
-         "rpcUrl": "Laboriosam laboriosam error.",
-         "serviceName": "Qui doloremque nam.",
-         "startBlock": "Sunt dolor ea ducimus doloribus.",
-         "type": "Sit sed."
+         "deploymentName": "Eos earum eveniet adipisci quibusdam nihil.",
+         "imageRepository": "Aliquid quibusdam deserunt aut.",
+         "install": false,
+         "rpcUrl": "Sunt quam illo laboriosam aperiam pariatur.",
+         "serviceName": "Incidunt eos est ipsa aut ratione eum.",
+         "startBlock": "Repudiandae incidunt.",
+         "type": "Itaque et quo."
       }
    }'
 `, os.Args[0])
@@ -1717,7 +1743,7 @@ UninstallLpClient implements uninstallLpClient.
 Example:
     %[1]s install-ctrl-panel uninstall-lp-client --body '{
       "setupConfig": {
-         "type": "Nulla magnam.",
+         "type": "Soluta molestias voluptatem sequi nostrum.",
          "uninstall": false
       }
    }'
@@ -1733,29 +1759,21 @@ InstallDeployment implements installDeployment.
 Example:
     %[1]s install-ctrl-panel install-deployment --body '{
       "setupConfig": {
-         "containerPort": "Incidunt eos est ipsa aut ratione eum.",
+         "containerPort": "Fugiat et quas incidunt fugit voluptatem eius.",
          "customEnv": [
             {
-               "key": "Ipsa et iusto ab.",
-               "value": "Dignissimos cupiditate."
+               "key": "Itaque et quasi est.",
+               "value": "Est quam vel modi."
             },
             {
-               "key": "Ipsa et iusto ab.",
-               "value": "Dignissimos cupiditate."
-            },
-            {
-               "key": "Ipsa et iusto ab.",
-               "value": "Dignissimos cupiditate."
-            },
-            {
-               "key": "Ipsa et iusto ab.",
-               "value": "Dignissimos cupiditate."
+               "key": "Itaque et quasi est.",
+               "value": "Est quam vel modi."
             }
          ],
-         "imageRepository": "Aliquid quibusdam deserunt aut.",
+         "imageRepository": "Corporis voluptas.",
          "install": false,
-         "installType": "market",
-         "name": "Eveniet adipisci quibusdam nihil fugit."
+         "installType": "amm",
+         "name": "Et fuga veritatis commodi accusantium corrupti."
       }
    }'
 `, os.Args[0])
@@ -1770,8 +1788,8 @@ UninstallDeployment implements uninstallDeployment.
 Example:
     %[1]s install-ctrl-panel uninstall-deployment --body '{
       "setupConfig": {
-         "installType": "Totam voluptatem.",
-         "name": "Ex sunt quidem dolores est.",
+         "installType": "Est eos molestias dolor eum consequuntur saepe.",
+         "name": "Laborum illum maxime et.",
          "uninstall": true
       }
    }'
@@ -1787,10 +1805,10 @@ UpdateDeployment implements updateDeployment.
 Example:
     %[1]s install-ctrl-panel update-deployment --body '{
       "setupConfig": {
-         "installContext": "Architecto eligendi necessitatibus nisi consequatur illum.",
-         "installType": "Ut quis.",
-         "name": "Iure et blanditiis unde beatae soluta.",
-         "update": false
+         "installContext": "Nemo fuga consequuntur fugiat id beatae.",
+         "installType": "Voluptatum neque animi odio.",
+         "name": "Atque qui nobis adipisci nesciunt provident.",
+         "update": true
       }
    }'
 `, os.Args[0])
@@ -1821,9 +1839,9 @@ add script and save
 
 Example:
     %[1]s lpmonit add-script --body '{
-      "cron": "Corporis voluptas.",
-      "name": "Sit aspernatur reiciendis voluptas.",
-      "scriptBody": "Fugiat et quas incidunt fugit voluptatem eius."
+      "cron": "Nihil fugit et nesciunt est dolores a.",
+      "name": "Accusamus et.",
+      "scriptBody": "Et iure vel voluptatum excepturi."
    }'
 `, os.Args[0])
 }
@@ -1846,7 +1864,7 @@ task_list_delete
 
 Example:
     %[1]s lpmonit delete-script --body '{
-      "_id": "Odit et qui."
+      "_id": "Temporibus officia."
    }'
 `, os.Args[0])
 }
@@ -1859,7 +1877,7 @@ task_run
 
 Example:
     %[1]s lpmonit run-script --body '{
-      "scriptContent": "Error in voluptatum neque animi."
+      "scriptContent": "Eaque excepturi."
    }'
 `, os.Args[0])
 }
@@ -1872,7 +1890,7 @@ run_result
 
 Example:
     %[1]s lpmonit run-result --body '{
-      "scriptName": "Illo voluptatem ut quo maxime minus quis."
+      "scriptName": "Et dolor dignissimos."
    }'
 `, os.Args[0])
 }
@@ -1899,9 +1917,9 @@ List implements list.
 
 Example:
     %[1]s order-center list --body '{
-      "page": 8408573116895750025,
-      "pageSize": 4806724831848111354,
-      "status": 8817568778650147705
+      "page": 5841001857259909626,
+      "pageSize": 6532877236707412271,
+      "status": 6933439399695667301
    }'
 `, os.Args[0])
 }
@@ -1975,8 +1993,8 @@ RegisterAccount implements registerAccount.
 
 Example:
     %[1]s relay-account register-account --body '{
-      "profile": "Ut et dolor dignissimos aspernatur sint laboriosam.",
-      "relayUrl": "Aut porro quis voluptatem dicta quia."
+      "profile": "Praesentium voluptatem et eum sed aut eius.",
+      "relayUrl": "Velit adipisci perferendis."
    }'
 `, os.Args[0])
 }
@@ -1989,7 +2007,7 @@ DeleteAccount implements deleteAccount.
 
 Example:
     %[1]s relay-account delete-account --body '{
-      "id": "Nihil est ea ipsa sint voluptatem."
+      "id": "Et nobis earum voluptas est."
    }'
 `, os.Args[0])
 }
@@ -2039,7 +2057,7 @@ Settings implements settings.
 
 Example:
     %[1]s settings settings --body '{
-      "relayUri": "Aut qui autem qui."
+      "relayUri": "Libero sunt temporibus ex sint accusantium."
    }'
 `, os.Args[0])
 }
@@ -2103,7 +2121,7 @@ TaskDeploy implements taskDeploy.
 
 Example:
     %[1]s task-manager task-deploy --body '{
-      "_id": "Tempore ea ut aut."
+      "_id": "Blanditiis vel fugiat quisquam."
    }'
 `, os.Args[0])
 }
@@ -2116,7 +2134,7 @@ UnDeploy implements unDeploy.
 
 Example:
     %[1]s task-manager un-deploy --body '{
-      "_id": "Dolores aut et recusandae omnis non."
+      "_id": "Omnis quisquam rem asperiores aspernatur culpa."
    }'
 `, os.Args[0])
 }
@@ -2129,12 +2147,12 @@ TaskCreate implements taskCreate.
 
 Example:
     %[1]s task-manager task-create --body '{
-      "_id": "Consequatur ullam.",
-      "deployMessage": "Eius ipsum reprehenderit ab consequuntur.",
+      "_id": "A nihil ut fugiat deleniti.",
+      "deployMessage": "Dolor dolor eius voluptatibus reprehenderit dolorem et.",
       "deployed": false,
-      "schedule": "Maxime harum ut.",
-      "scriptBody": "Accusantium blanditiis.",
-      "scriptPath": "Sunt temporibus ex.",
+      "schedule": "A non modi dolore.",
+      "scriptBody": "Ea optio.",
+      "scriptPath": "Enim fugit fuga accusantium laborum ea quaerat.",
       "taskType": "customize"
    }'
 `, os.Args[0])
@@ -2174,15 +2192,15 @@ TokenCreate implements tokenCreate.
 
 Example:
     %[1]s token-manager token-create --body '{
-      "_id": "Eveniet provident magnam suscipit rerum voluptatem.",
-      "address": "Ex ut est earum sit rem omnis.",
-      "chainId": 4374543503038424126,
-      "chainType": "Dolorem itaque sint minima ut aut omnis.",
+      "_id": "Quae velit incidunt sit.",
+      "address": "Est harum deserunt quo similique molestias in.",
+      "chainId": 6903460931663968518,
+      "chainType": "Alias sapiente explicabo.",
       "coinType": "stable_coin",
-      "marketName": "Eum blanditiis vel.",
-      "precision": 14,
-      "tokenId": "Voluptates rerum officia nulla quos id.",
-      "tokenName": "Occaecati necessitatibus quo ex mollitia."
+      "marketName": "Eos officiis.",
+      "precision": 10,
+      "tokenId": "Error qui sit blanditiis impedit voluptatem necessitatibus.",
+      "tokenName": "Veritatis omnis."
    }'
 `, os.Args[0])
 }
@@ -2195,7 +2213,7 @@ TokenDelete implements tokenDelete.
 
 Example:
     %[1]s token-manager token-delete --body '{
-      "_id": "Accusamus ratione a nihil ut."
+      "_id": "Non nihil."
    }'
 `, os.Args[0])
 }

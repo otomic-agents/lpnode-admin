@@ -8,6 +8,7 @@ import (
 	"admin-panel/types"
 	"admin-panel/utils"
 	"context"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -15,6 +16,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/mr-tron/base58"
 	"github.com/pkg/errors"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -23,6 +25,15 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
+
+func convertToBase58(hexStr string) (string, error) {
+	hexStr = strings.TrimPrefix(hexStr, "0x")
+	bytes, err := hex.DecodeString(hexStr)
+	if err != nil {
+		return "", err
+	}
+	return base58.Encode(bytes), nil
+}
 
 type BridgeConfigLogicService struct {
 }
@@ -237,19 +248,142 @@ func (bcls *BridgeConfigLogicService) HasBridge(srcToken string, dstToken string
 	return hasBridge
 }
 func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret []types.DBBridgeRow, err error) {
+	getKeys := func(m map[string]bool) []string {
+		keys := make([]string, 0, len(m))
+		for k := range m {
+			keys = append(keys, k)
+		}
+		return keys
+	}
 	emptyList := []types.DBBridgeRow{}
 	ret = emptyList
+
+	// 1. 查询 bridges
 	err, cursor := database.FindAll("main", "bridges", filter)
 	if err != nil {
 		return
 	}
+
 	var results []types.DBBridgeRow
 	if err = cursor.All(context.TODO(), &results); err != nil {
 		return
 	}
-	for _, result := range results {
-		cursor.Decode(&result)
+
+	// 2. 收集所有 walletName
+	walletNames := make(map[string]bool)
+	for _, bridge := range results {
+		walletNames[bridge.WalletName] = true
 	}
+
+	// 3. 查询钱包地址
+	walletFilter := bson.M{
+		"walletName": bson.M{"$in": getKeys(walletNames)},
+	}
+	var wallets []types.DBWalletRow
+	err, walletCursor := database.FindAll("main", "wallets", walletFilter)
+	if err != nil {
+		return results, nil
+	}
+
+	if err = walletCursor.All(context.TODO(), &wallets); err != nil {
+		return results, nil
+	}
+
+	// 4. 构建钱包地址映射
+	walletMap := make(map[string]string) // walletName -> address
+	for _, wallet := range wallets {
+		walletMap[wallet.WalletName] = wallet.Address
+	}
+
+	// 5. 构建余额查询条件
+	var balanceConditions []bson.M
+	for _, bridge := range results {
+		srcToken := bridge.SrcToken
+		dstToken := bridge.DstToken
+
+		// 如果源链或目标链是Solana，转换对应的token地址格式
+		if bridge.SrcChainId == 501 {
+			if base58Token, err := convertToBase58(srcToken); err == nil {
+				srcToken = base58Token
+			}
+		}
+		if bridge.DstChainId == 501 {
+			if base58Token, err := convertToBase58(dstToken); err == nil {
+				dstToken = base58Token
+			}
+		}
+
+		// srcToken 只查询收款地址(LpReceiverAddress)的余额
+		balanceConditions = append(balanceConditions, bson.M{
+			"wallet_address": bridge.LpReceiverAddress,
+			"token":          srcToken,
+		})
+
+		// dstToken 只查询付款地址(PayAddress)的余额
+		if payAddress, exists := walletMap[bridge.WalletName]; exists {
+			balanceConditions = append(balanceConditions, bson.M{
+				"wallet_address": payAddress,
+				"token":          dstToken,
+			})
+		}
+	}
+
+	// 6. 查询余额
+	balanceFilter := bson.M{"$or": balanceConditions}
+	var balances []types.DBWalletBalance
+	err, balanceCursor := database.FindAll("main", "wallet_balances", balanceFilter)
+	if err != nil {
+		return results, nil
+	}
+
+	if err = balanceCursor.All(context.TODO(), &balances); err != nil {
+		return results, nil
+	}
+
+	// 7. 构建余额查找映射
+	balanceMap := make(map[string]types.DBWalletBalance)
+	for _, balance := range balances {
+		key := fmt.Sprintf("%s_%s", balance.WalletAddress, balance.Token)
+		balanceMap[key] = balance
+	}
+
+	// 8. 填充余额信息并转换地址格式
+	for i := range results {
+		srcToken := results[i].SrcToken
+		dstToken := results[i].DstToken
+
+		// 如果源链或目标链是Solana，转换对应的token地址格式
+		if results[i].SrcChainId == 501 {
+			if base58Token, err := convertToBase58(srcToken); err == nil {
+				results[i].SrcToken = base58Token
+				srcToken = base58Token
+			}
+		}
+		if results[i].DstChainId == 501 {
+			if base58Token, err := convertToBase58(dstToken); err == nil {
+				results[i].DstToken = base58Token
+				dstToken = base58Token
+			}
+		}
+
+		// srcToken 余额 - 从收款地址(LpReceiverAddress)获取
+		srcBalanceKey := fmt.Sprintf("%s_%s", results[i].LpReceiverAddress, srcToken)
+		if balance, exists := balanceMap[srcBalanceKey]; exists {
+			results[i].SrcTokenBalance = balance.BalanceValue.Hex
+			results[i].SrcTokenDecimals = balance.Decimals
+		}
+
+		// dstToken 余额 - 从付款地址(PayAddress)获取
+		if payAddress, exists := walletMap[results[i].WalletName]; exists {
+			results[i].PayAddress = payAddress
+			dstBalanceKey := fmt.Sprintf("%s_%s", payAddress, dstToken)
+			if balance, exists := balanceMap[dstBalanceKey]; exists {
+				results[i].DstTokenBalance = balance.BalanceValue.Hex
+				results[i].DstTokenDecimals = balance.Decimals
+			}
+		}
+	}
+
 	ret = results
 	return
 }
@@ -663,4 +797,99 @@ func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err err
 
 	configResult = true
 	return
+}
+func (bcls *BridgeConfigLogicService) GetConfigData(chainId int64) (string, error) {
+	// Map to store configuration data for each chain
+	configData := make(map[int64]string)
+
+	// Fetch the JSON configuration data
+	chainListStr, err := bcls.GetConfigJsonData()
+	if err != nil {
+		return "", errors.WithMessage(err, "cannot get correct config structure, please check datasource")
+	}
+
+	// Iterate over each chain
+	for chainKey, chainItem := range gjson.Get(chainListStr, "@this").Map() {
+		log.Println("🔗 Chain Key:", chainKey, "ChainId:", chainId)
+		dataStr := `{"data":[]}`
+		walletIndex := 0
+
+		// Iterate over each wallet
+		for _, wallet := range chainItem.Get("walletInfo").Map() {
+			walletName := wallet.Get("walletName").String()
+			address := wallet.Get("address").String()
+			accountId := wallet.Get("accountId").String()
+			privateKey := wallet.Get("privateKey").String()
+			walletType := wallet.Get("walletType").String()
+			storeId := wallet.Get("storeId").String()
+			vaultHostType := wallet.Get("vaultHostType").String()
+			vaultName := wallet.Get("vaultName").String()
+			signatureServiceAddress := wallet.Get("signServiceEndpoint").String()
+			vaultSecertType := wallet.Get("vaultSecertType").String()
+
+			// Set wallet information
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.wallet_name", walletIndex), walletName)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign_712", walletIndex), true)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign", walletIndex), true)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.account_id", walletIndex), accountId)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.private_key", walletIndex), privateKey)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.address", walletIndex), address)
+			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.signature_service_address", walletIndex), signatureServiceAddress)
+
+			// Set wallet type
+			isTypeSet := false
+			if walletType == "storeId" {
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "vault")
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.secert_id", walletIndex), storeId)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.private_key", walletIndex), "")
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
+				isTypeSet = true
+			}
+			if walletType == "secretVault" {
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "secret_vault")
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.secert_id", walletIndex), vaultName)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
+				isTypeSet = true
+			}
+			if !isTypeSet {
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "key")
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
+				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
+			}
+
+			// Set token information
+			tokenIndex := 0
+			for _, tokens := range wallet.Get("tokenInfo").Map() {
+				address := tokens.Get("address").String()
+				tokenId := tokens.Get("tokenId").String()
+				if chainItem.Get("chainInfo.chainType").String() == "near" {
+					dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.token_list.%d.token_id", walletIndex, tokenIndex), tokenId)
+					dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.token_list.%d.create_receipt_id", walletIndex, tokenIndex), address)
+				} else {
+					dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.token_list.%d", walletIndex, tokenIndex), address)
+				}
+				tokenIndex++
+			}
+
+			walletIndex++
+		}
+
+		// Store the chain's configuration data in the map
+		chainId, _ := strconv.ParseInt(chainKey, 10, 64)
+		configData[chainId] = gjson.Get(dataStr, "data").Raw
+		log.Println("✅ Successfully processed chain with ChainId :", chainId)
+	}
+
+	if data, ok := configData[chainId]; ok {
+		log.Printf("🎉 Successfully fetched config data for chain ID %d", chainId)
+		return data, nil
+	}
+
+	log.Println("❌ ChainId not found:", chainId)
+	return "", fmt.Errorf("chainId %d not found", chainId)
 }

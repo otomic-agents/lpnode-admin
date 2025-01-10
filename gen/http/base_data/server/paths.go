@@ -21,3 +21,8 @@ func GetLpInfoBaseDataPath() string {
 func RunTimeEnvBaseDataPath() string {
 	return "/lpnode/lpnode_admin_panel/baseData/runTimeEnv"
 }
+
+// GetWalletAndTokensBaseDataPath returns the URL path to the baseData service getWalletAndTokens HTTP endpoint.
+func GetWalletAndTokensBaseDataPath() string {
+	return "/lpnode/lpnode_admin_panel/baseData/wallets"
+}

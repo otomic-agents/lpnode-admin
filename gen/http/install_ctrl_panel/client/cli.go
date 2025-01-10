@@ -23,7 +23,7 @@ func BuildListInstallPayload(installCtrlPanelListInstallBody string) (*installct
 	{
 		err = json.Unmarshal([]byte(installCtrlPanelListInstallBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"installType\": \"Omnis modi.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"installType\": \"Nisi officia laboriosam saepe voluptatum aliquid voluptas.\"\n   }'")
 		}
 	}
 	v := &installctrlpanel.ListInstallPayload{
@@ -41,7 +41,7 @@ func BuildInstallLpClientPayload(installCtrlPanelInstallLpClientBody string) (*i
 	{
 		err = json.Unmarshal([]byte(installCtrlPanelInstallLpClientBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"awsAccessKeyId\": \"Aliquam vel dolorem deleniti magnam et.\",\n         \"awsSecretAccessKey\": \"Neque voluptatem nihil debitis et magnam nisi.\",\n         \"connectionExplorerurl\": \"Quia sunt quam.\",\n         \"connectionHelperurl\": \"Laboriosam tenetur numquam.\",\n         \"connectionNodeurl\": \"Perferendis ut unde voluptatibus.\",\n         \"connectionWalleturl\": \"Veniam sint neque quia esse fugit.\",\n         \"containerPort\": \"Sint dolorem.\",\n         \"customEnv\": [\n            {\n               \"key\": \"Ipsa et iusto ab.\",\n               \"value\": \"Dignissimos cupiditate.\"\n            },\n            {\n               \"key\": \"Ipsa et iusto ab.\",\n               \"value\": \"Dignissimos cupiditate.\"\n            }\n         ],\n         \"deploymentName\": \"Sint asperiores error nulla quo sunt.\",\n         \"imageRepository\": \"Est magnam sed.\",\n         \"install\": true,\n         \"rpcUrl\": \"Laboriosam laboriosam error.\",\n         \"serviceName\": \"Qui doloremque nam.\",\n         \"startBlock\": \"Sunt dolor ea ducimus doloribus.\",\n         \"type\": \"Sit sed.\"\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"awsAccessKeyId\": \"Illo porro beatae et aut facere.\",\n         \"awsSecretAccessKey\": \"Exercitationem ab labore maiores odit porro.\",\n         \"connectionExplorerurl\": \"Ex sunt quidem dolores est.\",\n         \"connectionHelperurl\": \"Totam voluptatem.\",\n         \"connectionNodeurl\": \"Atque dolorem occaecati suscipit consectetur.\",\n         \"connectionWalleturl\": \"Esse dolores repellendus laboriosam harum.\",\n         \"containerPort\": \"Ut necessitatibus impedit blanditiis.\",\n         \"customEnv\": [\n            {\n               \"key\": \"Itaque et quasi est.\",\n               \"value\": \"Est quam vel modi.\"\n            },\n            {\n               \"key\": \"Itaque et quasi est.\",\n               \"value\": \"Est quam vel modi.\"\n            },\n            {\n               \"key\": \"Itaque et quasi est.\",\n               \"value\": \"Est quam vel modi.\"\n            },\n            {\n               \"key\": \"Itaque et quasi est.\",\n               \"value\": \"Est quam vel modi.\"\n            }\n         ],\n         \"deploymentName\": \"Eos earum eveniet adipisci quibusdam nihil.\",\n         \"imageRepository\": \"Aliquid quibusdam deserunt aut.\",\n         \"install\": false,\n         \"rpcUrl\": \"Sunt quam illo laboriosam aperiam pariatur.\",\n         \"serviceName\": \"Incidunt eos est ipsa aut ratione eum.\",\n         \"startBlock\": \"Repudiandae incidunt.\",\n         \"type\": \"Itaque et quo.\"\n      }\n   }'")
 		}
 		if body.SetupConfig == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("setupConfig", "body"))
@@ -66,7 +66,7 @@ func BuildUninstallLpClientPayload(installCtrlPanelUninstallLpClientBody string)
 	{
 		err = json.Unmarshal([]byte(installCtrlPanelUninstallLpClientBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"type\": \"Nulla magnam.\",\n         \"uninstall\": false\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"type\": \"Soluta molestias voluptatem sequi nostrum.\",\n         \"uninstall\": false\n      }\n   }'")
 		}
 		if body.SetupConfig == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("setupConfig", "body"))
@@ -91,7 +91,7 @@ func BuildInstallDeploymentPayload(installCtrlPanelInstallDeploymentBody string)
 	{
 		err = json.Unmarshal([]byte(installCtrlPanelInstallDeploymentBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"containerPort\": \"Incidunt eos est ipsa aut ratione eum.\",\n         \"customEnv\": [\n            {\n               \"key\": \"Ipsa et iusto ab.\",\n               \"value\": \"Dignissimos cupiditate.\"\n            },\n            {\n               \"key\": \"Ipsa et iusto ab.\",\n               \"value\": \"Dignissimos cupiditate.\"\n            },\n            {\n               \"key\": \"Ipsa et iusto ab.\",\n               \"value\": \"Dignissimos cupiditate.\"\n            },\n            {\n               \"key\": \"Ipsa et iusto ab.\",\n               \"value\": \"Dignissimos cupiditate.\"\n            }\n         ],\n         \"imageRepository\": \"Aliquid quibusdam deserunt aut.\",\n         \"install\": false,\n         \"installType\": \"market\",\n         \"name\": \"Eveniet adipisci quibusdam nihil fugit.\"\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"containerPort\": \"Fugiat et quas incidunt fugit voluptatem eius.\",\n         \"customEnv\": [\n            {\n               \"key\": \"Itaque et quasi est.\",\n               \"value\": \"Est quam vel modi.\"\n            },\n            {\n               \"key\": \"Itaque et quasi est.\",\n               \"value\": \"Est quam vel modi.\"\n            }\n         ],\n         \"imageRepository\": \"Corporis voluptas.\",\n         \"install\": false,\n         \"installType\": \"amm\",\n         \"name\": \"Et fuga veritatis commodi accusantium corrupti.\"\n      }\n   }'")
 		}
 		if body.SetupConfig == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("setupConfig", "body"))
@@ -121,7 +121,7 @@ func BuildUninstallDeploymentPayload(installCtrlPanelUninstallDeploymentBody str
 	{
 		err = json.Unmarshal([]byte(installCtrlPanelUninstallDeploymentBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"installType\": \"Totam voluptatem.\",\n         \"name\": \"Ex sunt quidem dolores est.\",\n         \"uninstall\": true\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"installType\": \"Est eos molestias dolor eum consequuntur saepe.\",\n         \"name\": \"Laborum illum maxime et.\",\n         \"uninstall\": true\n      }\n   }'")
 		}
 		if body.SetupConfig == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("setupConfig", "body"))
@@ -146,7 +146,7 @@ func BuildUpdateDeploymentPayload(installCtrlPanelUpdateDeploymentBody string) (
 	{
 		err = json.Unmarshal([]byte(installCtrlPanelUpdateDeploymentBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"installContext\": \"Architecto eligendi necessitatibus nisi consequatur illum.\",\n         \"installType\": \"Ut quis.\",\n         \"name\": \"Iure et blanditiis unde beatae soluta.\",\n         \"update\": false\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"setupConfig\": {\n         \"installContext\": \"Nemo fuga consequuntur fugiat id beatae.\",\n         \"installType\": \"Voluptatum neque animi odio.\",\n         \"name\": \"Atque qui nobis adipisci nesciunt provident.\",\n         \"update\": true\n      }\n   }'")
 		}
 		if body.SetupConfig == nil {
 			err = goa.MergeErrors(err, goa.MissingFieldError("setupConfig", "body"))

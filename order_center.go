@@ -26,8 +26,6 @@ func NewOrderCenter(logger *log.Logger) ordercenter.Service {
 func (s *orderCentersrvc) List(ctx context.Context, p *ordercenter.ListPayload) (res *ordercenter.ListResult, err error) {
 	res = &ordercenter.ListResult{Result: &ordercenter.OrderCenterRetResult{}}
 	res.Result.List = make([]ordercenter.OrderCenterOrderItem, 0)
-
-	log.Println("00000000000000000000")
 	ocls := &service.OrderCenterLogicService{}
 	queryOption := struct {
 		Page     int64
@@ -45,16 +43,18 @@ func (s *orderCentersrvc) List(ctx context.Context, p *ordercenter.ListPayload) 
 		queryOption.PageSize = ptr.ToInt64(p.PageSize)
 	}
 	var pageCount int64 = 1
-	var orderList []types.CenterOrder
-	if ptr.ToInt64(p.Status) == 1 {
-		orderList, err = ocls.AllRedis()
-	} else {
-		orderList, pageCount, err = ocls.All(queryOption, bson.M{})
-		if err != nil {
-			return
-		}
+	var orderList []types.OrderPageTransactionRow
+
+	orderList, pageCount, err = ocls.GetTransactionList(queryOption, bson.M{
+		"hasTransaction": true,
+	})
+	if err != nil {
+		return
 	}
+
 	for _, v := range orderList {
+		// Set chain information from BusinessOrder's BaseInfo
+
 		res.Result.List = append(res.Result.List, v)
 	}
 	res.Code = ptr.Int64(0)
