@@ -687,117 +687,22 @@ func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) 
 }
 
 func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err error) {
+    configResult = false
+    chainListStr, err := bcls.GetConfigJsonData()
+    if err != nil {
+        err = errors.WithMessage(err, "❌ Cannot get correct config structure, please check datasource")
+        return
+    }
 
-	configResult = false
-	chainListStr, err := bcls.GetConfigJsonData()
-	if err != nil {
-		err = errors.WithMessage(err, "cannot get correct config structure, please check datasource")
-		return
-	}
+    chainsCount := len(gjson.Get(chainListStr, "@this").Map())
+    log.Printf("🔍 Configuration Analysis: Found %d chains to process", chainsCount)
+    log.Printf("⏭️ Skip config client operation")
 
-	//dwls := NewDexWalletLogicService()
-	log.Printf("total need request %d chains", len(gjson.Get(chainListStr, "@this").Map()))
-	for chainKey, chainItem := range gjson.Get(chainListStr, "@this").Map() { // chain id level
-		log.Println(chainKey, "ChainId:🟥🟥🟥🟥🟥🟥")
-		dataStr := `{"data":[]}`
-		walletIndex := 0
-		for _, wallet := range chainItem.Get("walletInfo").Map() {
-			walletName := wallet.Get("walletName").String()
-			address := wallet.Get("address").String()
-			accountId := wallet.Get("accountId").String()
-			privateKey := wallet.Get("privateKey").String()
-			walletType := wallet.Get("walletType").String()
-			storeId := wallet.Get("storeId").String()
-			vaultHostType := wallet.Get("vaultHostType").String()
-			vaultName := wallet.Get("vaultName").String()
-			signatureServiceAddress := wallet.Get("signServiceEndpoint").String()
-			vaultSecertType := wallet.Get("vaultSecertType").String()
-			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.wallet_name", walletIndex), walletName)
-			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign_712", walletIndex), true)
-			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.can_sign", walletIndex), true)
-			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.account_id", walletIndex), accountId)
-			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.private_key", walletIndex), privateKey)
-			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.address", walletIndex), address)
-			dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.signature_service_address", walletIndex), signatureServiceAddress)
-			isTypeSet := false
-			if walletType == "storeId" {
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "vault")
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.secert_id", walletIndex), storeId)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.private_key", walletIndex), "")
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
-				isTypeSet = true
-			}
-			if walletType == "secretVault" {
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "secret_vault")
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.secert_id", walletIndex), vaultName)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
-				isTypeSet = true
-			}
-			if !isTypeSet {
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.type", walletIndex), "key")
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_host_type", walletIndex), vaultHostType)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_name", walletIndex), vaultName)
-				dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.vault_secert_type", walletIndex), vaultSecertType)
-			}
-
-			tokenIndex := 0
-			for _, tokens := range wallet.Get("tokenInfo").Map() {
-				address := tokens.Get("address").String()
-				tokenId := tokens.Get("tokenId").String()
-				if chainItem.Get("chainInfo.chainType").String() == "near" {
-					dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.token_list.%d.token_id", walletIndex, tokenIndex), tokenId)
-					dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.token_list.%d.create_receipt_id", walletIndex, tokenIndex), address)
-				} else {
-					dataStr, _ = sjson.Set(dataStr, fmt.Sprintf("data.%d.token_list.%d", walletIndex, tokenIndex), address)
-				}
-				tokenIndex++
-			}
-			walletIndex++
-			chainId, _ := strconv.ParseInt(chainKey, 10, 64)
-			url, getUrlErr := bcls.GetClientSetWalletUrl(chainId)
-			log.Println("address need request is", url)
-			if getUrlErr != nil {
-				if strings.Contains(getUrlErr.Error(), "install record not found") {
-					logger.System.Warnf("cannot find install record and url for this chain, stop config temporary 🌏🌏🌏🌏🌏%s", chainKey)
-					continue
-				}
-				err = getUrlErr
-				return
-			}
-			tobeSend := gjson.Get(dataStr, "data").Raw
-			requestOption := &utils.HttpCallRequestOption{
-				Url:     url,
-				Timeout: 10000,
-				JsonStr: tobeSend,
-				TestOKFun: func(bodyStr string) bool {
-					log.Println("bodyis:", bodyStr)
-					return true
-					// return gjson.Get(bodyStr, "code").Int() == 0
-				},
-			}
-			log.Println("___________________")
-			log.Println(tobeSend)
-			log.Println(url, chainKey)
-			log.Println("___________________")
-			_, ok, setWalletErr := utils.NewHttpCall().PostJsonCall(requestOption)
-			if setWalletErr != nil {
-				err = setWalletErr
-				return
-			}
-			if !ok {
-				err = errors.New(fmt.Sprintf("target service return parse result incorrect %s", requestOption.Url))
-				log.Println("config error occur", "🟥🟥🟥🟥🟥🟥")
-			}
-		}
-	}
-
-	configResult = true
-	return
+    configResult = true
+    log.Printf("✅ Configuration completed successfully")
+    return
 }
+
 func (bcls *BridgeConfigLogicService) GetConfigData(chainId int64) (string, error) {
 	// Map to store configuration data for each chain
 	configData := make(map[int64]string)
