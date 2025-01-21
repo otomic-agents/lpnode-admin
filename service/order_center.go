@@ -277,12 +277,19 @@ func (ocls *OrderCenterLogicService) convertToOrderPageTransactionRow(order type
 	}
 }
 func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOrder) []types.OrderPageChainTransaction {
+	getHash := func(info gjson.Result) string {
+		hash := info.Get("transactionHash").String()
+		if hash == "" {
+			hash = info.Get("hash").String()
+		}
+		return hash
+	}
 	txs := make([]types.OrderPageChainTransaction, 0)
 
 	// Handle transfer out transaction
 	if order.DexTradeInfoOut != nil && order.DexTradeInfoOut.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoOut.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "TransferOut",
 				TxHash:      txHash,
@@ -297,7 +304,7 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 	// Handle transfer out confirm transaction
 	if order.DexTradeInfoOutConfirm != nil && order.DexTradeInfoOutConfirm.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoOutConfirm.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "TransferOutConfirm",
 				TxHash:      txHash,
@@ -312,7 +319,7 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 	// Handle transfer in transaction
 	if order.DexTradeInfoIn != nil && order.DexTradeInfoIn.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoIn.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "TransferIn",
 				TxHash:      txHash,
@@ -327,7 +334,7 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 	// Handle transfer in confirm transaction
 	if order.DexTradeInfoInConfirm != nil && order.DexTradeInfoInConfirm.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoInConfirm.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "TransferInConfirm",
 				TxHash:      txHash,
@@ -342,7 +349,7 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 	// Handle transfer in refund transaction
 	if order.DexTradeInfoInRefund != nil && order.DexTradeInfoInRefund.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoInRefund.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "TransferInRefund",
 				TxHash:      txHash,
@@ -357,7 +364,7 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 	// Handle init swap transaction
 	if order.DexTradeInfoInitSwap != nil && order.DexTradeInfoInitSwap.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoInitSwap.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "InitSwap",
 				TxHash:      txHash,
@@ -372,7 +379,7 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 	// Handle confirm swap transaction
 	if order.DexTradeInfoConfirmSwap != nil && order.DexTradeInfoConfirmSwap.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoConfirmSwap.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "ConfirmSwap",
 				TxHash:      txHash,
@@ -387,7 +394,7 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 	// Handle refund swap transaction
 	if order.DexTradeInfoRefundSwap != nil && order.DexTradeInfoRefundSwap.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoRefundSwap.RawData.TransferInfo, ""))
-		if txHash := transferInfo.Get("transactionHash").String(); txHash != "" {
+		if txHash := getHash(transferInfo); txHash != "" {
 			txs = append(txs, types.OrderPageChainTransaction{
 				EventName:   "RefundSwap",
 				TxHash:      txHash,

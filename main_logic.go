@@ -20,7 +20,7 @@ type mainLogicsrvc struct {
 // NewMainLogic returns the mainLogic service implementation.
 func NewMainLogic(logger *log.Logger) mainlogic.Service {
 	logger.Println("new Main.....")
-	MainLogic_RegisterLp()
+	
 	// MainLogic_RefreshLpWallet()
 	return &mainLogicsrvc{logger}
 }
@@ -36,38 +36,6 @@ func MainLogic_RefreshLpWallet() {
 		log.Println("auto refresh lp wallet")
 		dwls := service.NewDexWalletLogicService()
 		dwls.RefreshLpWallet()
-	}()
-}
-func MainLogic_RegisterLp() {
-	go func() {
-		for {
-			time.Sleep(time.Second * 60 * 1) // automatically register lpnode every one minutes
-			cpls := service.NewCtrlPanelLogicService()
-			ret, err := cpls.GetInstallRowByInstallType("ammClient")
-			if err != nil {
-				return
-			}
-			lprls := service.NewLpRegisterLogicService()
-			log.Println("currently there are n clients that need to be registered", len(ret))
-			for _, item := range ret {
-				if item.RegisterClientStatus == 0 {
-					log.Println("item.Name, item.ChainType", item.Name, item.ChainType)
-					register, regErr := lprls.RegisterItemWithoutRestart(item.ID.Hex(), item.ServiceName, item.Name, item.ChainType, item.ChainId, item.Namespace)
-					if regErr != nil {
-						log.Println("register failed", regErr)
-						// err = regErr
-						continue
-						// return
-					}
-					if !register {
-						log.Println(fmt.Errorf("registration failed, id:%s", item.ID.Hex()))
-						continue
-						// return
-					}
-				}
-			}
-		}
-
 	}()
 }
 

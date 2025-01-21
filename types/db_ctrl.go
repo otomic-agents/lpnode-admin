@@ -15,14 +15,14 @@ func (templateWriter *TemplateWriter) Write(p []byte) (n int, err error) {
 
 type InstallRow struct {
 	ID                   primitive.ObjectID `bson:"_id"`
-	InstallType          string             `bson:"installType"` // client  amm market
+	InstallType          string             `bson:"installType"` // client amm market
 	Name                 string             `bson:"name"`        // bsc avax
 	Status               int64              `bson:"status"`
 	Yaml                 string             `bson:"yaml"`
 	Stdout               string             `bson:"stdout"`
 	Stderr               string             `bson:"stderr"`
 	InstallContext       string             `bson:"installContext"`
-	ConfigStatus         int64              `bson:"configStatus"` //0
+	ConfigStatus         int64              `bson:"configStatus"`
 	ServiceName          string             `bson:"serviceName"`
 	ChainId              int64              `bson:"chainId"`
 	UninstallStdErr      string             `bson:"un_stderr"`

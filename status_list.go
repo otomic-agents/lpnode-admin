@@ -6,9 +6,11 @@ import (
 	"admin-panel/redis_database"
 	"admin-panel/types"
 	"context"
+	"encoding/json"
 	"log"
 
 	"github.com/aws/smithy-go/ptr"
+	"github.com/tidwall/gjson"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -42,6 +44,7 @@ func (s *statusListsrvc) StatList(ctx context.Context) (res *statuslist.StatList
 		statusKey := ""
 		statusBody := ""
 		errMessage := ""
+		println(result.InstallType, "☣️")
 		log.Println(len(result.EnvList), "🧊🧊🧊🧊🧊")
 		for _, v := range result.EnvList {
 			if v.Name == "STATUS_KEY" {
@@ -49,13 +52,35 @@ func (s *statusListsrvc) StatList(ctx context.Context) (res *statuslist.StatList
 			}
 		}
 		if statusKey != "" {
-			redisBody, readErr := redis_database.GetStatusDb().GetString(statusKey)
-			statusBody = redisBody
-			if readErr != nil {
-				errMessage = readErr.Error()
+			if result.InstallType == "ammClient" {
+				hashMap, readErr := redis_database.GetStatusDb().HashGetAll(statusKey)
+				if readErr != nil {
+					errMessage = readErr.Error()
+				} else {
+					parsedData := make(map[string]interface{})
+
+					for k, v := range hashMap {
+						if parsed := gjson.Parse(v); parsed.Exists() {
+							parsedData[k] = parsed.Value()
+						} else {
+							parsedData[k] = v
+						}
+					}
+					jsonBytes, err := json.Marshal(parsedData)
+					if err != nil {
+						errMessage = err.Error()
+					} else {
+						statusBody = string(jsonBytes)
+					}
+				}
+			} else {
+				redisBody, readErr := redis_database.GetStatusDb().GetString(statusKey)
+				statusBody = redisBody
+				if readErr != nil {
+					errMessage = readErr.Error()
+				}
 			}
 		}
-
 		res.Result = append(res.Result, &statuslist.StatusListItem{
 			Name:        ptr.String(result.Name),
 			InstallType: ptr.String(result.InstallType),
@@ -64,7 +89,6 @@ func (s *statusListsrvc) StatList(ctx context.Context) (res *statuslist.StatList
 			ErrMessage:  ptr.String(errMessage),
 		})
 	}
-
 	s.logger.Print("statusList.statList")
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")

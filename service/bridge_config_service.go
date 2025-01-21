@@ -258,7 +258,6 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 	emptyList := []types.DBBridgeRow{}
 	ret = emptyList
 
-	// 1. 查询 bridges
 	err, cursor := database.FindAll("main", "bridges", filter)
 	if err != nil {
 		return
@@ -269,13 +268,11 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 		return
 	}
 
-	// 2. 收集所有 walletName
 	walletNames := make(map[string]bool)
 	for _, bridge := range results {
 		walletNames[bridge.WalletName] = true
 	}
 
-	// 3. 查询钱包地址
 	walletFilter := bson.M{
 		"walletName": bson.M{"$in": getKeys(walletNames)},
 	}
@@ -289,19 +286,16 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 		return results, nil
 	}
 
-	// 4. 构建钱包地址映射
 	walletMap := make(map[string]string) // walletName -> address
 	for _, wallet := range wallets {
 		walletMap[wallet.WalletName] = wallet.Address
 	}
 
-	// 5. 构建余额查询条件
 	var balanceConditions []bson.M
 	for _, bridge := range results {
 		srcToken := bridge.SrcToken
 		dstToken := bridge.DstToken
 
-		// 如果源链或目标链是Solana，转换对应的token地址格式
 		if bridge.SrcChainId == 501 {
 			if base58Token, err := convertToBase58(srcToken); err == nil {
 				srcToken = base58Token
@@ -313,13 +307,11 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 			}
 		}
 
-		// srcToken 只查询收款地址(LpReceiverAddress)的余额
 		balanceConditions = append(balanceConditions, bson.M{
 			"wallet_address": bridge.LpReceiverAddress,
 			"token":          srcToken,
 		})
 
-		// dstToken 只查询付款地址(PayAddress)的余额
 		if payAddress, exists := walletMap[bridge.WalletName]; exists {
 			balanceConditions = append(balanceConditions, bson.M{
 				"wallet_address": payAddress,
@@ -328,7 +320,6 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 		}
 	}
 
-	// 6. 查询余额
 	balanceFilter := bson.M{"$or": balanceConditions}
 	var balances []types.DBWalletBalance
 	err, balanceCursor := database.FindAll("main", "wallet_balances", balanceFilter)
@@ -340,19 +331,16 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 		return results, nil
 	}
 
-	// 7. 构建余额查找映射
 	balanceMap := make(map[string]types.DBWalletBalance)
 	for _, balance := range balances {
 		key := fmt.Sprintf("%s_%s", balance.WalletAddress, balance.Token)
 		balanceMap[key] = balance
 	}
 
-	// 8. 填充余额信息并转换地址格式
 	for i := range results {
 		srcToken := results[i].SrcToken
 		dstToken := results[i].DstToken
 
-		// 如果源链或目标链是Solana，转换对应的token地址格式
 		if results[i].SrcChainId == 501 {
 			if base58Token, err := convertToBase58(srcToken); err == nil {
 				results[i].SrcToken = base58Token
@@ -366,14 +354,12 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 			}
 		}
 
-		// srcToken 余额 - 从收款地址(LpReceiverAddress)获取
 		srcBalanceKey := fmt.Sprintf("%s_%s", results[i].LpReceiverAddress, srcToken)
 		if balance, exists := balanceMap[srcBalanceKey]; exists {
 			results[i].SrcTokenBalance = balance.BalanceValue.Hex
 			results[i].SrcTokenDecimals = balance.Decimals
 		}
 
-		// dstToken 余额 - 从付款地址(PayAddress)获取
 		if payAddress, exists := walletMap[results[i].WalletName]; exists {
 			results[i].PayAddress = payAddress
 			dstBalanceKey := fmt.Sprintf("%s_%s", payAddress, dstToken)
@@ -563,7 +549,6 @@ func (bcls *BridgeConfigLogicService) GetConfigJsonData() (res string, err error
 	}
 	res = baseJson
 	logger.System.Debug(baseJson)
-	logger.System.Debug("got configJson", "\r\n", gjson.Get(baseJson, "@pretty").String())
 	return
 }
 func (bcls *BridgeConfigLogicService) GetUniqDstToken(dstChainId int64, walletName string) (res []types.TDBBridgeUniqDstToken, err error) {
@@ -687,20 +672,20 @@ func (bcls *BridgeConfigLogicService) ConfigLp() (configResult bool, err error) 
 }
 
 func (bcls *BridgeConfigLogicService) ConfigClient() (configResult bool, err error) {
-    configResult = false
-    chainListStr, err := bcls.GetConfigJsonData()
-    if err != nil {
-        err = errors.WithMessage(err, "❌ Cannot get correct config structure, please check datasource")
-        return
-    }
+	configResult = false
+	chainListStr, err := bcls.GetConfigJsonData()
+	if err != nil {
+		err = errors.WithMessage(err, "❌ Cannot get correct config structure, please check datasource")
+		return
+	}
 
-    chainsCount := len(gjson.Get(chainListStr, "@this").Map())
-    log.Printf("🔍 Configuration Analysis: Found %d chains to process", chainsCount)
-    log.Printf("⏭️ Skip config client operation")
+	chainsCount := len(gjson.Get(chainListStr, "@this").Map())
+	log.Printf("🔍 Configuration Analysis: Found %d chains to process", chainsCount)
+	log.Printf("⏭️ Skip config client operation")
 
-    configResult = true
-    log.Printf("✅ Configuration completed successfully")
-    return
+	configResult = true
+	log.Printf("✅ Configuration completed successfully")
+	return
 }
 
 func (bcls *BridgeConfigLogicService) GetConfigData(chainId int64) (string, error) {
