@@ -119,4 +119,5 @@ type WalletRow struct {
 	VaultSecertType     *string
 	SignServiceEndpoint *string
 	WalletType          string
+	Balance             *string
 }

@@ -32,6 +32,7 @@ type CreateDexWalletRequestBody struct {
 	VaultSecertType     *string `form:"vaultSecertType,omitempty" json:"vaultSecertType,omitempty" xml:"vaultSecertType,omitempty"`
 	SignServiceEndpoint *string `form:"signServiceEndpoint,omitempty" json:"signServiceEndpoint,omitempty" xml:"signServiceEndpoint,omitempty"`
 	WalletType          *string `form:"walletType,omitempty" json:"walletType,omitempty" xml:"walletType,omitempty"`
+	Balance             *string `form:"balance,omitempty" json:"balance,omitempty" xml:"balance,omitempty"`
 }
 
 // DeleteDexWalletRequestBody is the type of the "dexWallet" service
@@ -105,6 +106,7 @@ type WalletRowResponseBody struct {
 	VaultSecertType     *string `form:"vaultSecertType,omitempty" json:"vaultSecertType,omitempty" xml:"vaultSecertType,omitempty"`
 	SignServiceEndpoint *string `form:"signServiceEndpoint,omitempty" json:"signServiceEndpoint,omitempty" xml:"signServiceEndpoint,omitempty"`
 	WalletType          string  `form:"walletType" json:"walletType" xml:"walletType"`
+	Balance             *string `form:"balance,omitempty" json:"balance,omitempty" xml:"balance,omitempty"`
 }
 
 // VaultRowResponseBody is used to define fields on response body types.
@@ -209,6 +211,7 @@ func NewCreateDexWalletWalletRow(body *CreateDexWalletRequestBody) *dexwallet.Wa
 		VaultSecertType:     body.VaultSecertType,
 		SignServiceEndpoint: body.SignServiceEndpoint,
 		WalletType:          *body.WalletType,
+		Balance:             body.Balance,
 	}
 
 	return v

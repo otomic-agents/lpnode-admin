@@ -17,4 +17,5 @@ type DBWalletRow struct {
 	VaultName           string             `bson:"vaultName"`
 	VaultSecertType     string             `bson:"vaultSecertType"`
 	SignServiceEndpoint string             `bson:"signServiceEndpoint"`
+	Balance             *DBWalletBalance   `bson:"balance,omitempty"`
 }

@@ -21,7 +21,7 @@ func BuildSettingsPayload(settingsSettingsBody string) (*settings.SettingsPayloa
 	{
 		err = json.Unmarshal([]byte(settingsSettingsBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"relayUri\": \"Libero sunt temporibus ex sint accusantium.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"relayUri\": \"Eligendi et qui officia quam.\"\n   }'")
 		}
 	}
 	v := &settings.SettingsPayload{

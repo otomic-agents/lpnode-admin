@@ -21,7 +21,7 @@ func BuildSetChainListPayload(chainConfigSetChainListBody string) (*chainconfig.
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainList\": [\n         {\n            \"chainId\": 7348474596581095218,\n            \"chainName\": \"Itaque voluptatem maxime voluptatem.\",\n            \"name\": \"Voluptatem occaecati neque qui in.\",\n            \"tokenName\": \"Nam totam adipisci.\"\n         },\n         {\n            \"chainId\": 7348474596581095218,\n            \"chainName\": \"Itaque voluptatem maxime voluptatem.\",\n            \"name\": \"Voluptatem occaecati neque qui in.\",\n            \"tokenName\": \"Nam totam adipisci.\"\n         }\n      ]\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainList\": [\n         {\n            \"chainId\": 2578895301441894512,\n            \"chainName\": \"Omnis voluptatem sint.\",\n            \"name\": \"Mollitia veniam dolorem quod numquam accusamus.\",\n            \"tokenName\": \"Cumque eum velit vero.\"\n         },\n         {\n            \"chainId\": 2578895301441894512,\n            \"chainName\": \"Omnis voluptatem sint.\",\n            \"name\": \"Mollitia veniam dolorem quod numquam accusamus.\",\n            \"tokenName\": \"Cumque eum velit vero.\"\n         },\n         {\n            \"chainId\": 2578895301441894512,\n            \"chainName\": \"Omnis voluptatem sint.\",\n            \"name\": \"Mollitia veniam dolorem quod numquam accusamus.\",\n            \"tokenName\": \"Cumque eum velit vero.\"\n         },\n         {\n            \"chainId\": 2578895301441894512,\n            \"chainName\": \"Omnis voluptatem sint.\",\n            \"name\": \"Mollitia veniam dolorem quod numquam accusamus.\",\n            \"tokenName\": \"Cumque eum velit vero.\"\n         }\n      ]\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainListPayload{}
@@ -43,7 +43,7 @@ func BuildDelChainListPayload(chainConfigDelChainListBody string) (*chainconfig.
 	{
 		err = json.Unmarshal([]byte(chainConfigDelChainListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Sapiente qui sed odio ut ratione.\",\n      \"chainId\": 1008534645703636779\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Officiis ipsam distinctio ducimus ipsum voluptate nisi.\",\n      \"chainId\": 5397625245382733691\n   }'")
 		}
 	}
 	v := &chainconfig.DelChainListPayload{
@@ -62,7 +62,7 @@ func BuildSetChainGasUsdPayload(chainConfigSetChainGasUsdBody string) (*chaincon
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainGasUsdBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Quod numquam accusamus deleniti cumque eum velit.\",\n      \"chainId\": 3733714128795416598,\n      \"usd\": 1019364508561785870\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Voluptas ullam culpa aperiam dolores officiis est.\",\n      \"chainId\": 3597779552369800295,\n      \"usd\": 6221639917582745627\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainGasUsdPayload{
@@ -82,7 +82,7 @@ func BuildSetChainClientConfigPayload(chainConfigSetChainClientConfigBody string
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainClientConfigBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainData\": \"Et facilis deleniti ea sit praesentium.\",\n      \"chainId\": 7571469164774561754\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainData\": \"At id quis neque ad dolorem.\",\n      \"chainId\": 4998736100017300873\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainClientConfigPayload{

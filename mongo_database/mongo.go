@@ -139,6 +139,17 @@ func FindAll(dbKey string, collection string, filter bson.M) (error, *mongo.Curs
 	}
 	return nil, cursor
 }
+func Aggregate(dbKey string, collection string, pipeline []bson.M) (*mongo.Cursor, error) {
+	if !IsInit(dbKey) {
+		return nil, errors.New(fmt.Sprintf("database not initialized%s", dbKey))
+	}
+	session := DbList[dbKey].Session
+	cursor, err := session.Collection(collection).Aggregate(context.Background(), pipeline)
+	if err != nil {
+		return nil, err
+	}
+	return cursor, nil
+}
 func FindAllOpt(dbKey string, collection string, filter bson.M, opts *options.FindOptions) (error, *mongo.Cursor) {
 	if !IsInit(dbKey) {
 		return errors.New(fmt.Sprintf("database not initialized%s", dbKey)), nil

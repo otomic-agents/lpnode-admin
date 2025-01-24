@@ -21,7 +21,7 @@ func BuildCreateResourcePayload(configResourceCreateResourceBody string) (*confi
 	{
 		err = json.Unmarshal([]byte(configResourceCreateResourceBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"appName\": \"Pariatur eaque.\",\n      \"clientId\": \"Nisi non dolore quidem.\",\n      \"template\": \"Voluptas doloremque quasi.\",\n      \"version\": \"Quidem officiis ipsam distinctio ducimus ipsum.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"appName\": \"Nihil explicabo quia qui autem.\",\n      \"clientId\": \"Suscipit qui nemo dolores.\",\n      \"template\": \"Provident non maxime.\",\n      \"version\": \"Perspiciatis error molestias.\"\n   }'")
 		}
 	}
 	v := &configresource.CreateResourcePayload{
@@ -42,7 +42,7 @@ func BuildGetResourcePayload(configResourceGetResourceBody string) (*configresou
 	{
 		err = json.Unmarshal([]byte(configResourceGetResourceBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"clientId\": \"Repellendus aut vitae repellendus.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"clientId\": \"Aliquid suscipit quia assumenda rerum sed dolores.\"\n   }'")
 		}
 	}
 	v := &configresource.GetResourcePayload{
@@ -60,7 +60,7 @@ func BuildEditResultPayload(configResourceEditResultBody string) (*configresourc
 	{
 		err = json.Unmarshal([]byte(configResourceEditResultBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"appName\": \"Eius consequuntur porro.\",\n      \"clientId\": \"Repellat molestiae ut odio pariatur.\",\n      \"template\": \"Rerum sed dolores dolorem.\",\n      \"templateResult\": \"Reprehenderit unde porro quam aliquid suscipit quia.\",\n      \"version\": \"Culpa omnis sunt autem.\",\n      \"versionHash\": \"Sequi temporibus tempora assumenda.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"appName\": \"Dicta eveniet nihil quo sint.\",\n      \"clientId\": \"Eaque cum sequi sunt qui culpa.\",\n      \"template\": \"Explicabo consectetur quod quod perspiciatis doloremque minima.\",\n      \"templateResult\": \"Voluptatum ratione sapiente quas.\",\n      \"version\": \"Recusandae sed vel qui et.\",\n      \"versionHash\": \"In numquam et.\"\n   }'")
 		}
 	}
 	v := &configresource.EditResultPayload{

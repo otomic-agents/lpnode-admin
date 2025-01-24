@@ -20,6 +20,7 @@ var DexWallet_WalletRow = Type("walletRow", func() {
 	Attribute("walletType", String, func() {
 		Enum("privateKey", "storeId")
 	})
+	Attribute("balance",String)
 	Required("walletName", "chainId", "chainType", "walletType")
 })
 var DexWallet_VaultRow = Type("vaultRow", func() {

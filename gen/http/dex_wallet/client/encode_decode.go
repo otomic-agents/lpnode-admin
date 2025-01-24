@@ -337,6 +337,7 @@ func unmarshalWalletRowResponseBodyToDexwalletWalletRow(v *WalletRowResponseBody
 		VaultSecertType:     v.VaultSecertType,
 		SignServiceEndpoint: v.SignServiceEndpoint,
 		WalletType:          *v.WalletType,
+		Balance:             v.Balance,
 	}
 
 	return res

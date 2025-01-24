@@ -45,21 +45,46 @@ func (*DexWalletLogicService) CreateByBsonMap(data interface{}) (err error) {
 	return
 }
 func (*DexWalletLogicService) ListAll(data bson.M) (ret []types.DBWalletRow, err error) {
-	emptyList := []types.DBWalletRow{}
-	ret = emptyList
-	err, cursor := database.FindAll("main", "wallets", data)
+	pipeline := []bson.M{
+		{"$match": data},
+		{
+			"$lookup": bson.M{
+				"from": "wallet_balances",
+				"let":  bson.M{"wallet_address": "$address"},
+				"pipeline": []bson.M{
+					{
+						"$match": bson.M{
+							"$expr": bson.M{
+								"$and": []bson.M{
+									{"$eq": []string{"$wallet_address", "$$wallet_address"}},
+									{"$eq": []string{"$token", "0x0000000000000000000000000000000000000000"}},
+								},
+							},
+						},
+					},
+					{"$limit": 1},
+				},
+				"as": "balance",
+			},
+		},
+		{
+			"$unwind": bson.M{
+				"path":                       "$balance",
+				"preserveNullAndEmptyArrays": true,
+			},
+		},
+	}
+
+	cursor, err := database.Aggregate("main", "wallets", pipeline)
 	if err != nil {
-		return
+		return nil, err
 	}
-	var results []types.DBWalletRow
-	if err = cursor.All(context.TODO(), &results); err != nil {
-		return
+
+	if err = cursor.All(context.TODO(), &ret); err != nil {
+		return nil, err
 	}
-	for _, result := range results {
-		cursor.Decode(&result)
-	}
-	ret = results
-	return
+
+	return ret, nil
 }
 func (*DexWalletLogicService) DeleteById(inputId string) (count int64, err error) {
 	objectId, idErr := primitive.ObjectIDFromHex(inputId)
