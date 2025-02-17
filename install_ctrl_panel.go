@@ -290,11 +290,18 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 				return env.Value
 			}
 		}
-		// 如果没有找到，返回空字符串或者错误值
+		// If not found, return empty string or error value
 		return ""
 	}
 	if p.SetupConfig.InstallType == "ammClient" {
-		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("chain-client-evm-%s-%d", installRow.Name, installRow.ChainId))
+		var chainType string
+		if installRow.ChainId == 501 {
+			chainType = "solana"
+		} else {
+			chainType = "evm"
+		}
+
+		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("chain-client-%s-%s-%d", chainType, installRow.Name, installRow.ChainId))
 		fmt.Println(envList, env_err, fmt.Sprintf("|%s|", os.Getenv("NAMESPACE")))
 		setupConfig.Deployment.RedisHost = findValueByName(envList, "REDIS_HOST")
 		setupConfig.Deployment.RedisPort = findValueByName(envList, "REDIS_PORT")
