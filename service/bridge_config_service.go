@@ -297,13 +297,17 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 		dstToken := bridge.DstToken
 
 		if bridge.SrcChainId == 501 {
-			if base58Token, err := convertToBase58(srcToken); err == nil {
-				srcToken = base58Token
+			if srcToken != "0x0000000000000000000000000000000000000000" {
+				if base58Token, err := convertToBase58(srcToken); err == nil {
+					srcToken = base58Token
+				}
 			}
 		}
 		if bridge.DstChainId == 501 {
-			if base58Token, err := convertToBase58(dstToken); err == nil {
-				dstToken = base58Token
+			if dstToken != "0x0000000000000000000000000000000000000000" {
+				if base58Token, err := convertToBase58(dstToken); err == nil {
+					dstToken = base58Token
+				}
 			}
 		}
 
@@ -342,15 +346,20 @@ func (bcls *BridgeConfigLogicService) GetBridgeListByFilter(filter bson.M) (ret 
 		dstToken := results[i].DstToken
 
 		if results[i].SrcChainId == 501 {
-			if base58Token, err := convertToBase58(srcToken); err == nil {
-				results[i].SrcToken = base58Token
-				srcToken = base58Token
+			if srcToken != "0x0000000000000000000000000000000000000000" {
+				if base58Token, err := convertToBase58(srcToken); err == nil {
+					results[i].SrcToken = base58Token
+					srcToken = base58Token
+				}
 			}
+
 		}
 		if results[i].DstChainId == 501 {
-			if base58Token, err := convertToBase58(dstToken); err == nil {
-				results[i].DstToken = base58Token
-				dstToken = base58Token
+			if dstToken != "0x0000000000000000000000000000000000000000" {
+				if base58Token, err := convertToBase58(dstToken); err == nil {
+					results[i].DstToken = base58Token
+					dstToken = base58Token
+				}
 			}
 		}
 
