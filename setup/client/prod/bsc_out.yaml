@@ -216,7 +216,7 @@ spec:
             - name: CONTRACT_ADDRESS
               value: "0xcb24e8aEDB15981F4C088214722D8E3809e817eB"
             - name: SENDER_RPC_URL
-              value: "https://data-seed-prebsc-1-s1.bnbchain.org:8545"
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://data-seed-prebsc-1-s1.bnbchain.org:8545{{ end }}"
           resources:
             requests:
               cpu: 1m
@@ -234,7 +234,8 @@ spec:
               value: "1"
           volumeMounts:
             - name: nginx-config
-              mountPath: /etc/nginx/conf.d
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
           resources:
             requests:
               cpu: 100m
@@ -254,71 +255,94 @@ metadata:
   namespace: "{{.Deployment.Namespace}}"
 data:
   default.conf: |
-    server {
-        listen 80;
+    user  nginx;
+    worker_processes  1;
 
-        # Message Producer endpoints
-        location ~ ^/producer/getNextEvent {
-            proxy_pass http://localhost:3001;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+    error_log  /var/log/nginx/error.log notice;
+    pid        /var/run/nginx.pid;
 
-        location ~ ^/producer/getLatestEvent {
-            proxy_pass http://localhost:3001;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+    events {
+        worker_connections  1024;
+    }
 
-        # Public Service endpoints
-        location ~ ^/evm-client-[0-9]+/lpnode/get_wallets {
-            proxy_pass http://localhost:3003;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
 
-        location ~ ^/evm-client-[0-9]+/lpnode/get_wallet_balances {
-            proxy_pass http://localhost:3003;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                         '$status $body_bytes_sent "$http_referer" '
+                         '"$http_user_agent" "$http_x_forwarded_for"';
 
-        # Sender endpoints
-        location = /submitTokenTransfer {
-            proxy_pass http://localhost:3004;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+        access_log  /var/log/nginx/access.log  main;
 
-        location ~ "/queryJobStatus/[a-f0-9]+" {
-            proxy_pass http://localhost:3004;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+        sendfile        on;
+        keepalive_timeout  65;
 
-        # Sender lpnode endpoints
-        location ~ ^/evm-client-[0-9]+/lpnode/(transfer_in|confirm|refund|sign_message_712|single_chain/sign_message_712|single_swap/confirm_swap) {
-            proxy_pass http://localhost:3004;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+        server {
+            listen 80;
 
-        # Sender relay endpoints
-        location ~ ^/evm-client-[0-9]+/relay/(get_hashlock|get_system_fee|get_signer_from_eip712) {
-            proxy_pass http://localhost:3004;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+            # Message Producer endpoints
+            location ~ ^/producer/getNextEvent {
+                proxy_pass http://localhost:3001;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
 
-        # Sender relay behalf endpoints
-        location ~ ^/evm-client-[0-9]+/relay/behalf/(confirm_out|confirm_in|refund_out|refund_in) {
-            proxy_pass http://localhost:3004;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-        }
+            location ~ ^/producer/getLatestEvent {
+                proxy_pass http://localhost:3001;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
 
-        # Default fallback route
-        location / {
-            return 404;
+            # Public Service endpoints
+            location ~ ^/evm-client-[0-9]+/lpnode/get_wallets {
+                proxy_pass http://localhost:3003;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            location ~ ^/evm-client-[0-9]+/lpnode/get_wallet_balances {
+                proxy_pass http://localhost:3003;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Sender endpoints
+            location = /submitTokenTransfer {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            location ~ "/queryJobStatus/[a-f0-9]+" {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Sender lpnode endpoints
+            location ~ ^/evm-client-[0-9]+/lpnode/(transfer_in|confirm|refund|sign_message_712|single_chain/sign_message_712|single_swap/confirm_swap) {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Sender relay endpoints
+            location ~ ^/evm-client-[0-9]+/relay/(get_hashlock|get_system_fee|get_signer_from_eip712) {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+            # Sender relay behalf endpoints
+            location ~ ^/evm-client-[0-9]+/relay/behalf/(confirm_out|confirm_in|refund_out|refund_in) {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Default fallback route
+            location / {
+                return 404;
+            }
         }
     }
