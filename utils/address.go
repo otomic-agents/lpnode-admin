@@ -70,6 +70,10 @@ func GetHexAddress(address string, evmType string) (ret string, err error) {
 		return
 	}
 	if evmType == "solana" {
+		if address == "0x0000000000000000000000000000000000000000" {
+			ret = address
+			return
+		}
 		tokenAddressHexByte, decodeErr := base58.Decode(address)
 		if decodeErr != nil {
 			err = errors.WithMessage(err, fmt.Sprintf("decode address error%s", address))
