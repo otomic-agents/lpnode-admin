@@ -43,7 +43,7 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: LP_MARKET_SERVICE_HOST
-              value: "lpnode-market"
+              value: "amm-market-price-service"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
             - name: MONGODB_PASSWORD
