@@ -470,6 +470,10 @@ func (ocls *OrderCenterLogicService) convertStatus(order types.BusinessOrder) st
 			log.Printf("DexTradeInfoInRefund exists, returning failed")
 			return failedStatus
 		}
+		if order.DexTradeInfoOutRefund != nil {
+			log.Printf("DexTradeInfoOutRefund exists, returning failed")
+			return failedStatus
+		}
 		log.Printf("Only DexTradeInfoOut exists, returning in progress")
 		return inProgress
 	}
@@ -899,7 +903,7 @@ func extractGasFee(transferInfo string, nativeTokenPrecision int, nativeTokenUsd
 			USD:    defaultAmount,
 		}
 	}
-	effectiveGasPrice, ok := data["effectiveGasPrice"].(string)
+	effectiveGasPrice, ok := data["gasPrice"].(string)
 	if !ok {
 		fmt.Printf("effectiveGasPrice is missing or not a string in transferInfo\n")
 		return types.OrderPageGasFeeItem{
