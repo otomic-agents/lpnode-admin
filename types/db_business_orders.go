@@ -29,6 +29,7 @@ type BusinessOrder struct {
 	IsTrading               *bool                                 `json:"is_trading" bson:"isTrading"`
 	DexTradeInfoIn          *BusinessOrderDexTradeInfoIn          `json:"dex_trade_info_in" bson:"dexTradeInfo_in"`
 	DexTradeInfoOutConfirm  *BusinessOrderDexTradeInfoOutConfirm  `json:"dex_trade_info_out_confirm" bson:"dexTradeInfo_out_confirm"`
+	DexTradeInfoOutRefund   *BusinessOrderDexTradeInfoOutRefund   `json:"dex_trade_info_out_refund" bson:"dexTradeInfo_out_refund"`
 	DexTradeInfoInConfirm   *BusinessOrderDexTradeInfoInConfirm   `json:"dex_trade_info_in_confirm" bson:"dexTradeInfo_in_confirm"`
 	DexTradeInfoInRefund    *BusinessOrderDexTradeInfoInRefund    `json:"dexTradeInfo_in_refund" bson:"dexTradeInfo_in_refund"`
 	DexTradeInfoInitSwap    *BusinessOrderDexTradeInfoInitSwap    `json:"dexTradeInfo_init_swap" bson:"dexTradeInfo_init_swap"`
@@ -223,6 +224,7 @@ type BusinessOrderSystemOrder struct {
 	TransferOutInfo             *BusinessOrderTransferOutInfo `json:"transfer_out_info" bson:"transferOutInfo"`
 	TransferOutTimestamp        *int64                        `json:"transfer_out_timestamp" bson:"transferOutTimestamp"`
 	TransferOutConfirmTimestamp *int64                        `json:"transfer_out_confirm_timestamp" bson:"transferOutConfirmTimestamp"`
+	TransferOutRefundTimestamp  *int64                        `json:"transfer_out_refund_timestamp" bson:"transferOutRefundTimestamp"`
 	TransferInTimestamp         *int64                        `json:"transfer_in_timestamp" bson:"transferInTimestamp"`
 	TransferInConfirmTimestamp  *int64                        `json:"transfer_in_confirm_timestamp" bson:"transferInConfirmTimestamp"`
 	TransferInRefundTimestamp   *int64                        `json:"transfer_in_refund_timestamp" bson:"transferInRefundTimestamp"`
@@ -381,6 +383,9 @@ type BusinessOrderDexTradeInfoOutRawData struct {
 type BusinessOrderDexTradeInfoOutConfirm struct {
 	RawData *BusinessOrderDexTradeInfoOutConfirmRawData `json:"raw_data" bson:"rawData"`
 }
+type BusinessOrderDexTradeInfoOutRefund struct {
+	RawData *BusinessOrderDexTradeInfoOutRefundRawData `json:"raw_data" bson:"rawData"`
+}
 type BusinessOrderDexTradeInfoOutConfirmRawData struct {
 	Class        *string `json:"@class" bson:"@class"`
 	BusinessID   *int    `json:"business_id" bson:"business_id"`
@@ -389,6 +394,13 @@ type BusinessOrderDexTradeInfoOutConfirmRawData struct {
 	Preimage     *string `json:"preimage" bson:"preimage"`
 }
 
+type BusinessOrderDexTradeInfoOutRefundRawData struct {
+	Class        *string `json:"@class" bson:"@class"`
+	BusinessID   *int    `json:"business_id" bson:"business_id"`
+	TransferInfo *string `json:"transfer_info" bson:"transfer_info"`
+	TransferID   *string `json:"transfer_id" bson:"transfer_id"`
+	Preimage     *string `json:"preimage" bson:"preimage"`
+}
 type BusinessOrderDexTradeInfoInConfirm struct {
 	RawData *BusinessOrderDexTradeInfoInConfirmRawData `json:"raw_data" bson:"rawData"`
 }

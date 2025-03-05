@@ -316,6 +316,20 @@ func (ocls *OrderCenterLogicService) getChainTransactions(order types.BusinessOr
 		}
 	}
 
+	// Handle transfer out refund transaction
+	if order.DexTradeInfoOutRefund != nil && order.DexTradeInfoOutRefund.RawData != nil {
+		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoOutRefund.RawData.TransferInfo, ""))
+		if txHash := getHash(transferInfo); txHash != "" {
+			txs = append(txs, types.OrderPageChainTransaction{
+				EventName:   "TransferOutRefund",
+				TxHash:      txHash,
+				ExplorerUrl: getExplorerUrl(order.BaseInfo.SrcChain.ID, txHash),
+				ChainName:   chainMap[lo.FromPtrOr(order.BaseInfo.SrcChain.ID, 0)],
+				Status:      transferInfo.Get("status").String(),
+				Timestamp:   lo.FromPtrOr(order.SystemOrder.TransferOutRefundTimestamp, lo.FromPtrOr(order.SystemOrder.TransferOutTimestamp, lo.FromPtrOr(order.AskTime, 0))),
+			})
+		}
+	}
 	// Handle transfer in transaction
 	if order.DexTradeInfoIn != nil && order.DexTradeInfoIn.RawData != nil {
 		transferInfo := gjson.Parse(lo.FromPtrOr(order.DexTradeInfoIn.RawData.TransferInfo, ""))
