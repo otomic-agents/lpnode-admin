@@ -834,16 +834,24 @@ func (ocls *OrderCenterLogicService) extractGasFeeByChain(order types.BusinessOr
 		return extractSolanaGasFee(transferInfo, nativeTokenPrice)
 	}
 	return extractGasFee(transferInfo,
-		lo.FromPtrOr(order.BaseInfo.SrcChain.NativeTokenPrecision, 18),
-		nativeTokenPrice)
+		lo.FromPtrOr(order.BaseInfo.DstChain.NativeTokenPrecision, 18),
+		nativeTokenPrice,
+		ptr.ToInt(order.BaseInfo.DstChain.ID))
 }
 
-func extractGasFee(transferInfo string, nativeTokenPrecision int, nativeTokenUsdtPrice float64) types.OrderPageGasFeeItem {
+func extractGasFee(transferInfo string, nativeTokenPrecision int, nativeTokenUsdtPrice float64, chainID int) types.OrderPageGasFeeItem {
 	fmt.Println("nativeTokenUsdtPrice", nativeTokenUsdtPrice)
 	// Default values
 	defaultAmount := "0.00000000"
 	defaultSymbol := "BNB"
-
+	symbolMap := map[int]string{
+		9006: "BNB", // BSC
+		60:   "ETH", // Ethereum
+		614:  "ETH", // Optimism
+	}
+	if chainSymbol, exists := symbolMap[chainID]; exists {
+		defaultSymbol = chainSymbol
+	}
 	// Convert hex string to decimal value
 	hexToDecimal := func(hexStr string) float64 {
 		if hexStr == "" {
@@ -914,9 +922,9 @@ func extractGasFee(transferInfo string, nativeTokenPrecision int, nativeTokenUsd
 	}
 
 	// Convert gasUsed and effectiveGasPrice to numeric values
-	gasUsedValue := convertToDecimal(gasUsed, 0)                                        // gasUsed is an integer, no precision conversion needed
-	effectiveGasPriceValue := convertToDecimal(effectiveGasPrice, nativeTokenPrecision) // effectiveGasPrice is in wei, convert to BNB
-
+	gasUsedValue := convertToDecimal(gasUsed, 0)
+	fmt.Printf("Using native token precision: %d\n", nativeTokenPrecision) // gasUsed is an integer, no precision conversion needed
+	effectiveGasPriceValue := convertToDecimal(effectiveGasPrice, nativeTokenPrecision)
 	// Calculate actual Gas fee
 	amount := gasUsedValue * effectiveGasPriceValue
 	usd := amount * nativeTokenUsdtPrice
