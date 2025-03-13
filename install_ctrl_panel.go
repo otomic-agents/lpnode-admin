@@ -424,10 +424,11 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 		"installContext": string(installContextByte),
 		"chainType":      chainType,
 		"updateResult": bson.M{
-			"stdout":     res.Result.CmdStdout,
-			"stderr":     res.Result.CmdStderr,
-			"updateYaml": string(tmpWriter.ByteBuffer),
-			"lastupdate": int64(time.Now().UnixNano() / 1e6),
+			"latestConfig": setupConfig,
+			"stdout":       res.Result.CmdStdout,
+			"stderr":       res.Result.CmdStderr,
+			"updateYaml":   string(tmpWriter.ByteBuffer),
+			"lastupdate":   int64(time.Now().UnixNano() / 1e6),
 		},
 	}})
 	return

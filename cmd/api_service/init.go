@@ -14,6 +14,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/robertkrimen/otto"
 	"github.com/tidwall/gjson"
 	"go.mongodb.org/mongo-driver/bson"
@@ -88,8 +89,48 @@ func init() {
 	if err != nil {
 		log.Println("init Monitor failed", err)
 	}
-	InitInstall()
 
+	fistrtSetup()
+
+}
+func fistrtSetup() (err error) {
+	lpVersion := os.Getenv("LP_VERSION")
+	if lpVersion == "" {
+		log.Println("Warning: LP_VERSION environment variable not set, using 'unknown' as version")
+		lpVersion = "unknown"
+	}
+
+	// Check if this version has already initialized chain client
+	var versionDoc struct {
+		Version             string `bson:"version"`
+		InitChainClientDone bool   `bson:"init_chain_client_done"`
+	}
+
+	err = database.FindOne("main", "version_history", bson.M{"version": lpVersion}, &versionDoc)
+	if err == nil && versionDoc.InitChainClientDone {
+		log.Printf("Chain client already initialized for version %s, skipping", lpVersion)
+		return nil
+	}
+
+	InitInstall()
+	InitChainClientInstall()
+
+	// Update or insert version history document
+	updateDoc := bson.M{
+		"$set": bson.M{
+			"version":                lpVersion,
+			"init_chain_client_done": true,
+			"updated_at":             time.Now(),
+		},
+		"$setOnInsert": bson.M{
+			"created_at": time.Now(),
+		},
+	}
+	_, err = database.FindOneAndUpdate("main", "version_history", bson.M{"version": lpVersion}, updateDoc)
+	if err != nil {
+		return errors.WithMessage(err, "failed to update version_history")
+	}
+	return
 }
 func initDbData() {
 	initData, err := ioutil.ReadFile("./init_data/init_data.js")
