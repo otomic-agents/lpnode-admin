@@ -438,6 +438,7 @@ func unmarshalCtrlDeploayItemResponseBodyToInstallctrlpanelCtrlDeploayItem(v *Ct
 		Status:         v.Status,
 		InstallContext: v.InstallContext,
 		Yaml:           v.Yaml,
+		RPC:            v.RPC,
 	}
 
 	return res

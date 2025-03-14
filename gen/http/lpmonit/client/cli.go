@@ -21,7 +21,7 @@ func BuildAddScriptPayload(lpmonitAddScriptBody string) (*lpmonit.AddScriptPaylo
 	{
 		err = json.Unmarshal([]byte(lpmonitAddScriptBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"cron\": \"Temporibus officia.\",\n      \"name\": \"Tempore voluptatem.\",\n      \"scriptBody\": \"Autem voluptatem.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"cron\": \"Temporibus officia.\",\n      \"name\": \"Laborum dicta tempore voluptatem.\",\n      \"scriptBody\": \"Autem voluptatem.\"\n   }'")
 		}
 	}
 	v := &lpmonit.AddScriptPayload{

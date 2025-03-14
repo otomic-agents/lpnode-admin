@@ -10,6 +10,7 @@ var Ctrl_DeploayItem = Type("ctrlDeploayItem", func() {
 	Attribute("status", Int64, "install status")
 	Attribute("installContext", String, "install context")
 	Attribute("yaml", String, "yaml")
+	Attribute("rpc", String, "chain client rpc")
 })
 var Ctrl_Amm_Client_SetupConfig = Type("ammClientSetupConfig", func() {
 	Attribute("customEnv", ArrayOf(Deployment_SetupConfig_Env_Item))

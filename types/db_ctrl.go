@@ -42,6 +42,7 @@ type InstallRow struct {
 		Value string `bson:"value"`
 	} `bson:"envList"`
 	UpdateResult UpdateResult `bson:"updateResult" json:"updateResult"`
+	EnvRpc       string
 }
 
 // Client Setup

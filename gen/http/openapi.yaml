@@ -1143,37 +1143,37 @@ definitions:
                     $ref: '#/definitions/CexAccountBalanceResponseBody'
                 description: result
                 example:
-                    - asset: Quidem pariatur sunt.
-                      free: Ut itaque ut sed adipisci.
-                      locked: Eum aliquam necessitatibus voluptatibus ipsam non ullam.
-                      price: Vel quo consequatur et.
-                      total: Corrupti itaque possimus autem quia.
-                    - asset: Quidem pariatur sunt.
-                      free: Ut itaque ut sed adipisci.
-                      locked: Eum aliquam necessitatibus voluptatibus ipsam non ullam.
-                      price: Vel quo consequatur et.
-                      total: Corrupti itaque possimus autem quia.
+                    - asset: Dolores est quas.
+                      free: Fuga repellendus odio.
+                      locked: Adipisci ipsa et quidem pariatur sunt et.
+                      price: Itaque possimus autem quia rem ut.
+                      total: Vel esse dolorum.
+                    - asset: Dolores est quas.
+                      free: Fuga repellendus odio.
+                      locked: Adipisci ipsa et quidem pariatur sunt et.
+                      price: Itaque possimus autem quia rem ut.
+                      total: Vel esse dolorum.
             message:
                 type: string
                 example: Dolor laboriosam.
         example:
             code: 5686073864793288394
             data:
-                - asset: Quidem pariatur sunt.
-                  free: Ut itaque ut sed adipisci.
-                  locked: Eum aliquam necessitatibus voluptatibus ipsam non ullam.
-                  price: Vel quo consequatur et.
-                  total: Corrupti itaque possimus autem quia.
-                - asset: Quidem pariatur sunt.
-                  free: Ut itaque ut sed adipisci.
-                  locked: Eum aliquam necessitatibus voluptatibus ipsam non ullam.
-                  price: Vel quo consequatur et.
-                  total: Corrupti itaque possimus autem quia.
-                - asset: Quidem pariatur sunt.
-                  free: Ut itaque ut sed adipisci.
-                  locked: Eum aliquam necessitatibus voluptatibus ipsam non ullam.
-                  price: Vel quo consequatur et.
-                  total: Corrupti itaque possimus autem quia.
+                - asset: Dolores est quas.
+                  free: Fuga repellendus odio.
+                  locked: Adipisci ipsa et quidem pariatur sunt et.
+                  price: Itaque possimus autem quia rem ut.
+                  total: Vel esse dolorum.
+                - asset: Dolores est quas.
+                  free: Fuga repellendus odio.
+                  locked: Adipisci ipsa et quidem pariatur sunt et.
+                  price: Itaque possimus autem quia rem ut.
+                  total: Vel esse dolorum.
+                - asset: Dolores est quas.
+                  free: Fuga repellendus odio.
+                  locked: Adipisci ipsa et quidem pariatur sunt et.
+                  price: Itaque possimus autem quia rem ut.
+                  total: Vel esse dolorum.
             message: Et iste et aut sed dolore.
     AccountDexWalletInfoRequestBody:
         title: AccountDexWalletInfoRequestBody
@@ -1200,48 +1200,48 @@ definitions:
                     $ref: '#/definitions/DexAccountBalanceResponseBody'
                 description: result
                 example:
-                    - amount: Doloremque voluptatem id eligendi aut reprehenderit.
-                      free: Reiciendis odio voluptas quas alias dolorum quae.
-                      locked: Odio totam.
-                      price: Nesciunt exercitationem voluptatem sint.
-                      token: Et laudantium error id ut ipsam.
-                      tokenName: Sequi laudantium dolore non ullam et.
-                    - amount: Doloremque voluptatem id eligendi aut reprehenderit.
-                      free: Reiciendis odio voluptas quas alias dolorum quae.
-                      locked: Odio totam.
-                      price: Nesciunt exercitationem voluptatem sint.
-                      token: Et laudantium error id ut ipsam.
-                      tokenName: Sequi laudantium dolore non ullam et.
-                    - amount: Doloremque voluptatem id eligendi aut reprehenderit.
-                      free: Reiciendis odio voluptas quas alias dolorum quae.
-                      locked: Odio totam.
-                      price: Nesciunt exercitationem voluptatem sint.
-                      token: Et laudantium error id ut ipsam.
-                      tokenName: Sequi laudantium dolore non ullam et.
+                    - amount: Non exercitationem quasi veritatis praesentium vero.
+                      free: Dolores nisi libero et laudantium.
+                      locked: Id ut ipsam consequatur.
+                      price: Laudantium dolore non ullam.
+                      token: Ipsam non ullam.
+                      tokenName: Vel quo consequatur et.
+                    - amount: Non exercitationem quasi veritatis praesentium vero.
+                      free: Dolores nisi libero et laudantium.
+                      locked: Id ut ipsam consequatur.
+                      price: Laudantium dolore non ullam.
+                      token: Ipsam non ullam.
+                      tokenName: Vel quo consequatur et.
+                    - amount: Non exercitationem quasi veritatis praesentium vero.
+                      free: Dolores nisi libero et laudantium.
+                      locked: Id ut ipsam consequatur.
+                      price: Laudantium dolore non ullam.
+                      token: Ipsam non ullam.
+                      tokenName: Vel quo consequatur et.
             message:
                 type: string
                 example: Dolores accusamus velit fugit earum quis.
         example:
             code: 7448628971496085819
             data:
-                - amount: Doloremque voluptatem id eligendi aut reprehenderit.
-                  free: Reiciendis odio voluptas quas alias dolorum quae.
-                  locked: Odio totam.
-                  price: Nesciunt exercitationem voluptatem sint.
-                  token: Et laudantium error id ut ipsam.
-                  tokenName: Sequi laudantium dolore non ullam et.
-                - amount: Doloremque voluptatem id eligendi aut reprehenderit.
-                  free: Reiciendis odio voluptas quas alias dolorum quae.
-                  locked: Odio totam.
-                  price: Nesciunt exercitationem voluptatem sint.
-                  token: Et laudantium error id ut ipsam.
-                  tokenName: Sequi laudantium dolore non ullam et.
-                - amount: Doloremque voluptatem id eligendi aut reprehenderit.
-                  free: Reiciendis odio voluptas quas alias dolorum quae.
-                  locked: Odio totam.
-                  price: Nesciunt exercitationem voluptatem sint.
-                  token: Et laudantium error id ut ipsam.
-                  tokenName: Sequi laudantium dolore non ullam et.
+                - amount: Non exercitationem quasi veritatis praesentium vero.
+                  free: Dolores nisi libero et laudantium.
+                  locked: Id ut ipsam consequatur.
+                  price: Laudantium dolore non ullam.
+                  token: Ipsam non ullam.
+                  tokenName: Vel quo consequatur et.
+                - amount: Non exercitationem quasi veritatis praesentium vero.
+                  free: Dolores nisi libero et laudantium.
+                  locked: Id ut ipsam consequatur.
+                  price: Laudantium dolore non ullam.
+                  token: Ipsam non ullam.
+                  tokenName: Vel quo consequatur et.
+                - amount: Non exercitationem quasi veritatis praesentium vero.
+                  free: Dolores nisi libero et laudantium.
+                  locked: Id ut ipsam consequatur.
+                  price: Laudantium dolore non ullam.
+                  token: Ipsam non ullam.
+                  tokenName: Vel quo consequatur et.
             message: Et voluptatem non animi ipsum accusamus quia.
     AmmOrderCenterListRequestBody:
         title: AmmOrderCenterListRequestBody
@@ -1287,9 +1287,10 @@ definitions:
             message: Voluptatem qui voluptatum aut quidem.
             result:
                 list:
-                    - Tempore quia vero consequatur.
-                    - Ipsa et nobis ad vero omnis aspernatur.
-                pageCount: 3754193835058766320
+                    - Exercitationem voluptatem sint architecto quod.
+                    - Consequatur possimus fuga in aut non eum.
+                    - Et ut eius omnis.
+                pageCount: 291513245808930260
     AuthenticationLimiterDelAuthenticationLimiterResponseBody:
         title: AuthenticationLimiterDelAuthenticationLimiterResponseBody
         type: object
@@ -1373,40 +1374,40 @@ definitions:
                     $ref: '#/definitions/ChainDataItemResponseBody'
                 description: list
                 example:
-                    - chainId: 6507361179857311585
-                      chainName: Nostrum non quam nostrum pariatur error et.
-                      id: Quae ut neque.
-                      name: Necessitatibus sed et alias.
-                      tokenName: Voluptas consectetur vitae ut.
-                    - chainId: 6507361179857311585
-                      chainName: Nostrum non quam nostrum pariatur error et.
-                      id: Quae ut neque.
-                      name: Necessitatibus sed et alias.
-                      tokenName: Voluptas consectetur vitae ut.
-                    - chainId: 6507361179857311585
-                      chainName: Nostrum non quam nostrum pariatur error et.
-                      id: Quae ut neque.
-                      name: Necessitatibus sed et alias.
-                      tokenName: Voluptas consectetur vitae ut.
+                    - chainId: 1318462536606579262
+                      chainName: Ex sit et voluptatem.
+                      id: Ad inventore quisquam ut tempora perspiciatis.
+                      name: Non aut.
+                      tokenName: Laboriosam eaque aut aut aut quas et.
+                    - chainId: 1318462536606579262
+                      chainName: Ex sit et voluptatem.
+                      id: Ad inventore quisquam ut tempora perspiciatis.
+                      name: Non aut.
+                      tokenName: Laboriosam eaque aut aut aut quas et.
+                    - chainId: 1318462536606579262
+                      chainName: Ex sit et voluptatem.
+                      id: Ad inventore quisquam ut tempora perspiciatis.
+                      name: Non aut.
+                      tokenName: Laboriosam eaque aut aut aut quas et.
         example:
             code: 5186789052489655514
             message: Temporibus aspernatur eos.
             result:
-                - chainId: 6507361179857311585
-                  chainName: Nostrum non quam nostrum pariatur error et.
-                  id: Quae ut neque.
-                  name: Necessitatibus sed et alias.
-                  tokenName: Voluptas consectetur vitae ut.
-                - chainId: 6507361179857311585
-                  chainName: Nostrum non quam nostrum pariatur error et.
-                  id: Quae ut neque.
-                  name: Necessitatibus sed et alias.
-                  tokenName: Voluptas consectetur vitae ut.
-                - chainId: 6507361179857311585
-                  chainName: Nostrum non quam nostrum pariatur error et.
-                  id: Quae ut neque.
-                  name: Necessitatibus sed et alias.
-                  tokenName: Voluptas consectetur vitae ut.
+                - chainId: 1318462536606579262
+                  chainName: Ex sit et voluptatem.
+                  id: Ad inventore quisquam ut tempora perspiciatis.
+                  name: Non aut.
+                  tokenName: Laboriosam eaque aut aut aut quas et.
+                - chainId: 1318462536606579262
+                  chainName: Ex sit et voluptatem.
+                  id: Ad inventore quisquam ut tempora perspiciatis.
+                  name: Non aut.
+                  tokenName: Laboriosam eaque aut aut aut quas et.
+                - chainId: 1318462536606579262
+                  chainName: Ex sit et voluptatem.
+                  id: Ad inventore quisquam ut tempora perspiciatis.
+                  name: Non aut.
+                  tokenName: Laboriosam eaque aut aut aut quas et.
     BaseDataGetLpInfoResponseBody:
         title: BaseDataGetLpInfoResponseBody
         type: object
@@ -1424,8 +1425,8 @@ definitions:
             code: 6917488969382596424
             message: Repellat quia voluptatem modi et.
             result:
-                name: Corporis omnis ullam quia.
-                profile: Et ut qui.
+                name: Provident quam necessitatibus.
+                profile: Et alias eum nostrum.
     BaseDataGetWalletAndTokensRequestBody:
         title: BaseDataGetWalletAndTokensRequestBody
         type: object
@@ -1458,143 +1459,122 @@ definitions:
                     $ref: '#/definitions/WalletItemResponseBody'
                 description: wallet list with tokens
                 example:
-                    - address: Cumque debitis et est ipsum illum qui.
+                    - address: Et ut qui.
                       can_sign: true
                       can_sign_712: false
-                      signature_service_address: Rerum fuga aliquam quis consectetur.
+                      signature_service_address: Nemo est ipsa pariatur distinctio explicabo.
                       tokens:
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                      type: Nam ullam cumque veritatis pariatur.
-                      wallet_name: Illum accusamus qui veniam enim earum saepe.
-                    - address: Cumque debitis et est ipsum illum qui.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                      type: Ut explicabo.
+                      wallet_name: Corporis omnis ullam quia.
+                    - address: Et ut qui.
                       can_sign: true
                       can_sign_712: false
-                      signature_service_address: Rerum fuga aliquam quis consectetur.
+                      signature_service_address: Nemo est ipsa pariatur distinctio explicabo.
                       tokens:
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                      type: Nam ullam cumque veritatis pariatur.
-                      wallet_name: Illum accusamus qui veniam enim earum saepe.
-                    - address: Cumque debitis et est ipsum illum qui.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                      type: Ut explicabo.
+                      wallet_name: Corporis omnis ullam quia.
+                    - address: Et ut qui.
                       can_sign: true
                       can_sign_712: false
-                      signature_service_address: Rerum fuga aliquam quis consectetur.
+                      signature_service_address: Nemo est ipsa pariatur distinctio explicabo.
                       tokens:
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                      type: Nam ullam cumque veritatis pariatur.
-                      wallet_name: Illum accusamus qui veniam enim earum saepe.
-                    - address: Cumque debitis et est ipsum illum qui.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                      type: Ut explicabo.
+                      wallet_name: Corporis omnis ullam quia.
+                    - address: Et ut qui.
                       can_sign: true
                       can_sign_712: false
-                      signature_service_address: Rerum fuga aliquam quis consectetur.
+                      signature_service_address: Nemo est ipsa pariatur distinctio explicabo.
                       tokens:
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                        - address: Quia ut.
-                          decimals: 1699488593
-                          symbol: Eum et.
-                      type: Nam ullam cumque veritatis pariatur.
-                      wallet_name: Illum accusamus qui veniam enim earum saepe.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                        - address: Accusamus reprehenderit totam saepe voluptates.
+                          decimals: 1018129229
+                          symbol: Modi officia dolor debitis quae.
+                      type: Ut explicabo.
+                      wallet_name: Corporis omnis ullam quia.
         example:
             code: 3343491626619779905
             message: Quos quidem necessitatibus ipsa non sapiente voluptatem.
             result:
-                - address: Cumque debitis et est ipsum illum qui.
+                - address: Et ut qui.
                   can_sign: true
                   can_sign_712: false
-                  signature_service_address: Rerum fuga aliquam quis consectetur.
+                  signature_service_address: Nemo est ipsa pariatur distinctio explicabo.
                   tokens:
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                  type: Nam ullam cumque veritatis pariatur.
-                  wallet_name: Illum accusamus qui veniam enim earum saepe.
-                - address: Cumque debitis et est ipsum illum qui.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                  type: Ut explicabo.
+                  wallet_name: Corporis omnis ullam quia.
+                - address: Et ut qui.
                   can_sign: true
                   can_sign_712: false
-                  signature_service_address: Rerum fuga aliquam quis consectetur.
+                  signature_service_address: Nemo est ipsa pariatur distinctio explicabo.
                   tokens:
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                  type: Nam ullam cumque veritatis pariatur.
-                  wallet_name: Illum accusamus qui veniam enim earum saepe.
-                - address: Cumque debitis et est ipsum illum qui.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                  type: Ut explicabo.
+                  wallet_name: Corporis omnis ullam quia.
+                - address: Et ut qui.
                   can_sign: true
                   can_sign_712: false
-                  signature_service_address: Rerum fuga aliquam quis consectetur.
+                  signature_service_address: Nemo est ipsa pariatur distinctio explicabo.
                   tokens:
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                  type: Nam ullam cumque veritatis pariatur.
-                  wallet_name: Illum accusamus qui veniam enim earum saepe.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                  type: Ut explicabo.
+                  wallet_name: Corporis omnis ullam quia.
     BaseDataRunTimeEnvResponseBody:
         title: BaseDataRunTimeEnvResponseBody
         type: object
@@ -1759,94 +1739,94 @@ definitions:
                     $ref: '#/definitions/listBridgeItemResponseBody'
                 description: chain list
                 example:
-                    - _id: Quo non ratione itaque et.
-                      ammName: Nihil quas itaque.
-                      bridgeName: Maxime voluptatem cum voluptatem.
-                      dstChainId: Vitae nulla harum perferendis.
-                      dstChainRawId: 2703906571356473487
-                      dstClientUri: Qui in officiis nam totam adipisci.
-                      dstToken: Sequi repellat repellat accusamus.
-                      dstTokenBalance: Quia vitae odio officia neque.
-                      dstTokenDecimals: 7967012597800616985
-                      dstTokenId: Dolores incidunt officia ipsum voluptas consequuntur ipsam.
-                      enableHedge: true
-                      lpReceiverAddress: Dolorem eum beatae molestias.
-                      msmqName: Quam officia fugit voluptatem.
-                      srcChainId: Sunt molestias.
-                      srcChainRawId: 3243517280772070526
-                      srcToken: Aut omnis et.
-                      srcTokenBalance: Odio ut ratione voluptates.
-                      srcTokenDecimals: 3009689485857983353
-                      srcTokenId: Dolore a.
-                      walletId: Soluta sapiente.
-                      walletName: Sequi et quaerat voluptatem.
-                    - _id: Quo non ratione itaque et.
-                      ammName: Nihil quas itaque.
-                      bridgeName: Maxime voluptatem cum voluptatem.
-                      dstChainId: Vitae nulla harum perferendis.
-                      dstChainRawId: 2703906571356473487
-                      dstClientUri: Qui in officiis nam totam adipisci.
-                      dstToken: Sequi repellat repellat accusamus.
-                      dstTokenBalance: Quia vitae odio officia neque.
-                      dstTokenDecimals: 7967012597800616985
-                      dstTokenId: Dolores incidunt officia ipsum voluptas consequuntur ipsam.
-                      enableHedge: true
-                      lpReceiverAddress: Dolorem eum beatae molestias.
-                      msmqName: Quam officia fugit voluptatem.
-                      srcChainId: Sunt molestias.
-                      srcChainRawId: 3243517280772070526
-                      srcToken: Aut omnis et.
-                      srcTokenBalance: Odio ut ratione voluptates.
-                      srcTokenDecimals: 3009689485857983353
-                      srcTokenId: Dolore a.
-                      walletId: Soluta sapiente.
-                      walletName: Sequi et quaerat voluptatem.
+                    - _id: Incidunt sit iure.
+                      ammName: Architecto nam ut ut.
+                      bridgeName: Autem magni blanditiis adipisci cupiditate officiis doloribus.
+                      dstChainId: Et dolor laboriosam unde beatae.
+                      dstChainRawId: 283438535752039648
+                      dstClientUri: Ratione itaque et deleniti vitae nulla harum.
+                      dstToken: Repudiandae dolores incidunt officia ipsum.
+                      dstTokenBalance: Dolore aut.
+                      dstTokenDecimals: 7784295389098600364
+                      dstTokenId: Exercitationem aut.
+                      enableHedge: false
+                      lpReceiverAddress: Consequuntur ipsam dicta sunt molestias provident dolore.
+                      msmqName: Sed nihil quas.
+                      srcChainId: Ex et porro saepe quia et sed.
+                      srcChainRawId: 2176005590088838054
+                      srcToken: Maxime voluptatem cum voluptatem.
+                      srcTokenBalance: Beatae molestias quasi quam officia fugit voluptatem.
+                      srcTokenDecimals: 2406343935399316729
+                      srcTokenId: Et est laborum numquam et ut laudantium.
+                      walletId: Adipisci quis sequi repellat repellat accusamus consectetur.
+                      walletName: Neque qui in officiis nam.
+                    - _id: Incidunt sit iure.
+                      ammName: Architecto nam ut ut.
+                      bridgeName: Autem magni blanditiis adipisci cupiditate officiis doloribus.
+                      dstChainId: Et dolor laboriosam unde beatae.
+                      dstChainRawId: 283438535752039648
+                      dstClientUri: Ratione itaque et deleniti vitae nulla harum.
+                      dstToken: Repudiandae dolores incidunt officia ipsum.
+                      dstTokenBalance: Dolore aut.
+                      dstTokenDecimals: 7784295389098600364
+                      dstTokenId: Exercitationem aut.
+                      enableHedge: false
+                      lpReceiverAddress: Consequuntur ipsam dicta sunt molestias provident dolore.
+                      msmqName: Sed nihil quas.
+                      srcChainId: Ex et porro saepe quia et sed.
+                      srcChainRawId: 2176005590088838054
+                      srcToken: Maxime voluptatem cum voluptatem.
+                      srcTokenBalance: Beatae molestias quasi quam officia fugit voluptatem.
+                      srcTokenDecimals: 2406343935399316729
+                      srcTokenId: Et est laborum numquam et ut laudantium.
+                      walletId: Adipisci quis sequi repellat repellat accusamus consectetur.
+                      walletName: Neque qui in officiis nam.
         example:
             code: 7769198935622830094
             message: Rerum ut doloribus molestiae architecto numquam.
             result:
-                - _id: Quo non ratione itaque et.
-                  ammName: Nihil quas itaque.
-                  bridgeName: Maxime voluptatem cum voluptatem.
-                  dstChainId: Vitae nulla harum perferendis.
-                  dstChainRawId: 2703906571356473487
-                  dstClientUri: Qui in officiis nam totam adipisci.
-                  dstToken: Sequi repellat repellat accusamus.
-                  dstTokenBalance: Quia vitae odio officia neque.
-                  dstTokenDecimals: 7967012597800616985
-                  dstTokenId: Dolores incidunt officia ipsum voluptas consequuntur ipsam.
-                  enableHedge: true
-                  lpReceiverAddress: Dolorem eum beatae molestias.
-                  msmqName: Quam officia fugit voluptatem.
-                  srcChainId: Sunt molestias.
-                  srcChainRawId: 3243517280772070526
-                  srcToken: Aut omnis et.
-                  srcTokenBalance: Odio ut ratione voluptates.
-                  srcTokenDecimals: 3009689485857983353
-                  srcTokenId: Dolore a.
-                  walletId: Soluta sapiente.
-                  walletName: Sequi et quaerat voluptatem.
-                - _id: Quo non ratione itaque et.
-                  ammName: Nihil quas itaque.
-                  bridgeName: Maxime voluptatem cum voluptatem.
-                  dstChainId: Vitae nulla harum perferendis.
-                  dstChainRawId: 2703906571356473487
-                  dstClientUri: Qui in officiis nam totam adipisci.
-                  dstToken: Sequi repellat repellat accusamus.
-                  dstTokenBalance: Quia vitae odio officia neque.
-                  dstTokenDecimals: 7967012597800616985
-                  dstTokenId: Dolores incidunt officia ipsum voluptas consequuntur ipsam.
-                  enableHedge: true
-                  lpReceiverAddress: Dolorem eum beatae molestias.
-                  msmqName: Quam officia fugit voluptatem.
-                  srcChainId: Sunt molestias.
-                  srcChainRawId: 3243517280772070526
-                  srcToken: Aut omnis et.
-                  srcTokenBalance: Odio ut ratione voluptates.
-                  srcTokenDecimals: 3009689485857983353
-                  srcTokenId: Dolore a.
-                  walletId: Soluta sapiente.
-                  walletName: Sequi et quaerat voluptatem.
+                - _id: Incidunt sit iure.
+                  ammName: Architecto nam ut ut.
+                  bridgeName: Autem magni blanditiis adipisci cupiditate officiis doloribus.
+                  dstChainId: Et dolor laboriosam unde beatae.
+                  dstChainRawId: 283438535752039648
+                  dstClientUri: Ratione itaque et deleniti vitae nulla harum.
+                  dstToken: Repudiandae dolores incidunt officia ipsum.
+                  dstTokenBalance: Dolore aut.
+                  dstTokenDecimals: 7784295389098600364
+                  dstTokenId: Exercitationem aut.
+                  enableHedge: false
+                  lpReceiverAddress: Consequuntur ipsam dicta sunt molestias provident dolore.
+                  msmqName: Sed nihil quas.
+                  srcChainId: Ex et porro saepe quia et sed.
+                  srcChainRawId: 2176005590088838054
+                  srcToken: Maxime voluptatem cum voluptatem.
+                  srcTokenBalance: Beatae molestias quasi quam officia fugit voluptatem.
+                  srcTokenDecimals: 2406343935399316729
+                  srcTokenId: Et est laborum numquam et ut laudantium.
+                  walletId: Adipisci quis sequi repellat repellat accusamus consectetur.
+                  walletName: Neque qui in officiis nam.
+                - _id: Incidunt sit iure.
+                  ammName: Architecto nam ut ut.
+                  bridgeName: Autem magni blanditiis adipisci cupiditate officiis doloribus.
+                  dstChainId: Et dolor laboriosam unde beatae.
+                  dstChainRawId: 283438535752039648
+                  dstClientUri: Ratione itaque et deleniti vitae nulla harum.
+                  dstToken: Repudiandae dolores incidunt officia ipsum.
+                  dstTokenBalance: Dolore aut.
+                  dstTokenDecimals: 7784295389098600364
+                  dstTokenId: Exercitationem aut.
+                  enableHedge: false
+                  lpReceiverAddress: Consequuntur ipsam dicta sunt molestias provident dolore.
+                  msmqName: Sed nihil quas.
+                  srcChainId: Ex et porro saepe quia et sed.
+                  srcChainRawId: 2176005590088838054
+                  srcToken: Maxime voluptatem cum voluptatem.
+                  srcTokenBalance: Beatae molestias quasi quam officia fugit voluptatem.
+                  srcTokenDecimals: 2406343935399316729
+                  srcTokenId: Et est laborum numquam et ut laudantium.
+                  walletId: Adipisci quis sequi repellat repellat accusamus consectetur.
+                  walletName: Neque qui in officiis nam.
     BridgeConfigBridgeTestRequestBody:
         title: BridgeConfigBridgeTestRequestBody
         type: object
@@ -1905,36 +1885,36 @@ definitions:
                     $ref: '#/definitions/chainDataItemResponseBody'
                 description: chain list
                 example:
-                    - chainId: 5397625245382733691
-                      chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                      name: Dolore quidem.
-                      tokenName: Voluptas doloremque quasi.
-                    - chainId: 5397625245382733691
-                      chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                      name: Dolore quidem.
-                      tokenName: Voluptas doloremque quasi.
-                    - chainId: 5397625245382733691
-                      chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                      name: Dolore quidem.
-                      tokenName: Voluptas doloremque quasi.
+                    - chainId: 5503261059898482280
+                      chainName: Est sint maiores minima ex quo.
+                      name: Facilis deleniti ea sit.
+                      tokenName: Repudiandae odio velit odit nobis.
+                    - chainId: 5503261059898482280
+                      chainName: Est sint maiores minima ex quo.
+                      name: Facilis deleniti ea sit.
+                      tokenName: Repudiandae odio velit odit nobis.
+                    - chainId: 5503261059898482280
+                      chainName: Est sint maiores minima ex quo.
+                      name: Facilis deleniti ea sit.
+                      tokenName: Repudiandae odio velit odit nobis.
             message:
                 type: string
                 example: Corrupti natus voluptas error rerum.
         example:
             code: 7623075852549853531
             data:
-                - chainId: 5397625245382733691
-                  chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                  name: Dolore quidem.
-                  tokenName: Voluptas doloremque quasi.
-                - chainId: 5397625245382733691
-                  chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                  name: Dolore quidem.
-                  tokenName: Voluptas doloremque quasi.
-                - chainId: 5397625245382733691
-                  chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                  name: Dolore quidem.
-                  tokenName: Voluptas doloremque quasi.
+                - chainId: 5503261059898482280
+                  chainName: Est sint maiores minima ex quo.
+                  name: Facilis deleniti ea sit.
+                  tokenName: Repudiandae odio velit odit nobis.
+                - chainId: 5503261059898482280
+                  chainName: Est sint maiores minima ex quo.
+                  name: Facilis deleniti ea sit.
+                  tokenName: Repudiandae odio velit odit nobis.
+                - chainId: 5503261059898482280
+                  chainName: Est sint maiores minima ex quo.
+                  name: Facilis deleniti ea sit.
+                  tokenName: Repudiandae odio velit odit nobis.
             message: Voluptas id.
     ChainConfigDelChainListRequestBody:
         title: ChainConfigDelChainListRequestBody
@@ -2069,24 +2049,24 @@ definitions:
                     $ref: '#/definitions/chainDataItemRequestBody'
                 description: listData
                 example:
-                    - chainId: 4775065101166745003
-                      chainName: Deleniti ea sit praesentium repudiandae odio.
-                      name: Odit nobis.
-                      tokenName: Pariatur eaque.
-                    - chainId: 4775065101166745003
-                      chainName: Deleniti ea sit praesentium repudiandae odio.
-                      name: Odit nobis.
-                      tokenName: Pariatur eaque.
+                    - chainId: 4330276518306282256
+                      chainName: Dolorem quod numquam.
+                      name: Deleniti cumque eum velit vero.
+                      tokenName: Consequatur dolorum.
+                    - chainId: 4330276518306282256
+                      chainName: Dolorem quod numquam.
+                      name: Deleniti cumque eum velit vero.
+                      tokenName: Consequatur dolorum.
         example:
             chainList:
-                - chainId: 4775065101166745003
-                  chainName: Deleniti ea sit praesentium repudiandae odio.
-                  name: Odit nobis.
-                  tokenName: Pariatur eaque.
-                - chainId: 4775065101166745003
-                  chainName: Deleniti ea sit praesentium repudiandae odio.
-                  name: Odit nobis.
-                  tokenName: Pariatur eaque.
+                - chainId: 4330276518306282256
+                  chainName: Dolorem quod numquam.
+                  name: Deleniti cumque eum velit vero.
+                  tokenName: Consequatur dolorum.
+                - chainId: 4330276518306282256
+                  chainName: Dolorem quod numquam.
+                  name: Deleniti cumque eum velit vero.
+                  tokenName: Consequatur dolorum.
     ChainConfigSetChainListResponseBody:
         title: ChainConfigSetChainListResponseBody
         type: object
@@ -2101,40 +2081,40 @@ definitions:
                     $ref: '#/definitions/chainDataItemResponseBody'
                 description: result
                 example:
-                    - chainId: 5397625245382733691
-                      chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                      name: Dolore quidem.
-                      tokenName: Voluptas doloremque quasi.
-                    - chainId: 5397625245382733691
-                      chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                      name: Dolore quidem.
-                      tokenName: Voluptas doloremque quasi.
-                    - chainId: 5397625245382733691
-                      chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                      name: Dolore quidem.
-                      tokenName: Voluptas doloremque quasi.
-                    - chainId: 5397625245382733691
-                      chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                      name: Dolore quidem.
-                      tokenName: Voluptas doloremque quasi.
+                    - chainId: 5503261059898482280
+                      chainName: Est sint maiores minima ex quo.
+                      name: Facilis deleniti ea sit.
+                      tokenName: Repudiandae odio velit odit nobis.
+                    - chainId: 5503261059898482280
+                      chainName: Est sint maiores minima ex quo.
+                      name: Facilis deleniti ea sit.
+                      tokenName: Repudiandae odio velit odit nobis.
+                    - chainId: 5503261059898482280
+                      chainName: Est sint maiores minima ex quo.
+                      name: Facilis deleniti ea sit.
+                      tokenName: Repudiandae odio velit odit nobis.
+                    - chainId: 5503261059898482280
+                      chainName: Est sint maiores minima ex quo.
+                      name: Facilis deleniti ea sit.
+                      tokenName: Repudiandae odio velit odit nobis.
             message:
                 type: string
                 example: Ad delectus quis earum.
         example:
             code: 7069990926455743102
             data:
-                - chainId: 5397625245382733691
-                  chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                  name: Dolore quidem.
-                  tokenName: Voluptas doloremque quasi.
-                - chainId: 5397625245382733691
-                  chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                  name: Dolore quidem.
-                  tokenName: Voluptas doloremque quasi.
-                - chainId: 5397625245382733691
-                  chainName: Officiis ipsam distinctio ducimus ipsum voluptate nisi.
-                  name: Dolore quidem.
-                  tokenName: Voluptas doloremque quasi.
+                - chainId: 5503261059898482280
+                  chainName: Est sint maiores minima ex quo.
+                  name: Facilis deleniti ea sit.
+                  tokenName: Repudiandae odio velit odit nobis.
+                - chainId: 5503261059898482280
+                  chainName: Est sint maiores minima ex quo.
+                  name: Facilis deleniti ea sit.
+                  tokenName: Repudiandae odio velit odit nobis.
+                - chainId: 5503261059898482280
+                  chainName: Est sint maiores minima ex quo.
+                  name: Facilis deleniti ea sit.
+                  tokenName: Repudiandae odio velit odit nobis.
             message: Qui dolor doloribus sed asperiores accusamus aspernatur.
     ChainDataItemResponseBody:
         title: ChainDataItemResponseBody
@@ -2209,8 +2189,8 @@ definitions:
             code: 7194016347012533790
             message: Saepe qui veniam expedita odit labore nam.
             result:
-                clientId: Quia assumenda rerum sed.
-                id: Autem possimus reprehenderit unde porro quam aliquid.
+                clientId: Cumque odit voluptatum voluptas.
+                id: Consequuntur et rem ut.
     ConfigResourceDeleteResultResponseBody:
         title: ConfigResourceDeleteResultResponseBody
         type: object
@@ -2301,13 +2281,13 @@ definitions:
             code: 1707561488897119048
             message: Aspernatur voluptatem in.
             result:
-                appName: Occaecati rerum eum voluptas commodi qui enim.
-                clientId: Ut voluptatem.
-                id: Autem sapiente sequi.
-                template: Nihil fugiat et quia dolore ex.
-                templateResult: Tempora assumenda itaque.
-                version: Est cum quibusdam debitis quisquam commodi.
-                versionHash: Dolor qui hic et quibusdam.
+                appName: Nihil fugiat et quia dolore ex.
+                clientId: Tempora assumenda itaque.
+                id: Dicta repellat molestiae ut odio pariatur neque.
+                template: Autem sapiente sequi.
+                templateResult: Consequuntur porro enim culpa omnis.
+                version: Ut voluptatem.
+                versionHash: Occaecati rerum eum voluptas commodi qui enim.
     ConfigResourceListResourceResponseBody:
         title: ConfigResourceListResourceResponseBody
         type: object
@@ -2324,45 +2304,45 @@ definitions:
                 items:
                     $ref: '#/definitions/ResourceConfigResultResponseBody'
                 example:
-                    - appName: Occaecati rerum eum voluptas commodi qui enim.
-                      clientId: Ut voluptatem.
-                      id: Autem sapiente sequi.
-                      template: Nihil fugiat et quia dolore ex.
-                      templateResult: Tempora assumenda itaque.
-                      version: Est cum quibusdam debitis quisquam commodi.
-                      versionHash: Dolor qui hic et quibusdam.
-                    - appName: Occaecati rerum eum voluptas commodi qui enim.
-                      clientId: Ut voluptatem.
-                      id: Autem sapiente sequi.
-                      template: Nihil fugiat et quia dolore ex.
-                      templateResult: Tempora assumenda itaque.
-                      version: Est cum quibusdam debitis quisquam commodi.
-                      versionHash: Dolor qui hic et quibusdam.
-                    - appName: Occaecati rerum eum voluptas commodi qui enim.
-                      clientId: Ut voluptatem.
-                      id: Autem sapiente sequi.
-                      template: Nihil fugiat et quia dolore ex.
-                      templateResult: Tempora assumenda itaque.
-                      version: Est cum quibusdam debitis quisquam commodi.
-                      versionHash: Dolor qui hic et quibusdam.
+                    - appName: Nihil fugiat et quia dolore ex.
+                      clientId: Tempora assumenda itaque.
+                      id: Dicta repellat molestiae ut odio pariatur neque.
+                      template: Autem sapiente sequi.
+                      templateResult: Consequuntur porro enim culpa omnis.
+                      version: Ut voluptatem.
+                      versionHash: Occaecati rerum eum voluptas commodi qui enim.
+                    - appName: Nihil fugiat et quia dolore ex.
+                      clientId: Tempora assumenda itaque.
+                      id: Dicta repellat molestiae ut odio pariatur neque.
+                      template: Autem sapiente sequi.
+                      templateResult: Consequuntur porro enim culpa omnis.
+                      version: Ut voluptatem.
+                      versionHash: Occaecati rerum eum voluptas commodi qui enim.
+                    - appName: Nihil fugiat et quia dolore ex.
+                      clientId: Tempora assumenda itaque.
+                      id: Dicta repellat molestiae ut odio pariatur neque.
+                      template: Autem sapiente sequi.
+                      templateResult: Consequuntur porro enim culpa omnis.
+                      version: Ut voluptatem.
+                      versionHash: Occaecati rerum eum voluptas commodi qui enim.
         example:
             code: 3114404973739409209
             message: Voluptas quibusdam est.
             result:
-                - appName: Occaecati rerum eum voluptas commodi qui enim.
-                  clientId: Ut voluptatem.
-                  id: Autem sapiente sequi.
-                  template: Nihil fugiat et quia dolore ex.
-                  templateResult: Tempora assumenda itaque.
-                  version: Est cum quibusdam debitis quisquam commodi.
-                  versionHash: Dolor qui hic et quibusdam.
-                - appName: Occaecati rerum eum voluptas commodi qui enim.
-                  clientId: Ut voluptatem.
-                  id: Autem sapiente sequi.
-                  template: Nihil fugiat et quia dolore ex.
-                  templateResult: Tempora assumenda itaque.
-                  version: Est cum quibusdam debitis quisquam commodi.
-                  versionHash: Dolor qui hic et quibusdam.
+                - appName: Nihil fugiat et quia dolore ex.
+                  clientId: Tempora assumenda itaque.
+                  id: Dicta repellat molestiae ut odio pariatur neque.
+                  template: Autem sapiente sequi.
+                  templateResult: Consequuntur porro enim culpa omnis.
+                  version: Ut voluptatem.
+                  versionHash: Occaecati rerum eum voluptas commodi qui enim.
+                - appName: Nihil fugiat et quia dolore ex.
+                  clientId: Tempora assumenda itaque.
+                  id: Dicta repellat molestiae ut odio pariatur neque.
+                  template: Autem sapiente sequi.
+                  templateResult: Consequuntur porro enim culpa omnis.
+                  version: Ut voluptatem.
+                  versionHash: Occaecati rerum eum voluptas commodi qui enim.
     ConfigResultIdItemResponseBody:
         title: ConfigResultIdItemResponseBody
         type: object
@@ -2386,7 +2366,7 @@ definitions:
         properties:
             key:
                 type: string
-                example: Harum dolor possimus omnis quo vel dolorem.
+                example: Dolor possimus omnis quo vel dolorem.
             value:
                 type: string
                 example: Sapiente a.
@@ -2406,14 +2386,14 @@ definitions:
                     $ref: '#/definitions/DeploymentSetupConfigEnvItemRequestBody'
                 description: env list
                 example:
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
             imageRepository:
                 type: string
                 example: Sit nihil amet.
@@ -2434,14 +2414,14 @@ definitions:
         example:
             containerPort: Nobis voluptatem et impedit corrupti est a.
             customEnv:
-                - key: Et est sunt consectetur delectus saepe.
-                  value: Ut quis.
-                - key: Et est sunt consectetur delectus saepe.
-                  value: Ut quis.
-                - key: Et est sunt consectetur delectus saepe.
-                  value: Ut quis.
-                - key: Et est sunt consectetur delectus saepe.
-                  value: Ut quis.
+                - key: Sunt consectetur.
+                  value: Saepe repellendus ut quis consequatur.
+                - key: Sunt consectetur.
+                  value: Saepe repellendus ut quis consequatur.
+                - key: Sunt consectetur.
+                  value: Saepe repellendus ut quis consequatur.
+                - key: Sunt consectetur.
+                  value: Saepe repellendus ut quis consequatur.
             imageRepository: Et quis ut.
             install: true
             installType: amm
@@ -2626,121 +2606,121 @@ definitions:
                     $ref: '#/definitions/walletRowResponseBody'
                 description: wallet list
                 example:
-                    - accountId: Reprehenderit aut.
-                      address: Non aut quaerat aut voluptas et est.
-                      balance: Et dolores aut ut rerum.
-                      chainId: 4080053145056054729
-                      chainType: A nulla ipsa.
-                      id: Exercitationem quas debitis eaque corrupti.
-                      privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                      signServiceEndpoint: Eaque et ex.
-                      storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                      vaultHostType: Et iusto voluptatem debitis.
-                      vaultName: Voluptatem dolorem.
-                      vaultSecertType: Voluptas officiis sed voluptates.
-                      walletName: Nemo excepturi.
+                    - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                      address: Exercitationem quas debitis eaque corrupti.
+                      balance: Voluptas officiis sed voluptates.
+                      chainId: 2032867488760726454
+                      chainType: Nemo excepturi.
+                      id: Pariatur repellendus commodi aut possimus.
+                      privateKey: Aut adipisci cupiditate quisquam.
+                      signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                      storeId: Aut quaerat aut voluptas et est.
+                      vaultHostType: A nulla ipsa.
+                      vaultName: Reprehenderit aut.
+                      vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                      walletName: Omnis sit quia et vel.
                       walletType: privateKey
-                    - accountId: Reprehenderit aut.
-                      address: Non aut quaerat aut voluptas et est.
-                      balance: Et dolores aut ut rerum.
-                      chainId: 4080053145056054729
-                      chainType: A nulla ipsa.
-                      id: Exercitationem quas debitis eaque corrupti.
-                      privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                      signServiceEndpoint: Eaque et ex.
-                      storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                      vaultHostType: Et iusto voluptatem debitis.
-                      vaultName: Voluptatem dolorem.
-                      vaultSecertType: Voluptas officiis sed voluptates.
-                      walletName: Nemo excepturi.
+                    - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                      address: Exercitationem quas debitis eaque corrupti.
+                      balance: Voluptas officiis sed voluptates.
+                      chainId: 2032867488760726454
+                      chainType: Nemo excepturi.
+                      id: Pariatur repellendus commodi aut possimus.
+                      privateKey: Aut adipisci cupiditate quisquam.
+                      signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                      storeId: Aut quaerat aut voluptas et est.
+                      vaultHostType: A nulla ipsa.
+                      vaultName: Reprehenderit aut.
+                      vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                      walletName: Omnis sit quia et vel.
                       walletType: privateKey
-                    - accountId: Reprehenderit aut.
-                      address: Non aut quaerat aut voluptas et est.
-                      balance: Et dolores aut ut rerum.
-                      chainId: 4080053145056054729
-                      chainType: A nulla ipsa.
-                      id: Exercitationem quas debitis eaque corrupti.
-                      privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                      signServiceEndpoint: Eaque et ex.
-                      storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                      vaultHostType: Et iusto voluptatem debitis.
-                      vaultName: Voluptatem dolorem.
-                      vaultSecertType: Voluptas officiis sed voluptates.
-                      walletName: Nemo excepturi.
+                    - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                      address: Exercitationem quas debitis eaque corrupti.
+                      balance: Voluptas officiis sed voluptates.
+                      chainId: 2032867488760726454
+                      chainType: Nemo excepturi.
+                      id: Pariatur repellendus commodi aut possimus.
+                      privateKey: Aut adipisci cupiditate quisquam.
+                      signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                      storeId: Aut quaerat aut voluptas et est.
+                      vaultHostType: A nulla ipsa.
+                      vaultName: Reprehenderit aut.
+                      vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                      walletName: Omnis sit quia et vel.
                       walletType: privateKey
-                    - accountId: Reprehenderit aut.
-                      address: Non aut quaerat aut voluptas et est.
-                      balance: Et dolores aut ut rerum.
-                      chainId: 4080053145056054729
-                      chainType: A nulla ipsa.
-                      id: Exercitationem quas debitis eaque corrupti.
-                      privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                      signServiceEndpoint: Eaque et ex.
-                      storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                      vaultHostType: Et iusto voluptatem debitis.
-                      vaultName: Voluptatem dolorem.
-                      vaultSecertType: Voluptas officiis sed voluptates.
-                      walletName: Nemo excepturi.
+                    - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                      address: Exercitationem quas debitis eaque corrupti.
+                      balance: Voluptas officiis sed voluptates.
+                      chainId: 2032867488760726454
+                      chainType: Nemo excepturi.
+                      id: Pariatur repellendus commodi aut possimus.
+                      privateKey: Aut adipisci cupiditate quisquam.
+                      signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                      storeId: Aut quaerat aut voluptas et est.
+                      vaultHostType: A nulla ipsa.
+                      vaultName: Reprehenderit aut.
+                      vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                      walletName: Omnis sit quia et vel.
                       walletType: privateKey
         example:
             code: 6496881710250149127
             message: Rerum aut voluptatibus accusamus.
             result:
-                - accountId: Reprehenderit aut.
-                  address: Non aut quaerat aut voluptas et est.
-                  balance: Et dolores aut ut rerum.
-                  chainId: 4080053145056054729
-                  chainType: A nulla ipsa.
-                  id: Exercitationem quas debitis eaque corrupti.
-                  privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                  signServiceEndpoint: Eaque et ex.
-                  storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                  vaultHostType: Et iusto voluptatem debitis.
-                  vaultName: Voluptatem dolorem.
-                  vaultSecertType: Voluptas officiis sed voluptates.
-                  walletName: Nemo excepturi.
+                - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                  address: Exercitationem quas debitis eaque corrupti.
+                  balance: Voluptas officiis sed voluptates.
+                  chainId: 2032867488760726454
+                  chainType: Nemo excepturi.
+                  id: Pariatur repellendus commodi aut possimus.
+                  privateKey: Aut adipisci cupiditate quisquam.
+                  signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                  storeId: Aut quaerat aut voluptas et est.
+                  vaultHostType: A nulla ipsa.
+                  vaultName: Reprehenderit aut.
+                  vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                  walletName: Omnis sit quia et vel.
                   walletType: privateKey
-                - accountId: Reprehenderit aut.
-                  address: Non aut quaerat aut voluptas et est.
-                  balance: Et dolores aut ut rerum.
-                  chainId: 4080053145056054729
-                  chainType: A nulla ipsa.
-                  id: Exercitationem quas debitis eaque corrupti.
-                  privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                  signServiceEndpoint: Eaque et ex.
-                  storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                  vaultHostType: Et iusto voluptatem debitis.
-                  vaultName: Voluptatem dolorem.
-                  vaultSecertType: Voluptas officiis sed voluptates.
-                  walletName: Nemo excepturi.
+                - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                  address: Exercitationem quas debitis eaque corrupti.
+                  balance: Voluptas officiis sed voluptates.
+                  chainId: 2032867488760726454
+                  chainType: Nemo excepturi.
+                  id: Pariatur repellendus commodi aut possimus.
+                  privateKey: Aut adipisci cupiditate quisquam.
+                  signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                  storeId: Aut quaerat aut voluptas et est.
+                  vaultHostType: A nulla ipsa.
+                  vaultName: Reprehenderit aut.
+                  vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                  walletName: Omnis sit quia et vel.
                   walletType: privateKey
-                - accountId: Reprehenderit aut.
-                  address: Non aut quaerat aut voluptas et est.
-                  balance: Et dolores aut ut rerum.
-                  chainId: 4080053145056054729
-                  chainType: A nulla ipsa.
-                  id: Exercitationem quas debitis eaque corrupti.
-                  privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                  signServiceEndpoint: Eaque et ex.
-                  storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                  vaultHostType: Et iusto voluptatem debitis.
-                  vaultName: Voluptatem dolorem.
-                  vaultSecertType: Voluptas officiis sed voluptates.
-                  walletName: Nemo excepturi.
+                - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                  address: Exercitationem quas debitis eaque corrupti.
+                  balance: Voluptas officiis sed voluptates.
+                  chainId: 2032867488760726454
+                  chainType: Nemo excepturi.
+                  id: Pariatur repellendus commodi aut possimus.
+                  privateKey: Aut adipisci cupiditate quisquam.
+                  signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                  storeId: Aut quaerat aut voluptas et est.
+                  vaultHostType: A nulla ipsa.
+                  vaultName: Reprehenderit aut.
+                  vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                  walletName: Omnis sit quia et vel.
                   walletType: privateKey
-                - accountId: Reprehenderit aut.
-                  address: Non aut quaerat aut voluptas et est.
-                  balance: Et dolores aut ut rerum.
-                  chainId: 4080053145056054729
-                  chainType: A nulla ipsa.
-                  id: Exercitationem quas debitis eaque corrupti.
-                  privateKey: Explicabo sit expedita fugit quia qui quisquam.
-                  signServiceEndpoint: Eaque et ex.
-                  storeId: Laudantium iure impedit nesciunt ut rerum sed.
-                  vaultHostType: Et iusto voluptatem debitis.
-                  vaultName: Voluptatem dolorem.
-                  vaultSecertType: Voluptas officiis sed voluptates.
-                  walletName: Nemo excepturi.
+                - accountId: Explicabo sit expedita fugit quia qui quisquam.
+                  address: Exercitationem quas debitis eaque corrupti.
+                  balance: Voluptas officiis sed voluptates.
+                  chainId: 2032867488760726454
+                  chainType: Nemo excepturi.
+                  id: Pariatur repellendus commodi aut possimus.
+                  privateKey: Aut adipisci cupiditate quisquam.
+                  signServiceEndpoint: Aut et iusto voluptatem debitis earum voluptatem.
+                  storeId: Aut quaerat aut voluptas et est.
+                  vaultHostType: A nulla ipsa.
+                  vaultName: Reprehenderit aut.
+                  vaultSecertType: Repellat laudantium iure impedit nesciunt ut rerum.
+                  walletName: Omnis sit quia et vel.
                   walletType: privateKey
     DexWalletUpdateLpWalletRequestBody:
         title: DexWalletUpdateLpWalletRequestBody
@@ -2792,40 +2772,40 @@ definitions:
                     $ref: '#/definitions/vaultRowResponseBody'
                 description: list
                 example:
-                    - address: Numquam velit quia sunt quam.
-                      hostType: Aliquam vel dolorem deleniti magnam et.
-                      id: Sint dolorem.
-                      name: Neque voluptatem nihil debitis et magnam nisi.
-                      secertType: Laboriosam saepe voluptatum aliquid.
-                    - address: Numquam velit quia sunt quam.
-                      hostType: Aliquam vel dolorem deleniti magnam et.
-                      id: Sint dolorem.
-                      name: Neque voluptatem nihil debitis et magnam nisi.
-                      secertType: Laboriosam saepe voluptatum aliquid.
-                    - address: Numquam velit quia sunt quam.
-                      hostType: Aliquam vel dolorem deleniti magnam et.
-                      id: Sint dolorem.
-                      name: Neque voluptatem nihil debitis et magnam nisi.
-                      secertType: Laboriosam saepe voluptatum aliquid.
-                    - address: Numquam velit quia sunt quam.
-                      hostType: Aliquam vel dolorem deleniti magnam et.
-                      id: Sint dolorem.
-                      name: Neque voluptatem nihil debitis et magnam nisi.
-                      secertType: Laboriosam saepe voluptatum aliquid.
+                    - address: Tenetur numquam velit quia sunt.
+                      hostType: Sunt aliquam vel dolorem.
+                      id: Magnam et molestias sint.
+                      name: Blanditiis neque voluptatem nihil debitis et.
+                      secertType: Nisi officia laboriosam saepe voluptatum aliquid voluptas.
+                    - address: Tenetur numquam velit quia sunt.
+                      hostType: Sunt aliquam vel dolorem.
+                      id: Magnam et molestias sint.
+                      name: Blanditiis neque voluptatem nihil debitis et.
+                      secertType: Nisi officia laboriosam saepe voluptatum aliquid voluptas.
+                    - address: Tenetur numquam velit quia sunt.
+                      hostType: Sunt aliquam vel dolorem.
+                      id: Magnam et molestias sint.
+                      name: Blanditiis neque voluptatem nihil debitis et.
+                      secertType: Nisi officia laboriosam saepe voluptatum aliquid voluptas.
+                    - address: Tenetur numquam velit quia sunt.
+                      hostType: Sunt aliquam vel dolorem.
+                      id: Magnam et molestias sint.
+                      name: Blanditiis neque voluptatem nihil debitis et.
+                      secertType: Nisi officia laboriosam saepe voluptatum aliquid voluptas.
         example:
             code: 5723834411976402264
             message: Dolore cumque et amet atque provident temporibus.
             result:
-                - address: Numquam velit quia sunt quam.
-                  hostType: Aliquam vel dolorem deleniti magnam et.
-                  id: Sint dolorem.
-                  name: Neque voluptatem nihil debitis et magnam nisi.
-                  secertType: Laboriosam saepe voluptatum aliquid.
-                - address: Numquam velit quia sunt quam.
-                  hostType: Aliquam vel dolorem deleniti magnam et.
-                  id: Sint dolorem.
-                  name: Neque voluptatem nihil debitis et magnam nisi.
-                  secertType: Laboriosam saepe voluptatum aliquid.
+                - address: Tenetur numquam velit quia sunt.
+                  hostType: Sunt aliquam vel dolorem.
+                  id: Magnam et molestias sint.
+                  name: Blanditiis neque voluptatem nihil debitis et.
+                  secertType: Nisi officia laboriosam saepe voluptatum aliquid voluptas.
+                - address: Tenetur numquam velit quia sunt.
+                  hostType: Sunt aliquam vel dolorem.
+                  id: Magnam et molestias sint.
+                  name: Blanditiis neque voluptatem nihil debitis et.
+                  secertType: Nisi officia laboriosam saepe voluptatum aliquid voluptas.
         required:
             - result
     HedgeDelRequestBody:
@@ -2955,16 +2935,20 @@ definitions:
                 $ref: '#/definitions/DeploymentSetupConfigRequestBody'
         example:
             setupConfig:
-                containerPort: Neque animi odio voluptatum atque qui.
+                containerPort: Praesentium commodi error in.
                 customEnv:
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                imageRepository: Praesentium commodi error in.
-                install: true
-                installType: ammClient
-                name: Provident quo nemo fuga consequuntur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                imageRepository: Omnis labore architecto ex eius ut.
+                install: false
+                installType: userApp
+                name: Odio voluptatum atque qui.
         required:
             - setupConfig
     InstallCtrlPanelInstallDeploymentResponseBody:
@@ -2984,9 +2968,9 @@ definitions:
             code: 5895454153369525931
             message: Eum eos blanditiis.
             result:
-                CmdStderr: Voluptatem ut quo maxime minus quis.
-                CmdStdout: Beatae ullam.
-                Template: Possimus iusto.
+                CmdStderr: Nemo fuga consequuntur fugiat id beatae.
+                CmdStdout: Nesciunt provident.
+                Template: Illo voluptatem ut quo maxime minus quis.
     InstallCtrlPanelInstallLpClientRequestBody:
         title: InstallCtrlPanelInstallLpClientRequestBody
         type: object
@@ -2995,25 +2979,29 @@ definitions:
                 $ref: '#/definitions/ammClientSetupConfigRequestBody'
         example:
             setupConfig:
-                awsAccessKeyId: Asperiores quaerat et fuga.
-                awsSecretAccessKey: Recusandae tempora quia maxime aliquam delectus.
-                connectionExplorerurl: Fugiat et quas incidunt fugit voluptatem eius.
-                connectionHelperurl: Corporis voluptas.
-                connectionNodeurl: Quasi vitae est nobis aperiam.
-                connectionWalleturl: Sit aspernatur reiciendis voluptas.
-                containerPort: Commodi accusantium.
+                awsAccessKeyId: Fugiat et quas incidunt fugit voluptatem eius.
+                awsSecretAccessKey: Commodi accusantium.
+                connectionExplorerurl: Corporis voluptas.
+                connectionHelperurl: Sit aspernatur reiciendis voluptas.
+                connectionNodeurl: Ad consequuntur nihil et quasi vitae.
+                connectionWalleturl: Nobis aperiam.
+                containerPort: Asperiores quaerat et fuga.
                 customEnv:
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                deploymentName: Nostrum soluta molestias voluptatem sequi.
-                imageRepository: Iure et blanditiis unde beatae soluta.
-                install: false
-                rpcUrl: Enim consequatur ad consequuntur nihil.
-                serviceName: Architecto eligendi necessitatibus nisi consequatur illum.
-                startBlock: Commodi et natus debitis.
-                type: Est ipsa quos iure quisquam.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                deploymentName: Consequatur illum nulla.
+                imageRepository: Et blanditiis.
+                install: true
+                rpcUrl: Et natus debitis repellendus enim.
+                serviceName: Beatae soluta nihil architecto eligendi necessitatibus.
+                startBlock: Ipsa quos iure quisquam in.
+                type: Soluta molestias voluptatem sequi nostrum.
         required:
             - setupConfig
     InstallCtrlPanelInstallLpClientResponseBody:
@@ -3022,35 +3010,35 @@ definitions:
         properties:
             code:
                 type: integer
-                example: 4162898134655122730
+                example: 6090913024042319293
                 format: int64
             message:
                 type: string
-                example: Cupiditate natus aut illo non.
+                example: Ex accusamus.
             result:
                 type: object
                 properties:
                     CmdStderr:
                         type: string
-                        example: Odit ut aut.
+                        example: Est commodi.
                     CmdStdout:
                         type: string
-                        example: Praesentium corporis.
+                        example: Voluptatem laborum consequuntur.
                     Template:
                         type: string
                         description: rendered template content
-                        example: Qui quod iste aliquid quisquam distinctio.
+                        example: Enim perspiciatis quaerat architecto quo.
                 example:
-                    CmdStderr: Laborum consequuntur eius est.
-                    CmdStdout: Architecto quo libero.
-                    Template: Aspernatur enim perspiciatis.
+                    CmdStderr: Quidem perspiciatis quae quisquam.
+                    CmdStdout: Facere qui dignissimos.
+                    Template: Natus aut illo.
         example:
-            code: 2150461656217540556
-            message: Et dignissimos provident facere rem cupiditate.
+            code: 4197958327046235609
+            message: Rem cupiditate quidem.
             result:
-                CmdStderr: Qui repellendus ipsam harum placeat accusantium ipsum.
-                CmdStdout: Quisquam similique ex accusamus omnis repudiandae voluptas.
-                Template: Dignissimos sint quidem perspiciatis.
+                CmdStderr: Ipsum esse et dignissimos provident.
+                CmdStdout: Harum placeat.
+                Template: Voluptas necessitatibus qui repellendus.
     InstallCtrlPanelListInstallRequestBody:
         title: InstallCtrlPanelListInstallRequestBody
         type: object
@@ -3058,9 +3046,9 @@ definitions:
             installType:
                 type: string
                 description: type of service installed
-                example: Quidem dolorem quia quibusdam.
+                example: Qui qui quod iste aliquid quisquam.
         example:
-            installType: Impedit nemo.
+            installType: Dicta praesentium corporis eos odit ut aut.
         required:
             - installType
     InstallCtrlPanelListInstallResponseBody:
@@ -3073,7 +3061,7 @@ definitions:
                 format: int64
             message:
                 type: string
-                example: Ut enim.
+                example: Debitis quidem dolorem.
             result:
                 type: array
                 items:
@@ -3083,35 +3071,53 @@ definitions:
                     - installContext: Sunt quidem dolores est reprehenderit illo.
                       installType: Dolores repellendus laboriosam.
                       name: Sit totam voluptatem.
+                      rpc: Impedit blanditiis enim exercitationem.
                       status: 4081671194535684807
                       yaml: Beatae et aut facere totam ut.
                     - installContext: Sunt quidem dolores est reprehenderit illo.
                       installType: Dolores repellendus laboriosam.
                       name: Sit totam voluptatem.
+                      rpc: Impedit blanditiis enim exercitationem.
+                      status: 4081671194535684807
+                      yaml: Beatae et aut facere totam ut.
+                    - installContext: Sunt quidem dolores est reprehenderit illo.
+                      installType: Dolores repellendus laboriosam.
+                      name: Sit totam voluptatem.
+                      rpc: Impedit blanditiis enim exercitationem.
+                      status: 4081671194535684807
+                      yaml: Beatae et aut facere totam ut.
+                    - installContext: Sunt quidem dolores est reprehenderit illo.
+                      installType: Dolores repellendus laboriosam.
+                      name: Sit totam voluptatem.
+                      rpc: Impedit blanditiis enim exercitationem.
                       status: 4081671194535684807
                       yaml: Beatae et aut facere totam ut.
         example:
-            code: 4438285123414231879
-            message: Et illum eum officiis.
+            code: 8787672972885006811
+            message: Impedit nemo.
             result:
                 - installContext: Sunt quidem dolores est reprehenderit illo.
                   installType: Dolores repellendus laboriosam.
                   name: Sit totam voluptatem.
+                  rpc: Impedit blanditiis enim exercitationem.
                   status: 4081671194535684807
                   yaml: Beatae et aut facere totam ut.
                 - installContext: Sunt quidem dolores est reprehenderit illo.
                   installType: Dolores repellendus laboriosam.
                   name: Sit totam voluptatem.
+                  rpc: Impedit blanditiis enim exercitationem.
                   status: 4081671194535684807
                   yaml: Beatae et aut facere totam ut.
                 - installContext: Sunt quidem dolores est reprehenderit illo.
                   installType: Dolores repellendus laboriosam.
                   name: Sit totam voluptatem.
+                  rpc: Impedit blanditiis enim exercitationem.
                   status: 4081671194535684807
                   yaml: Beatae et aut facere totam ut.
                 - installContext: Sunt quidem dolores est reprehenderit illo.
                   installType: Dolores repellendus laboriosam.
                   name: Sit totam voluptatem.
+                  rpc: Impedit blanditiis enim exercitationem.
                   status: 4081671194535684807
                   yaml: Beatae et aut facere totam ut.
     InstallCtrlPanelUninstallDeploymentRequestBody:
@@ -3122,9 +3128,9 @@ definitions:
                 $ref: '#/definitions/UnDeploymentSetupConfigRequestBody'
         example:
             setupConfig:
-                installType: Deserunt dolor qui nihil ab cupiditate.
-                name: Accusamus et.
-                uninstall: true
+                installType: Facilis deserunt dolor qui.
+                name: Ab cupiditate reiciendis accusamus et maiores.
+                uninstall: false
         required:
             - setupConfig
     InstallCtrlPanelUninstallDeploymentResponseBody:
@@ -3144,9 +3150,9 @@ definitions:
             code: 1724147902015857396
             message: Illo consequatur consequatur similique molestias.
             result:
-                CmdStderr: Et iure vel voluptatum excepturi.
-                CmdStdout: Nihil fugit et nesciunt est dolores a.
-                Template: Eligendi aut.
+                CmdStderr: Dolores a vero.
+                CmdStdout: Fugit et nesciunt.
+                Template: Iure vel voluptatum excepturi culpa.
     InstallCtrlPanelUninstallLpClientRequestBody:
         title: InstallCtrlPanelUninstallLpClientRequestBody
         type: object
@@ -3155,8 +3161,8 @@ definitions:
                 $ref: '#/definitions/ammClientUnSetupConfigRequestBody'
         example:
             setupConfig:
-                type: Magni est.
-                uninstall: false
+                type: Eligendi sit magni est eos.
+                uninstall: true
         required:
             - setupConfig
     InstallCtrlPanelUninstallLpClientResponseBody:
@@ -3202,10 +3208,10 @@ definitions:
                 $ref: '#/definitions/updateDeploymentConfigRequestBody'
         example:
             setupConfig:
-                installContext: Laudantium aut.
-                installType: Quis sequi ut voluptatem.
-                name: Voluptate id alias hic ratione.
-                update: false
+                installContext: Et omnis in laboriosam repellendus.
+                installType: Sequi ut voluptatem voluptas voluptate id alias.
+                name: Ratione ab laudantium aut.
+                update: true
         required:
             - setupConfig
     InstallCtrlPanelUpdateDeploymentResponseBody:
@@ -4402,18 +4408,18 @@ definitions:
                     $ref: '#/definitions/WalletTokenItemResponseBody'
                 description: token list
                 example:
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
-                    - address: Quia ut.
-                      decimals: 1699488593
-                      symbol: Eum et.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
+                    - address: Accusamus reprehenderit totam saepe voluptates.
+                      decimals: 1018129229
+                      symbol: Modi officia dolor debitis quae.
             type:
                 type: string
                 description: wallet type
@@ -4428,18 +4434,18 @@ definitions:
             can_sign_712: true
             signature_service_address: Adipisci aut alias.
             tokens:
-                - address: Quia ut.
-                  decimals: 1699488593
-                  symbol: Eum et.
-                - address: Quia ut.
-                  decimals: 1699488593
-                  symbol: Eum et.
-                - address: Quia ut.
-                  decimals: 1699488593
-                  symbol: Eum et.
-                - address: Quia ut.
-                  decimals: 1699488593
-                  symbol: Eum et.
+                - address: Accusamus reprehenderit totam saepe voluptates.
+                  decimals: 1018129229
+                  symbol: Modi officia dolor debitis quae.
+                - address: Accusamus reprehenderit totam saepe voluptates.
+                  decimals: 1018129229
+                  symbol: Modi officia dolor debitis quae.
+                - address: Accusamus reprehenderit totam saepe voluptates.
+                  decimals: 1018129229
+                  symbol: Modi officia dolor debitis quae.
+                - address: Accusamus reprehenderit totam saepe voluptates.
+                  decimals: 1018129229
+                  symbol: Modi officia dolor debitis quae.
             type: Laborum aut illo.
             wallet_name: Est ipsa quia.
     WalletTokenItemResponseBody:
@@ -4493,14 +4499,14 @@ definitions:
                 items:
                     $ref: '#/definitions/DeploymentSetupConfigEnvItemRequestBody'
                 example:
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
-                    - key: Et est sunt consectetur delectus saepe.
-                      value: Ut quis.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
+                    - key: Sunt consectetur.
+                      value: Saepe repellendus ut quis consequatur.
             deploymentName:
                 type: string
                 description: deploymentName
@@ -4535,10 +4541,10 @@ definitions:
             connectionWalleturl: Incidunt at voluptatibus officia nemo aut.
             containerPort: Ullam explicabo quia vitae ratione est ut.
             customEnv:
-                - key: Et est sunt consectetur delectus saepe.
-                  value: Ut quis.
-                - key: Et est sunt consectetur delectus saepe.
-                  value: Ut quis.
+                - key: Sunt consectetur.
+                  value: Saepe repellendus ut quis consequatur.
+                - key: Sunt consectetur.
+                  value: Saepe repellendus ut quis consequatur.
             deploymentName: Aut expedita quas neque quaerat ullam.
             imageRepository: Vitae est dolorem est voluptatem modi.
             install: false
@@ -4653,6 +4659,10 @@ definitions:
                 type: string
                 description: name
                 example: Consequuntur ut et dignissimos est.
+            rpc:
+                type: string
+                description: chain client rpc
+                example: Ut pariatur consectetur dolor et.
             status:
                 type: integer
                 description: install status
@@ -4663,11 +4673,12 @@ definitions:
                 description: yaml
                 example: Qui excepturi.
         example:
-            installContext: Quia id vel.
-            installType: Ut pariatur consectetur dolor et.
-            name: Laborum deleniti labore necessitatibus.
-            status: 1036435777804642995
-            yaml: Assumenda aspernatur dicta nam autem officia.
+            installContext: Dicta nam autem officia reprehenderit.
+            installType: Laborum deleniti labore necessitatibus.
+            name: Consequatur quia id vel et.
+            rpc: Qui enim et illum.
+            status: 5724955178791203855
+            yaml: Ut enim.
     installDeploymentDataResultResponseBody:
         title: installDeploymentDataResultResponseBody
         type: object

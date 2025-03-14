@@ -19,3 +19,4 @@ export OS_SYSTEM_SERVER=system-server.user-system-magicdog
 export OS_API_KEY=bytetrade_otmoiclp_941144
 export OS_API_SECRET=59770d775bd5d360
 export PATH=$PATH:$(go env GOPATH)/bin
+export LP_VERSION="2.5.0"

@@ -77,6 +77,8 @@ type CtrlDeploayItem struct {
 	InstallContext *string
 	// yaml
 	Yaml *string
+	// chain client rpc
+	RPC *string
 }
 
 type DeploymentSetupConfig struct {

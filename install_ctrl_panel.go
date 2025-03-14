@@ -205,13 +205,15 @@ func (s *installCtrlPanelsrvc) ListInstall(ctx context.Context, p *installctrlpa
 		return
 	}
 	for _, v := range list {
-		res.Result = append(res.Result, &installctrlpanel.CtrlDeploayItem{
+		valueRow := &installctrlpanel.CtrlDeploayItem{
 			Name:           ptr.String(v.Name),
 			Yaml:           ptr.String(v.Yaml),
 			Status:         ptr.Int64(v.Status),
 			InstallType:    ptr.String(v.InstallType),
 			InstallContext: ptr.String(v.InstallContext),
-		})
+			RPC:            ptr.String(v.EnvRpc),
+		}
+		res.Result = append(res.Result, valueRow)
 	}
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")

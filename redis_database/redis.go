@@ -119,6 +119,48 @@ func (redisDb *RedisDb) Del(key string) (int64, error) {
 	result, err := redis.Int64(reply, err)
 	return result, err
 }
+func (redisDb *RedisDb) Scan(pattern string) ([]string, error) {
+	conn := redisDb.PoolPtr.Get()
+	defer func(conn redis.Conn) {
+		err := conn.Close()
+		if err != nil {
+
+		}
+	}(conn)
+
+	var cursor int64 = 0
+	var keys []string
+
+	for {
+		reply, err := conn.Do("SCAN", cursor, "MATCH", pattern, "COUNT", 100)
+		if err != nil {
+			return nil, err
+		}
+
+		values, err := redis.Values(reply, nil)
+		if err != nil {
+			return nil, err
+		}
+
+		cursor, err = redis.Int64(values[0], nil)
+		if err != nil {
+			return nil, err
+		}
+
+		scanKeys, err := redis.Strings(values[1], nil)
+		if err != nil {
+			return nil, err
+		}
+
+		keys = append(keys, scanKeys...)
+
+		if cursor == 0 {
+			break
+		}
+	}
+
+	return keys, nil
+}
 func (redisDb *RedisDb) RPush(key string, value string) (int64, error) {
 	conn := redisDb.PoolPtr.Get()
 	defer func(conn redis.Conn) {
