@@ -47,7 +47,7 @@ func (s *relayListsrvc) ListRelay(ctx context.Context) (res *relaylist.ListRelay
 			LpIDFake:     ptr.String(result.LpIdFake),
 			LpNodeAPIKey: ptr.String(result.LpnodeApiKey),
 			RelayAPIKey:  ptr.String(result.RelayApiKey),
-			RelayURI:     ptr.String(result.RelayUri),
+			RelayURI:     ptr.String(result.RelayUrl),
 		})
 	}
 	res.Result = retList

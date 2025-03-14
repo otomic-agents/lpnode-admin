@@ -21,7 +21,7 @@ func BuildGetWalletAndTokensPayload(baseDataGetWalletAndTokensBody string) (*bas
 	{
 		err = json.Unmarshal([]byte(baseDataGetWalletAndTokensBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainId\": 1437269766890030526\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainId\": 3278290998833001510\n   }'")
 		}
 	}
 	v := &basedata.GetWalletAndTokensPayload{

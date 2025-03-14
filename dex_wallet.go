@@ -249,11 +249,12 @@ func (s *dexWalletsrvc) VaultList(cxt context.Context) (res *dexwallet.VaultList
 	res.Message = ptr.String("")
 	return
 }
-func (s *dexWalletsrvc) UpdateLpWallet(cxt context.Context) (res *dexwallet.UpdateLpWalletResult, err error) {
+func (s *dexWalletsrvc) UpdateLpWallet(cxt context.Context, p *dexwallet.UpdateLpWalletPayload) (res *dexwallet.UpdateLpWalletResult, err error) {
 	res = &dexwallet.UpdateLpWalletResult{}
 
 	dwls := service.NewDexWalletLogicService()
-	update, err := dwls.RefreshLpWallet()
+	relayUrl := p.RelayURL
+	update, err := dwls.RefreshLpWallet(relayUrl)
 	if err != nil {
 		return
 	}

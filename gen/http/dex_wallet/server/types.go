@@ -42,6 +42,13 @@ type DeleteDexWalletRequestBody struct {
 	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
 }
 
+// UpdateLpWalletRequestBody is the type of the "dexWallet" service
+// "updateLpWallet" endpoint HTTP request body.
+type UpdateLpWalletRequestBody struct {
+	// relayUrl
+	RelayURL *string `form:"relayUrl,omitempty" json:"relayUrl,omitempty" xml:"relayUrl,omitempty"`
+}
+
 // ListDexWalletResponseBody is the type of the "dexWallet" service
 // "listDexWallet" endpoint HTTP response body.
 type ListDexWalletResponseBody struct {
@@ -227,6 +234,16 @@ func NewDeleteDexWalletDeleteFilter(body *DeleteDexWalletRequestBody) *dexwallet
 	return v
 }
 
+// NewUpdateLpWalletPayload builds a dexWallet service updateLpWallet endpoint
+// payload.
+func NewUpdateLpWalletPayload(body *UpdateLpWalletRequestBody) *dexwallet.UpdateLpWalletPayload {
+	v := &dexwallet.UpdateLpWalletPayload{
+		RelayURL: *body.RelayURL,
+	}
+
+	return v
+}
+
 // ValidateCreateDexWalletRequestBody runs the validations defined on
 // CreateDexWalletRequestBody
 func ValidateCreateDexWalletRequestBody(body *CreateDexWalletRequestBody) (err error) {
@@ -255,6 +272,15 @@ func ValidateCreateDexWalletRequestBody(body *CreateDexWalletRequestBody) (err e
 func ValidateDeleteDexWalletRequestBody(body *DeleteDexWalletRequestBody) (err error) {
 	if body.ID == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("id", "body"))
+	}
+	return
+}
+
+// ValidateUpdateLpWalletRequestBody runs the validations defined on
+// UpdateLpWalletRequestBody
+func ValidateUpdateLpWalletRequestBody(body *UpdateLpWalletRequestBody) (err error) {
+	if body.RelayURL == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("relayUrl", "body"))
 	}
 	return
 }

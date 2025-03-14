@@ -80,6 +80,7 @@ func NewVaultListEndpoint(s Service) goa.Endpoint {
 // "updateLpWallet" of service "dexWallet".
 func NewUpdateLpWalletEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		return s.UpdateLpWallet(ctx)
+		p := req.(*UpdateLpWalletPayload)
+		return s.UpdateLpWallet(ctx, p)
 	}
 }

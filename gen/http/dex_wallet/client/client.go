@@ -160,10 +160,15 @@ func (c *Client) VaultList() goa.Endpoint {
 // service updateLpWallet server.
 func (c *Client) UpdateLpWallet() goa.Endpoint {
 	var (
+		encodeRequest  = EncodeUpdateLpWalletRequest(c.encoder)
 		decodeResponse = DecodeUpdateLpWalletResponse(c.decoder, c.RestoreResponseBody)
 	)
 	return func(ctx context.Context, v interface{}) (interface{}, error) {
 		req, err := c.BuildUpdateLpWalletRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
 		if err != nil {
 			return nil, err
 		}

@@ -42,6 +42,13 @@ type DeleteDexWalletRequestBody struct {
 	ID string `form:"id" json:"id" xml:"id"`
 }
 
+// UpdateLpWalletRequestBody is the type of the "dexWallet" service
+// "updateLpWallet" endpoint HTTP request body.
+type UpdateLpWalletRequestBody struct {
+	// relayUrl
+	RelayURL string `form:"relayUrl" json:"relayUrl" xml:"relayUrl"`
+}
+
 // ListDexWalletResponseBody is the type of the "dexWallet" service
 // "listDexWallet" endpoint HTTP response body.
 type ListDexWalletResponseBody struct {
@@ -150,6 +157,15 @@ func NewCreateDexWalletRequestBody(p *dexwallet.WalletRow) *CreateDexWalletReque
 func NewDeleteDexWalletRequestBody(p *dexwallet.DeleteFilter) *DeleteDexWalletRequestBody {
 	body := &DeleteDexWalletRequestBody{
 		ID: p.ID,
+	}
+	return body
+}
+
+// NewUpdateLpWalletRequestBody builds the HTTP request body from the payload
+// of the "updateLpWallet" endpoint of the "dexWallet" service.
+func NewUpdateLpWalletRequestBody(p *dexwallet.UpdateLpWalletPayload) *UpdateLpWalletRequestBody {
+	body := &UpdateLpWalletRequestBody{
+		RelayURL: p.RelayURL,
 	}
 	return body
 }

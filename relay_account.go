@@ -51,6 +51,7 @@ func (s *relayAccountsrvc) ListAccount(ctx context.Context) (res *relayaccount.L
 			LpIDFake:     ptr.String(result.LpIdFake),
 			LpNodeAPIKey: ptr.String(result.LpnodeApiKey),
 			RelayAPIKey:  ptr.String(result.RelayApiKey),
+			RelayURL:     ptr.String(result.RelayUrl),
 		})
 	}
 	res.Result = retList

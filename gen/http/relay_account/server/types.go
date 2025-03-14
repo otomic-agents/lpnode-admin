@@ -58,6 +58,7 @@ type RelayAccountItemResponseBody struct {
 	LpIDFake     *string `form:"lpIdFake,omitempty" json:"lpIdFake,omitempty" xml:"lpIdFake,omitempty"`
 	LpNodeAPIKey *string `form:"lpNodeApiKey,omitempty" json:"lpNodeApiKey,omitempty" xml:"lpNodeApiKey,omitempty"`
 	RelayAPIKey  *string `form:"relayApiKey,omitempty" json:"relayApiKey,omitempty" xml:"relayApiKey,omitempty"`
+	RelayURL     *string `form:"relayUrl,omitempty" json:"relayUrl,omitempty" xml:"relayUrl,omitempty"`
 }
 
 // NewListAccountResponseBody builds the HTTP response body from the result of

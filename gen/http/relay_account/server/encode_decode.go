@@ -117,6 +117,7 @@ func marshalRelayaccountRelayAccountItemToRelayAccountItemResponseBody(v *relaya
 		LpIDFake:     v.LpIDFake,
 		LpNodeAPIKey: v.LpNodeAPIKey,
 		RelayAPIKey:  v.RelayAPIKey,
+		RelayURL:     v.RelayURL,
 	}
 
 	return res

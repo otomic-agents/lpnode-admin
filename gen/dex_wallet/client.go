@@ -77,9 +77,9 @@ func (c *Client) VaultList(ctx context.Context) (res *VaultListResult, err error
 
 // UpdateLpWallet calls the "updateLpWallet" endpoint of the "dexWallet"
 // service.
-func (c *Client) UpdateLpWallet(ctx context.Context) (res *UpdateLpWalletResult, err error) {
+func (c *Client) UpdateLpWallet(ctx context.Context, p *UpdateLpWalletPayload) (res *UpdateLpWalletResult, err error) {
 	var ires interface{}
-	ires, err = c.UpdateLpWalletEndpoint(ctx, nil)
+	ires, err = c.UpdateLpWalletEndpoint(ctx, p)
 	if err != nil {
 		return
 	}

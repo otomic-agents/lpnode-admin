@@ -2,7 +2,6 @@ package adminapiservice
 
 import (
 	mainlogic "admin-panel/gen/main_logic"
-	"admin-panel/service"
 	"context"
 	"fmt"
 	"log"
@@ -20,7 +19,7 @@ type mainLogicsrvc struct {
 // NewMainLogic returns the mainLogic service implementation.
 func NewMainLogic(logger *log.Logger) mainlogic.Service {
 	logger.Println("new Main.....")
-	
+
 	// MainLogic_RefreshLpWallet()
 	return &mainLogicsrvc{logger}
 }
@@ -28,14 +27,17 @@ func MainLogic_RefreshLpWallet() {
 	index := 0
 	go func() {
 		if index == 0 {
-			time.Sleep(time.Second * 60 * 1) //Refresh for the first time with an interval of 1 minute.
+			time.Sleep(time.Second * 60 * 1) // Refresh for the first time with an interval of 1 minute.
 		} else {
 			time.Sleep(time.Second * 60 * 20)
 		}
 
 		log.Println("auto refresh lp wallet")
-		dwls := service.NewDexWalletLogicService()
-		dwls.RefreshLpWallet()
+		// Temporarily commenting out this code. If re-enabled in the future,
+		// first read the relay list from the database and refresh each one,
+		// as the latest version of relay supports multiple instances.
+		// dwls := service.NewDexWalletLogicService()
+		// dwls.RefreshLpWallet()
 	}()
 }
 

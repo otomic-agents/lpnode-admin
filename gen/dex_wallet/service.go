@@ -22,7 +22,7 @@ type Service interface {
 	// VaultList implements vaultList.
 	VaultList(context.Context) (res *VaultListResult, err error)
 	// UpdateLpWallet implements updateLpWallet.
-	UpdateLpWallet(context.Context) (res *UpdateLpWalletResult, err error)
+	UpdateLpWallet(context.Context, *UpdateLpWalletPayload) (res *UpdateLpWalletResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -68,6 +68,13 @@ type ListDexWalletResult struct {
 	// wallet list
 	Result  []*WalletRow
 	Message *string
+}
+
+// UpdateLpWalletPayload is the payload type of the dexWallet service
+// updateLpWallet method.
+type UpdateLpWalletPayload struct {
+	// relayUrl
+	RelayURL string
 }
 
 // UpdateLpWalletResult is the result type of the dexWallet service

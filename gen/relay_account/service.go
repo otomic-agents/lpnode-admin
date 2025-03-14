@@ -75,4 +75,5 @@ type RelayAccountItem struct {
 	LpIDFake     *string
 	LpNodeAPIKey *string
 	RelayAPIKey  *string
+	RelayURL     *string
 }

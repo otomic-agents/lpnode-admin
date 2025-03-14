@@ -327,9 +327,9 @@ func (dwls *DexWalletLogicService) GetFromSecretVault(vaultName string) (res str
 	res = secretId
 	return
 }
-func (dwls *DexWalletLogicService) RefreshLpWallet() (ret bool, err error) {
+func (dwls *DexWalletLogicService) RefreshLpWallet(relayUrl string) (ret bool, err error) {
 	ret = false
-	relayUrl := os.Getenv("RELAY_ACCESS_URL")
+
 	if relayUrl == "" {
 		err = errors.New("unable to get relay url")
 		return
