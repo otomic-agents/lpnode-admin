@@ -162,7 +162,7 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 		SignServiceEndpoint: ptr.ToString(p.SignServiceEndpoint),
 		Address: func() string {
 			if p.ChainType == "evm" {
-				return common.HexToAddress(address).Hex() // 这会返回经过checksum的地址
+				return common.HexToAddress(address).Hex() 
 			}
 			return address
 		}(),

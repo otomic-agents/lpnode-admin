@@ -51,7 +51,7 @@ type BusinessOrderDexTradeInfoInRefundRawData struct {
 	TransferID   *string `json:"transfer_id" bson:"transfer_id"`
 }
 
-// BusinessOrderDexTradeInfoInitSwap 定义初始化交换的结构
+// BusinessOrderDexTradeInfoInitSwap 
 type BusinessOrderDexTradeInfoInitSwap struct {
 	RawData *BusinessOrderDexTradeInfoInitSwapRawData `json:"raw_data" bson:"rawData"`
 }
@@ -73,7 +73,7 @@ type BusinessOrderDexTradeInfoInitSwapRawData struct {
 	LPID                   *string `json:"lp_id" bson:"lp_id"`
 }
 
-// BusinessOrderDexTradeInfoConfirmSwap 定义确认交换的结构
+// BusinessOrderDexTradeInfoConfirmSwap 
 type BusinessOrderDexTradeInfoConfirmSwap struct {
 	RawData *BusinessOrderDexTradeInfoConfirmSwapRawData `json:"raw_data" bson:"rawData"`
 }

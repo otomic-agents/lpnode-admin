@@ -8,6 +8,7 @@ import (
 	authenticationlimiter "admin-panel/gen/authentication_limiter"
 	basedata "admin-panel/gen/base_data"
 	bridgeconfig "admin-panel/gen/bridge_config"
+	chainclienttransaction "admin-panel/gen/chain_client_transaction"
 	chainconfig "admin-panel/gen/chain_config"
 	configresource "admin-panel/gen/config_resource"
 	dexwallet "admin-panel/gen/dex_wallet"
@@ -57,27 +58,28 @@ func main() {
 
 	// Initialize the services.
 	var (
-		mainLogicSvc             mainlogic.Service
-		accountCexSvc            accountcex.Service
-		accountDexSvc            accountdex.Service
-		ammOrderCenterSvc        ammordercenter.Service
-		authenticationLimiterSvc authenticationlimiter.Service
-		baseDataSvc              basedata.Service
-		bridgeConfigSvc          bridgeconfig.Service
-		chainConfigSvc           chainconfig.Service
-		configResourceSvc        configresource.Service
-		dexWalletSvc             dexwallet.Service
-		hedgeSvc                 hedge.Service
-		installCtrlPanelSvc      installctrlpanel.Service
-		lpmonitSvc               lpmonit.Service
-		orderCenterSvc           ordercenter.Service
-		lpRegisterSvc            lpregister.Service
-		relayAccountSvc          relayaccount.Service
-		relayListSvc             relaylist.Service
-		settingsSvc              settings.Service
-		statusListSvc            statuslist.Service
-		taskManagerSvc           taskmanager.Service
-		tokenManagerSvc          tokenmanager.Service
+		mainLogicSvc              mainlogic.Service
+		accountCexSvc             accountcex.Service
+		accountDexSvc             accountdex.Service
+		ammOrderCenterSvc         ammordercenter.Service
+		authenticationLimiterSvc  authenticationlimiter.Service
+		baseDataSvc               basedata.Service
+		bridgeConfigSvc           bridgeconfig.Service
+		chainClientTransactionSvc chainclienttransaction.Service
+		chainConfigSvc            chainconfig.Service
+		configResourceSvc         configresource.Service
+		dexWalletSvc              dexwallet.Service
+		hedgeSvc                  hedge.Service
+		installCtrlPanelSvc       installctrlpanel.Service
+		lpmonitSvc                lpmonit.Service
+		orderCenterSvc            ordercenter.Service
+		lpRegisterSvc             lpregister.Service
+		relayAccountSvc           relayaccount.Service
+		relayListSvc              relaylist.Service
+		settingsSvc               settings.Service
+		statusListSvc             statuslist.Service
+		taskManagerSvc            taskmanager.Service
+		tokenManagerSvc           tokenmanager.Service
 	)
 	{
 		mainLogicSvc = adminapiservice.NewMainLogic(logger)
@@ -87,6 +89,7 @@ func main() {
 		authenticationLimiterSvc = adminapiservice.NewAuthenticationLimiter(logger)
 		baseDataSvc = adminapiservice.NewBaseData(logger)
 		bridgeConfigSvc = adminapiservice.NewBridgeConfig(logger)
+		chainClientTransactionSvc = adminapiservice.NewChainClientTransaction(logger)
 		chainConfigSvc = adminapiservice.NewChainConfig(logger)
 		configResourceSvc = adminapiservice.NewConfigResource(logger)
 		dexWalletSvc = adminapiservice.NewDexWallet(logger)
@@ -106,27 +109,28 @@ func main() {
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		mainLogicEndpoints             *mainlogic.Endpoints
-		accountCexEndpoints            *accountcex.Endpoints
-		accountDexEndpoints            *accountdex.Endpoints
-		ammOrderCenterEndpoints        *ammordercenter.Endpoints
-		authenticationLimiterEndpoints *authenticationlimiter.Endpoints
-		baseDataEndpoints              *basedata.Endpoints
-		bridgeConfigEndpoints          *bridgeconfig.Endpoints
-		chainConfigEndpoints           *chainconfig.Endpoints
-		configResourceEndpoints        *configresource.Endpoints
-		dexWalletEndpoints             *dexwallet.Endpoints
-		hedgeEndpoints                 *hedge.Endpoints
-		installCtrlPanelEndpoints      *installctrlpanel.Endpoints
-		lpmonitEndpoints               *lpmonit.Endpoints
-		orderCenterEndpoints           *ordercenter.Endpoints
-		lpRegisterEndpoints            *lpregister.Endpoints
-		relayAccountEndpoints          *relayaccount.Endpoints
-		relayListEndpoints             *relaylist.Endpoints
-		settingsEndpoints              *settings.Endpoints
-		statusListEndpoints            *statuslist.Endpoints
-		taskManagerEndpoints           *taskmanager.Endpoints
-		tokenManagerEndpoints          *tokenmanager.Endpoints
+		mainLogicEndpoints              *mainlogic.Endpoints
+		accountCexEndpoints             *accountcex.Endpoints
+		accountDexEndpoints             *accountdex.Endpoints
+		ammOrderCenterEndpoints         *ammordercenter.Endpoints
+		authenticationLimiterEndpoints  *authenticationlimiter.Endpoints
+		baseDataEndpoints               *basedata.Endpoints
+		bridgeConfigEndpoints           *bridgeconfig.Endpoints
+		chainClientTransactionEndpoints *chainclienttransaction.Endpoints
+		chainConfigEndpoints            *chainconfig.Endpoints
+		configResourceEndpoints         *configresource.Endpoints
+		dexWalletEndpoints              *dexwallet.Endpoints
+		hedgeEndpoints                  *hedge.Endpoints
+		installCtrlPanelEndpoints       *installctrlpanel.Endpoints
+		lpmonitEndpoints                *lpmonit.Endpoints
+		orderCenterEndpoints            *ordercenter.Endpoints
+		lpRegisterEndpoints             *lpregister.Endpoints
+		relayAccountEndpoints           *relayaccount.Endpoints
+		relayListEndpoints              *relaylist.Endpoints
+		settingsEndpoints               *settings.Endpoints
+		statusListEndpoints             *statuslist.Endpoints
+		taskManagerEndpoints            *taskmanager.Endpoints
+		tokenManagerEndpoints           *tokenmanager.Endpoints
 	)
 	{
 		mainLogicEndpoints = mainlogic.NewEndpoints(mainLogicSvc)
@@ -136,6 +140,7 @@ func main() {
 		authenticationLimiterEndpoints = authenticationlimiter.NewEndpoints(authenticationLimiterSvc)
 		baseDataEndpoints = basedata.NewEndpoints(baseDataSvc)
 		bridgeConfigEndpoints = bridgeconfig.NewEndpoints(bridgeConfigSvc)
+		chainClientTransactionEndpoints = chainclienttransaction.NewEndpoints(chainClientTransactionSvc)
 		chainConfigEndpoints = chainconfig.NewEndpoints(chainConfigSvc)
 		configResourceEndpoints = configresource.NewEndpoints(configResourceSvc)
 		dexWalletEndpoints = dexwallet.NewEndpoints(dexWalletSvc)
@@ -191,7 +196,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, hedgeEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainClientTransactionEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, hedgeEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

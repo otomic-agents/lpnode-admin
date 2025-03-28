@@ -21,7 +21,7 @@ func BuildSetAuthenticationLimiterPayload(authenticationLimiterSetAuthentication
 	{
 		err = json.Unmarshal([]byte(authenticationLimiterSetAuthenticationLimiterBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"authenticationLimiter\": \"Aperiam non omnis iste similique.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"authenticationLimiter\": \"Ullam cumque.\"\n   }'")
 		}
 	}
 	v := &authenticationlimiter.SetAuthenticationLimiterPayload{

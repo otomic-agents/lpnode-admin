@@ -23,7 +23,7 @@ func BuildTokenCreatePayload(tokenManagerTokenCreateBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Sit vero aperiam.\",\n      \"address\": \"Perspiciatis eveniet autem et autem aut nam.\",\n      \"chainId\": 2903106585971770355,\n      \"chainType\": \"Numquam voluptatem iusto rerum perferendis ipsum.\",\n      \"coinType\": \"stable_coin\",\n      \"marketName\": \"Distinctio amet beatae velit nesciunt.\",\n      \"precision\": 15,\n      \"tokenId\": \"Voluptas voluptatibus aliquid.\",\n      \"tokenName\": \"Sed officia.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Eius veritatis minima.\",\n      \"address\": \"Sed totam aut.\",\n      \"chainId\": 6067014032755977977,\n      \"chainType\": \"Dolorem aut molestiae quidem deserunt repellat voluptas.\",\n      \"coinType\": \"stable_coin\",\n      \"marketName\": \"Accusantium tempora et aperiam.\",\n      \"precision\": 10,\n      \"tokenId\": \"Suscipit nihil sint amet.\",\n      \"tokenName\": \"Repellat sit consequatur impedit.\"\n   }'")
 		}
 		if body.Precision < 6 {
 			err = goa.MergeErrors(err, goa.InvalidRangeError("body.precision", body.Precision, 6, true))
@@ -61,7 +61,7 @@ func BuildTokenDeletePayload(tokenManagerTokenDeleteBody string) (*tokenmanager.
 	{
 		err = json.Unmarshal([]byte(tokenManagerTokenDeleteBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Atque tempora molestias libero enim.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Illum illum laborum.\"\n   }'")
 		}
 	}
 	v := &tokenmanager.DeleteTokenFilter{

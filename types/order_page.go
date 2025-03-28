@@ -1,9 +1,9 @@
 package types
 
 type OrderPageAssetChangeItem struct {
-	Symbol string  `json:"symbol"` // 资产符号
-	Amount float64 `json:"amount"` // 数量（正数表示获得，负数表示支出）
-	USD    string  `json:"usd"`    // USD价值（可选）
+	Symbol string  `json:"symbol"`
+	Amount float64 `json:"amount"`
+	USD    string  `json:"usd"`
 }
 type OrderPageChainTransaction struct {
 	EventName   string `json:"event_name"`
@@ -15,34 +15,33 @@ type OrderPageChainTransaction struct {
 }
 
 type OrderPageTransactionRow struct {
-	TransactionID     string                      `json:"transaction_id"`   // 交易 ID
-	TransactionTime   string                      `json:"transaction_time"` // 交易时间
-	Status            string                      `json:"status"`           // 状态（成功、进行中、失败）
-	Type              string                      `json:"type"`             // 交易类型（跨链 Swap）
-	SourceChain       string                      `json:"source_chain"`     // 源链
+	TransactionID     string                      `json:"transaction_id"`
+	TransactionTime   string                      `json:"transaction_time"`
+	Status            string                      `json:"status"`
+	Type              string                      `json:"type"`
+	SourceChain       string                      `json:"source_chain"`
 	TradeStatus       string                      `json:"trade_status"`
-	SrcTokenAddress   string                      `json:"src_token_address"` // 源代币地址
-	DstTokenAddress   string                      `json:"dst_token_address"` // 目标代币地址
-	DestinationChain  string                      `json:"destination_chain"` // 目标链
-	Received          []OrderPageReceivedItem     `json:"received"`          // 接收的资产
-	Pay               []OrderPagePayItem          `json:"pay"`               // 支付的资产
-	GasFee            []OrderPageGasFeeItem       `json:"gas_fee"`           // Gas 费用
+	SrcTokenAddress   string                      `json:"src_token_address"`
+	DstTokenAddress   string                      `json:"dst_token_address"`
+	DestinationChain  string                      `json:"destination_chain"`
+	Received          []OrderPageReceivedItem     `json:"received"`
+	Pay               []OrderPagePayItem          `json:"pay"`
+	GasFee            []OrderPageGasFeeItem       `json:"gas_fee"`
 	TotalChanges      []OrderPageAssetChangeItem  `json:"total_changes"`
 	ChainTransactions []OrderPageChainTransaction `json:"chain_transactions"`
 }
 
 type OrderPageReceivedItem struct {
-	Amount string `json:"amount"` // 数量
-	Symbol string `json:"symbol"` // 资产符号（如 USDT、ETH）
+	Amount string `json:"amount"`
+	Symbol string `json:"symbol"`
 }
 
 type OrderPagePayItem struct {
-	Amount string `json:"amount"` // 数量
-	Symbol string `json:"symbol"` // 资产符号（如 B-ETH-A、BNB）
-
+	Amount string `json:"amount"`
+	Symbol string `json:"symbol"`
 }
 type OrderPageGasFeeItem struct {
-	Amount string `json:"amount"` // 数量
-	Symbol string `json:"symbol"` // 资产符号（如 BNB、ETH）
-	USD    string `json:"usd"`    // 对应的美元价值
+	Amount string `json:"amount"`
+	Symbol string `json:"symbol"`
+	USD    string `json:"usd"`
 }

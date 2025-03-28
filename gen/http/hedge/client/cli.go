@@ -21,7 +21,7 @@ func BuildEditPayload(hedgeEditBody string) (*hedge.EditPayload, error) {
 	{
 		err = json.Unmarshal([]byte(hedgeEditBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"hedge\": {\n         \"hedgeType\": \"Incidunt eos est ipsa aut ratione eum.\",\n         \"id\": \"Modi repudiandae aliquid quibusdam deserunt aut.\"\n      }\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"hedge\": {\n         \"hedgeType\": \"Ratione ab laudantium aut.\",\n         \"id\": \"Sequi ut voluptatem voluptas voluptate id alias.\"\n      }\n   }'")
 		}
 	}
 	v := &hedge.EditPayload{}
@@ -39,7 +39,7 @@ func BuildDelPayload(hedgeDelBody string) (*hedge.DelPayload, error) {
 	{
 		err = json.Unmarshal([]byte(hedgeDelBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Et quo et repudiandae.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"A est sint autem dolorem voluptas.\"\n   }'")
 		}
 	}
 	v := &hedge.DelPayload{

@@ -58,7 +58,6 @@ func (cps *CtrlPanelLogicService) getRpcFromPodEnv(chainId int64, name string, c
 		return "", fmt.Errorf("failed to get pod environment variables: %w", err)
 	}
 
-	// 查找 RPCS 环境变量
 	for _, env := range podEnvs {
 		logger.System.Debug(env.Name, env.Value)
 		if env.Name == "RPCS" {

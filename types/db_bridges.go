@@ -31,7 +31,7 @@ type DBBridgeRow struct {
 	DstTokenBalance   string             `bson:"dstTokenBalance,omitempty"`
 	SrcTokenDecimals  int64              `bson:"srcTokenDecimals,omitempty"`
 	DstTokenDecimals  int64              `bson:"dstTokenDecimals,omitempty"`
-	PayAddress        string             `bson:"payAddress,omitempty" json:"payAddress"` // 付款地址
+	PayAddress        string             `bson:"payAddress,omitempty" json:"payAddress"` 
 }
 
 type DBBridgeDstChainAggregateItem struct {
