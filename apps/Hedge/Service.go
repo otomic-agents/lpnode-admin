@@ -251,6 +251,7 @@ func (s *HedgeService) UpdateHedge(ctx context.Context, params UpdateHedgeParams
 	// Prepare update fields
 	now := time.Now()
 	updateFields := bson.M{
+		"status":     params.Status,
 		"updated_at": now,
 		"version":    dbHedge.Version + 1,
 	}

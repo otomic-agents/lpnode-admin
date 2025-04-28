@@ -110,6 +110,7 @@ func (s *hedgeTaskssrvc) updateExistingTask(ctx context.Context, hs *apps_hedge.
 		CexAccountID: p.AccountID,
 		BridgeID:     p.BridgeID,
 		AmmName:      p.AmmName,
+		Status:       "pending",
 		// Other parameters can be added as needed
 	}
 

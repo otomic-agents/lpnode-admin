@@ -89,6 +89,7 @@ type UpdateHedgeParams struct {
 	CexAccountID string
 	BridgeID     string
 	AmmName      string
+	Status       string
 }
 type WalletInfo struct {
 	Address string
