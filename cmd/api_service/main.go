@@ -12,7 +12,9 @@ import (
 	chainconfig "admin-panel/gen/chain_config"
 	configresource "admin-panel/gen/config_resource"
 	dexwallet "admin-panel/gen/dex_wallet"
+	exchangerates "admin-panel/gen/exchange_rates"
 	hedge "admin-panel/gen/hedge"
+	hedgetasks "admin-panel/gen/hedge_tasks"
 	installctrlpanel "admin-panel/gen/install_ctrl_panel"
 	lpregister "admin-panel/gen/lp_register"
 	lpmonit "admin-panel/gen/lpmonit"
@@ -69,7 +71,9 @@ func main() {
 		chainConfigSvc            chainconfig.Service
 		configResourceSvc         configresource.Service
 		dexWalletSvc              dexwallet.Service
+		exchangeRatesSvc          exchangerates.Service
 		hedgeSvc                  hedge.Service
+		hedgeTasksSvc             hedgetasks.Service
 		installCtrlPanelSvc       installctrlpanel.Service
 		lpmonitSvc                lpmonit.Service
 		orderCenterSvc            ordercenter.Service
@@ -93,7 +97,9 @@ func main() {
 		chainConfigSvc = adminapiservice.NewChainConfig(logger)
 		configResourceSvc = adminapiservice.NewConfigResource(logger)
 		dexWalletSvc = adminapiservice.NewDexWallet(logger)
+		exchangeRatesSvc = adminapiservice.NewExchangeRates(logger)
 		hedgeSvc = adminapiservice.NewHedge(logger)
+		hedgeTasksSvc = adminapiservice.NewHedgeTasks(logger)
 		installCtrlPanelSvc = adminapiservice.NewInstallCtrlPanel(logger)
 		lpmonitSvc = adminapiservice.NewLpmonit(logger)
 		orderCenterSvc = adminapiservice.NewOrderCenter(logger)
@@ -120,7 +126,9 @@ func main() {
 		chainConfigEndpoints            *chainconfig.Endpoints
 		configResourceEndpoints         *configresource.Endpoints
 		dexWalletEndpoints              *dexwallet.Endpoints
+		exchangeRatesEndpoints          *exchangerates.Endpoints
 		hedgeEndpoints                  *hedge.Endpoints
+		hedgeTasksEndpoints             *hedgetasks.Endpoints
 		installCtrlPanelEndpoints       *installctrlpanel.Endpoints
 		lpmonitEndpoints                *lpmonit.Endpoints
 		orderCenterEndpoints            *ordercenter.Endpoints
@@ -144,7 +152,9 @@ func main() {
 		chainConfigEndpoints = chainconfig.NewEndpoints(chainConfigSvc)
 		configResourceEndpoints = configresource.NewEndpoints(configResourceSvc)
 		dexWalletEndpoints = dexwallet.NewEndpoints(dexWalletSvc)
+		exchangeRatesEndpoints = exchangerates.NewEndpoints(exchangeRatesSvc)
 		hedgeEndpoints = hedge.NewEndpoints(hedgeSvc)
+		hedgeTasksEndpoints = hedgetasks.NewEndpoints(hedgeTasksSvc)
 		installCtrlPanelEndpoints = installctrlpanel.NewEndpoints(installCtrlPanelSvc)
 		lpmonitEndpoints = lpmonit.NewEndpoints(lpmonitSvc)
 		orderCenterEndpoints = ordercenter.NewEndpoints(orderCenterSvc)
@@ -196,7 +206,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainClientTransactionEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, hedgeEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainClientTransactionEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, exchangeRatesEndpoints, hedgeEndpoints, hedgeTasksEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

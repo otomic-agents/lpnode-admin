@@ -41,6 +41,7 @@ var BridgeConfig_listItem = Type("listBridgeItem", func() {
 	Attribute("srcToken", String)
 	Attribute("walletName", String)
 	Attribute("walletId", String)
+	Attribute("srcWalletId", String, "receiving wallet id")
 	Attribute("enableHedge", Boolean)
 	Attribute("srcTokenBalance", String, "Source chain token balance", func() {
 		Default("0")

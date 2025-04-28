@@ -21,6 +21,10 @@ type Client struct {
 	// endpoint.
 	WalletInfoDoer goahttp.Doer
 
+	// GetWalletAssets Doer is the HTTP client used to make requests to the
+	// getWalletAssets endpoint.
+	GetWalletAssetsDoer goahttp.Doer
+
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
 	RestoreResponseBody bool
@@ -42,6 +46,7 @@ func NewClient(
 ) *Client {
 	return &Client{
 		WalletInfoDoer:      doer,
+		GetWalletAssetsDoer: doer,
 		RestoreResponseBody: restoreBody,
 		scheme:              scheme,
 		host:                host,
@@ -69,6 +74,30 @@ func (c *Client) WalletInfo() goa.Endpoint {
 		resp, err := c.WalletInfoDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("accountDex", "walletInfo", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// GetWalletAssets returns an endpoint that makes HTTP requests to the
+// accountDex service getWalletAssets server.
+func (c *Client) GetWalletAssets() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeGetWalletAssetsRequest(c.encoder)
+		decodeResponse = DecodeGetWalletAssetsResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildGetWalletAssetsRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetWalletAssetsDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("accountDex", "getWalletAssets", err)
 		}
 		return decodeResponse(resp)
 	}

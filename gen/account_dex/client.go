@@ -15,13 +15,15 @@ import (
 
 // Client is the "accountDex" service client.
 type Client struct {
-	WalletInfoEndpoint goa.Endpoint
+	WalletInfoEndpoint      goa.Endpoint
+	GetWalletAssetsEndpoint goa.Endpoint
 }
 
 // NewClient initializes a "accountDex" service client given the endpoints.
-func NewClient(walletInfo goa.Endpoint) *Client {
+func NewClient(walletInfo, getWalletAssets goa.Endpoint) *Client {
 	return &Client{
-		WalletInfoEndpoint: walletInfo,
+		WalletInfoEndpoint:      walletInfo,
+		GetWalletAssetsEndpoint: getWalletAssets,
 	}
 }
 
@@ -33,4 +35,15 @@ func (c *Client) WalletInfo(ctx context.Context, p *WalletInfoPayload) (res *Wal
 		return
 	}
 	return ires.(*WalletInfoResult), nil
+}
+
+// GetWalletAssets calls the "getWalletAssets" endpoint of the "accountDex"
+// service.
+func (c *Client) GetWalletAssets(ctx context.Context, p *GetWalletAssetsPayload) (res *GetWalletAssetsResult, err error) {
+	var ires interface{}
+	ires, err = c.GetWalletAssetsEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*GetWalletAssetsResult), nil
 }

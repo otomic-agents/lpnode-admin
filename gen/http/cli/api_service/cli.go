@@ -18,7 +18,9 @@ import (
 	chainconfigc "admin-panel/gen/http/chain_config/client"
 	configresourcec "admin-panel/gen/http/config_resource/client"
 	dexwalletc "admin-panel/gen/http/dex_wallet/client"
+	exchangeratesc "admin-panel/gen/http/exchange_rates/client"
 	hedgec "admin-panel/gen/http/hedge/client"
+	hedgetasksc "admin-panel/gen/http/hedge_tasks/client"
 	installctrlpanelc "admin-panel/gen/http/install_ctrl_panel/client"
 	lpregisterc "admin-panel/gen/http/lp_register/client"
 	lpmonitc "admin-panel/gen/http/lpmonit/client"
@@ -44,8 +46,8 @@ import (
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
 	return `main-logic (main-logic|main-logic-link)
-account-cex wallet-info
-account-dex wallet-info
+account-cex (get-all-token-balances|token-balance|wallet-info|create-account|list-accounts|delete-account)
+account-dex (wallet-info|get-wallet-assets)
 amm-order-center list
 authentication-limiter (get-authentication-limiter|set-authentication-limiter|del-authentication-limiter)
 base-data (chain-data-list|get-lp-info|run-time-env|get-wallet-and-tokens)
@@ -54,7 +56,9 @@ chain-client-transaction transaction-list
 chain-config (set-chain-list|del-chain-list|chain-list|set-chain-gas-usd|set-chain-client-config)
 config-resource (create-resource|get-resource|list-resource|delete-result|edit-result)
 dex-wallet (list-dex-wallet|create-dex-wallet|delete-dex-wallet|vault-list|update-lp-wallet)
+exchange-rates get-all-rates
 hedge (list|edit|del)
+hedge-tasks (list-tasks|get-task|delete-task|create-task|save-hedge-data|close-task)
 install-ctrl-panel (list-install|install-lp-client|uninstall-lp-client|install-deployment|uninstall-deployment|update-deployment)
 lpmonit (add-script|list-script|delete-script|run-script|run-result)
 order-center list
@@ -71,15 +75,13 @@ token-manager (token-list|token-create|token-delete)
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
 	return os.Args[0] + ` main-logic main-logic` + "\n" +
-		os.Args[0] + ` account-cex wallet-info` + "\n" +
-		os.Args[0] + ` account-dex wallet-info --body '{
-      "chainId": 3588115170606933138
-   }'` + "\n" +
+		os.Args[0] + ` account-cex get-all-token-balances --account-id "68020ad9378b05e70089f71f"` + "\n" +
+		os.Args[0] + ` account-dex wallet-info --id "Nam totam adipisci."` + "\n" +
 		os.Args[0] + ` amm-order-center list --body '{
-      "ammName": "Voluptatem expedita quibusdam ut explicabo officiis.",
-      "page": 2717927861584690275,
-      "pageSize": 7355161102422913159,
-      "status": 3119845283383217669
+      "ammName": "Suscipit quia assumenda rerum sed.",
+      "page": 9025772668383392293,
+      "pageSize": 7271879471297109181,
+      "status": 7661082466357357072
    }'` + "\n" +
 		os.Args[0] + ` authentication-limiter get-authentication-limiter` + "\n" +
 		""
@@ -103,12 +105,35 @@ func ParseEndpoint(
 
 		accountCexFlags = flag.NewFlagSet("account-cex", flag.ContinueOnError)
 
-		accountCexWalletInfoFlags = flag.NewFlagSet("wallet-info", flag.ExitOnError)
+		accountCexGetAllTokenBalancesFlags         = flag.NewFlagSet("get-all-token-balances", flag.ExitOnError)
+		accountCexGetAllTokenBalancesAccountIDFlag = accountCexGetAllTokenBalancesFlags.String("account-id", "REQUIRED", "CEX account ID")
+
+		accountCexTokenBalanceFlags         = flag.NewFlagSet("token-balance", flag.ExitOnError)
+		accountCexTokenBalanceAccountIDFlag = accountCexTokenBalanceFlags.String("account-id", "REQUIRED", "CEX account ID")
+		accountCexTokenBalanceSymbolFlag    = accountCexTokenBalanceFlags.String("symbol", "REQUIRED", "Token symbol")
+
+		accountCexWalletInfoFlags         = flag.NewFlagSet("wallet-info", flag.ExitOnError)
+		accountCexWalletInfoAccountIDFlag = accountCexWalletInfoFlags.String("account-id", "REQUIRED", "CEX account ID")
+
+		accountCexCreateAccountFlags    = flag.NewFlagSet("create-account", flag.ExitOnError)
+		accountCexCreateAccountBodyFlag = accountCexCreateAccountFlags.String("body", "REQUIRED", "")
+
+		accountCexListAccountsFlags = flag.NewFlagSet("list-accounts", flag.ExitOnError)
+
+		accountCexDeleteAccountFlags         = flag.NewFlagSet("delete-account", flag.ExitOnError)
+		accountCexDeleteAccountAccountIDFlag = accountCexDeleteAccountFlags.String("account-id", "REQUIRED", "CEX account ID")
 
 		accountDexFlags = flag.NewFlagSet("account-dex", flag.ContinueOnError)
 
-		accountDexWalletInfoFlags    = flag.NewFlagSet("wallet-info", flag.ExitOnError)
-		accountDexWalletInfoBodyFlag = accountDexWalletInfoFlags.String("body", "REQUIRED", "")
+		accountDexWalletInfoFlags  = flag.NewFlagSet("wallet-info", flag.ExitOnError)
+		accountDexWalletInfoIDFlag = accountDexWalletInfoFlags.String("id", "REQUIRED", "")
+
+		accountDexGetWalletAssetsFlags                     = flag.NewFlagSet("get-wallet-assets", flag.ExitOnError)
+		accountDexGetWalletAssetsAddressesFlag             = accountDexGetWalletAssetsFlags.String("addresses", "", "")
+		accountDexGetWalletAssetsCurrencyFlag              = accountDexGetWalletAssetsFlags.String("currency", "USD", "")
+		accountDexGetWalletAssetsHideZeroBalanceFlag       = accountDexGetWalletAssetsFlags.String("hide-zero-balance", "", "")
+		accountDexGetWalletAssetsHideSmallBalanceFlag      = accountDexGetWalletAssetsFlags.String("hide-small-balance", "true", "")
+		accountDexGetWalletAssetsSmallBalanceThresholdFlag = accountDexGetWalletAssetsFlags.String("small-balance-threshold", "1.0", "")
 
 		ammOrderCenterFlags = flag.NewFlagSet("amm-order-center", flag.ContinueOnError)
 
@@ -199,6 +224,10 @@ func ParseEndpoint(
 		dexWalletUpdateLpWalletFlags    = flag.NewFlagSet("update-lp-wallet", flag.ExitOnError)
 		dexWalletUpdateLpWalletBodyFlag = dexWalletUpdateLpWalletFlags.String("body", "REQUIRED", "")
 
+		exchangeRatesFlags = flag.NewFlagSet("exchange-rates", flag.ContinueOnError)
+
+		exchangeRatesGetAllRatesFlags = flag.NewFlagSet("get-all-rates", flag.ExitOnError)
+
 		hedgeFlags = flag.NewFlagSet("hedge", flag.ContinueOnError)
 
 		hedgeListFlags = flag.NewFlagSet("list", flag.ExitOnError)
@@ -208,6 +237,25 @@ func ParseEndpoint(
 
 		hedgeDelFlags    = flag.NewFlagSet("del", flag.ExitOnError)
 		hedgeDelBodyFlag = hedgeDelFlags.String("body", "REQUIRED", "")
+
+		hedgeTasksFlags = flag.NewFlagSet("hedge-tasks", flag.ContinueOnError)
+
+		hedgeTasksListTasksFlags = flag.NewFlagSet("list-tasks", flag.ExitOnError)
+
+		hedgeTasksGetTaskFlags      = flag.NewFlagSet("get-task", flag.ExitOnError)
+		hedgeTasksGetTaskTaskIDFlag = hedgeTasksGetTaskFlags.String("task-id", "REQUIRED", "Hedge task ID")
+
+		hedgeTasksDeleteTaskFlags      = flag.NewFlagSet("delete-task", flag.ExitOnError)
+		hedgeTasksDeleteTaskTaskIDFlag = hedgeTasksDeleteTaskFlags.String("task-id", "REQUIRED", "Hedge task ID")
+
+		hedgeTasksCreateTaskFlags    = flag.NewFlagSet("create-task", flag.ExitOnError)
+		hedgeTasksCreateTaskBodyFlag = hedgeTasksCreateTaskFlags.String("body", "REQUIRED", "")
+
+		hedgeTasksSaveHedgeDataFlags    = flag.NewFlagSet("save-hedge-data", flag.ExitOnError)
+		hedgeTasksSaveHedgeDataBodyFlag = hedgeTasksSaveHedgeDataFlags.String("body", "REQUIRED", "")
+
+		hedgeTasksCloseTaskFlags      = flag.NewFlagSet("close-task", flag.ExitOnError)
+		hedgeTasksCloseTaskTaskIDFlag = hedgeTasksCloseTaskFlags.String("task-id", "REQUIRED", "Hedge task ID")
 
 		installCtrlPanelFlags = flag.NewFlagSet("install-ctrl-panel", flag.ContinueOnError)
 
@@ -307,10 +355,16 @@ func ParseEndpoint(
 	mainLogicMainLogicLinkFlags.Usage = mainLogicMainLogicLinkUsage
 
 	accountCexFlags.Usage = accountCexUsage
+	accountCexGetAllTokenBalancesFlags.Usage = accountCexGetAllTokenBalancesUsage
+	accountCexTokenBalanceFlags.Usage = accountCexTokenBalanceUsage
 	accountCexWalletInfoFlags.Usage = accountCexWalletInfoUsage
+	accountCexCreateAccountFlags.Usage = accountCexCreateAccountUsage
+	accountCexListAccountsFlags.Usage = accountCexListAccountsUsage
+	accountCexDeleteAccountFlags.Usage = accountCexDeleteAccountUsage
 
 	accountDexFlags.Usage = accountDexUsage
 	accountDexWalletInfoFlags.Usage = accountDexWalletInfoUsage
+	accountDexGetWalletAssetsFlags.Usage = accountDexGetWalletAssetsUsage
 
 	ammOrderCenterFlags.Usage = ammOrderCenterUsage
 	ammOrderCenterListFlags.Usage = ammOrderCenterListUsage
@@ -356,10 +410,21 @@ func ParseEndpoint(
 	dexWalletVaultListFlags.Usage = dexWalletVaultListUsage
 	dexWalletUpdateLpWalletFlags.Usage = dexWalletUpdateLpWalletUsage
 
+	exchangeRatesFlags.Usage = exchangeRatesUsage
+	exchangeRatesGetAllRatesFlags.Usage = exchangeRatesGetAllRatesUsage
+
 	hedgeFlags.Usage = hedgeUsage
 	hedgeListFlags.Usage = hedgeListUsage
 	hedgeEditFlags.Usage = hedgeEditUsage
 	hedgeDelFlags.Usage = hedgeDelUsage
+
+	hedgeTasksFlags.Usage = hedgeTasksUsage
+	hedgeTasksListTasksFlags.Usage = hedgeTasksListTasksUsage
+	hedgeTasksGetTaskFlags.Usage = hedgeTasksGetTaskUsage
+	hedgeTasksDeleteTaskFlags.Usage = hedgeTasksDeleteTaskUsage
+	hedgeTasksCreateTaskFlags.Usage = hedgeTasksCreateTaskUsage
+	hedgeTasksSaveHedgeDataFlags.Usage = hedgeTasksSaveHedgeDataUsage
+	hedgeTasksCloseTaskFlags.Usage = hedgeTasksCloseTaskUsage
 
 	installCtrlPanelFlags.Usage = installCtrlPanelUsage
 	installCtrlPanelListInstallFlags.Usage = installCtrlPanelListInstallUsage
@@ -445,8 +510,12 @@ func ParseEndpoint(
 			svcf = configResourceFlags
 		case "dex-wallet":
 			svcf = dexWalletFlags
+		case "exchange-rates":
+			svcf = exchangeRatesFlags
 		case "hedge":
 			svcf = hedgeFlags
+		case "hedge-tasks":
+			svcf = hedgeTasksFlags
 		case "install-ctrl-panel":
 			svcf = installCtrlPanelFlags
 		case "lpmonit":
@@ -494,8 +563,23 @@ func ParseEndpoint(
 
 		case "account-cex":
 			switch epn {
+			case "get-all-token-balances":
+				epf = accountCexGetAllTokenBalancesFlags
+
+			case "token-balance":
+				epf = accountCexTokenBalanceFlags
+
 			case "wallet-info":
 				epf = accountCexWalletInfoFlags
+
+			case "create-account":
+				epf = accountCexCreateAccountFlags
+
+			case "list-accounts":
+				epf = accountCexListAccountsFlags
+
+			case "delete-account":
+				epf = accountCexDeleteAccountFlags
 
 			}
 
@@ -503,6 +587,9 @@ func ParseEndpoint(
 			switch epn {
 			case "wallet-info":
 				epf = accountDexWalletInfoFlags
+
+			case "get-wallet-assets":
+				epf = accountDexGetWalletAssetsFlags
 
 			}
 
@@ -622,6 +709,13 @@ func ParseEndpoint(
 
 			}
 
+		case "exchange-rates":
+			switch epn {
+			case "get-all-rates":
+				epf = exchangeRatesGetAllRatesFlags
+
+			}
+
 		case "hedge":
 			switch epn {
 			case "list":
@@ -632,6 +726,28 @@ func ParseEndpoint(
 
 			case "del":
 				epf = hedgeDelFlags
+
+			}
+
+		case "hedge-tasks":
+			switch epn {
+			case "list-tasks":
+				epf = hedgeTasksListTasksFlags
+
+			case "get-task":
+				epf = hedgeTasksGetTaskFlags
+
+			case "delete-task":
+				epf = hedgeTasksDeleteTaskFlags
+
+			case "create-task":
+				epf = hedgeTasksCreateTaskFlags
+
+			case "save-hedge-data":
+				epf = hedgeTasksSaveHedgeDataFlags
+
+			case "close-task":
+				epf = hedgeTasksCloseTaskFlags
 
 			}
 
@@ -789,16 +905,34 @@ func ParseEndpoint(
 		case "account-cex":
 			c := accountcexc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
+			case "get-all-token-balances":
+				endpoint = c.GetAllTokenBalances()
+				data, err = accountcexc.BuildGetAllTokenBalancesPayload(*accountCexGetAllTokenBalancesAccountIDFlag)
+			case "token-balance":
+				endpoint = c.TokenBalance()
+				data, err = accountcexc.BuildTokenBalancePayload(*accountCexTokenBalanceAccountIDFlag, *accountCexTokenBalanceSymbolFlag)
 			case "wallet-info":
 				endpoint = c.WalletInfo()
+				data, err = accountcexc.BuildWalletInfoPayload(*accountCexWalletInfoAccountIDFlag)
+			case "create-account":
+				endpoint = c.CreateAccount()
+				data, err = accountcexc.BuildCreateAccountPayload(*accountCexCreateAccountBodyFlag)
+			case "list-accounts":
+				endpoint = c.ListAccounts()
 				data = nil
+			case "delete-account":
+				endpoint = c.DeleteAccount()
+				data, err = accountcexc.BuildDeleteAccountPayload(*accountCexDeleteAccountAccountIDFlag)
 			}
 		case "account-dex":
 			c := accountdexc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "wallet-info":
 				endpoint = c.WalletInfo()
-				data, err = accountdexc.BuildWalletInfoPayload(*accountDexWalletInfoBodyFlag)
+				data, err = accountdexc.BuildWalletInfoPayload(*accountDexWalletInfoIDFlag)
+			case "get-wallet-assets":
+				endpoint = c.GetWalletAssets()
+				data, err = accountdexc.BuildGetWalletAssetsPayload(*accountDexGetWalletAssetsAddressesFlag, *accountDexGetWalletAssetsCurrencyFlag, *accountDexGetWalletAssetsHideZeroBalanceFlag, *accountDexGetWalletAssetsHideSmallBalanceFlag, *accountDexGetWalletAssetsSmallBalanceThresholdFlag)
 			}
 		case "amm-order-center":
 			c := ammordercenterc.NewClient(scheme, host, doer, enc, dec, restore)
@@ -916,6 +1050,13 @@ func ParseEndpoint(
 				endpoint = c.UpdateLpWallet()
 				data, err = dexwalletc.BuildUpdateLpWalletPayload(*dexWalletUpdateLpWalletBodyFlag)
 			}
+		case "exchange-rates":
+			c := exchangeratesc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "get-all-rates":
+				endpoint = c.GetAllRates()
+				data = nil
+			}
 		case "hedge":
 			c := hedgec.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
@@ -928,6 +1069,28 @@ func ParseEndpoint(
 			case "del":
 				endpoint = c.Del()
 				data, err = hedgec.BuildDelPayload(*hedgeDelBodyFlag)
+			}
+		case "hedge-tasks":
+			c := hedgetasksc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "list-tasks":
+				endpoint = c.ListTasks()
+				data = nil
+			case "get-task":
+				endpoint = c.GetTask()
+				data, err = hedgetasksc.BuildGetTaskPayload(*hedgeTasksGetTaskTaskIDFlag)
+			case "delete-task":
+				endpoint = c.DeleteTask()
+				data, err = hedgetasksc.BuildDeleteTaskPayload(*hedgeTasksDeleteTaskTaskIDFlag)
+			case "create-task":
+				endpoint = c.CreateTask()
+				data, err = hedgetasksc.BuildCreateTaskPayload(*hedgeTasksCreateTaskBodyFlag)
+			case "save-hedge-data":
+				endpoint = c.SaveHedgeData()
+				data, err = hedgetasksc.BuildSaveHedgeDataPayload(*hedgeTasksSaveHedgeDataBodyFlag)
+			case "close-task":
+				endpoint = c.CloseTask()
+				data, err = hedgetasksc.BuildCloseTaskPayload(*hedgeTasksCloseTaskTaskIDFlag)
 			}
 		case "install-ctrl-panel":
 			c := installctrlpanelc.NewClient(scheme, host, doer, enc, dec, restore)
@@ -1097,24 +1260,91 @@ Example:
 // account-cexUsage displays the usage of the account-cex command and its
 // subcommands.
 func accountCexUsage() {
-	fmt.Fprintf(os.Stderr, `Service is the accountCex service interface.
+	fmt.Fprintf(os.Stderr, `Manage centralized exchange (CEX) accounts and their wallet information
 Usage:
     %[1]s [globalflags] account-cex COMMAND [flags]
 
 COMMAND:
-    wallet-info: WalletInfo implements walletInfo.
+    get-all-token-balances: Get all token balances for a specified CEX account
+    token-balance: Get specific token balance for a specified CEX account
+    wallet-info: Get wallet balance information for a specified CEX account
+    create-account: Create a new CEX account configuration
+    list-accounts: List all configured CEX accounts
+    delete-account: Delete a specified CEX account
 
 Additional help:
     %[1]s account-cex COMMAND --help
 `, os.Args[0])
 }
-func accountCexWalletInfoUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-cex wallet-info
+func accountCexGetAllTokenBalancesUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-cex get-all-token-balances -account-id STRING
 
-WalletInfo implements walletInfo.
+Get all token balances for a specified CEX account
+    -account-id STRING: CEX account ID
 
 Example:
-    %[1]s account-cex wallet-info
+    %[1]s account-cex get-all-token-balances --account-id "68020ad9378b05e70089f71f"
+`, os.Args[0])
+}
+
+func accountCexTokenBalanceUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-cex token-balance -account-id STRING -symbol STRING
+
+Get specific token balance for a specified CEX account
+    -account-id STRING: CEX account ID
+    -symbol STRING: Token symbol
+
+Example:
+    %[1]s account-cex token-balance --account-id "68020ad9378b05e70089f71f" --symbol "BTC"
+`, os.Args[0])
+}
+
+func accountCexWalletInfoUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-cex wallet-info -account-id STRING
+
+Get wallet balance information for a specified CEX account
+    -account-id STRING: CEX account ID
+
+Example:
+    %[1]s account-cex wallet-info --account-id "60c72b2f9b1d8e001c8a4d5e"
+`, os.Args[0])
+}
+
+func accountCexCreateAccountUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-cex create-account -body JSON
+
+Create a new CEX account configuration
+    -body JSON: 
+
+Example:
+    %[1]s account-cex create-account --body '{
+      "api_key": "abc123def456",
+      "api_secret": "xyz789uvw101",
+      "exchange": "binance",
+      "name": "Binance Hedge Account 1",
+      "passphrase": "mysecretpassphrase"
+   }'
+`, os.Args[0])
+}
+
+func accountCexListAccountsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-cex list-accounts
+
+List all configured CEX accounts
+
+Example:
+    %[1]s account-cex list-accounts
+`, os.Args[0])
+}
+
+func accountCexDeleteAccountUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-cex delete-account -account-id STRING
+
+Delete a specified CEX account
+    -account-id STRING: CEX account ID
+
+Example:
+    %[1]s account-cex delete-account --account-id "60c72b2f9b1d8e001c8a4d5e"
 `, os.Args[0])
 }
 
@@ -1127,21 +1357,38 @@ Usage:
 
 COMMAND:
     wallet-info: WalletInfo implements walletInfo.
+    get-wallet-assets: GetWalletAssets implements getWalletAssets.
 
 Additional help:
     %[1]s account-dex COMMAND --help
 `, os.Args[0])
 }
 func accountDexWalletInfoUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-dex wallet-info -body JSON
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-dex wallet-info -id STRING
 
 WalletInfo implements walletInfo.
-    -body JSON: 
+    -id STRING: 
 
 Example:
-    %[1]s account-dex wallet-info --body '{
-      "chainId": 3588115170606933138
-   }'
+    %[1]s account-dex wallet-info --id "Nam totam adipisci."
+`, os.Args[0])
+}
+
+func accountDexGetWalletAssetsUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] account-dex get-wallet-assets -addresses JSON -currency STRING -hide-zero-balance BOOL -hide-small-balance BOOL -small-balance-threshold STRING
+
+GetWalletAssets implements getWalletAssets.
+    -addresses JSON: 
+    -currency STRING: 
+    -hide-zero-balance BOOL: 
+    -hide-small-balance BOOL: 
+    -small-balance-threshold STRING: 
+
+Example:
+    %[1]s account-dex get-wallet-assets --addresses '[
+      "Consequuntur excepturi omnis voluptatem sint vel.",
+      "Veniam dolorem quod numquam accusamus deleniti."
+   ]' --currency "CNY" --hide-zero-balance true --hide-small-balance false --small-balance-threshold "Placeat consequatur."
 `, os.Args[0])
 }
 
@@ -1167,10 +1414,10 @@ List implements list.
 
 Example:
     %[1]s amm-order-center list --body '{
-      "ammName": "Voluptatem expedita quibusdam ut explicabo officiis.",
-      "page": 2717927861584690275,
-      "pageSize": 7355161102422913159,
-      "status": 3119845283383217669
+      "ammName": "Suscipit quia assumenda rerum sed.",
+      "page": 9025772668383392293,
+      "pageSize": 7271879471297109181,
+      "status": 7661082466357357072
    }'
 `, os.Args[0])
 }
@@ -1209,7 +1456,7 @@ set limit information
 
 Example:
     %[1]s authentication-limiter set-authentication-limiter --body '{
-      "authenticationLimiter": "Ullam cumque."
+      "authenticationLimiter": "Occaecati rerum eum voluptas commodi qui enim."
    }'
 `, os.Args[0])
 }
@@ -1279,7 +1526,7 @@ Get wallet list with their associated tokens
 
 Example:
     %[1]s base-data get-wallet-and-tokens --body '{
-      "chainId": 6527562537914258047
+      "chainId": 3283168463868168616
    }'
 `, os.Args[0])
 }
@@ -1309,18 +1556,18 @@ used to create cross-chain config
 
 Example:
     %[1]s bridge-config bridge-create --body '{
-      "ammName": "Quia vitae odio officia neque.",
-      "bridgeName": "Sequi repellat repellat accusamus.",
-      "dstChainId": "Quam officia fugit voluptatem.",
-      "dstTokenId": "Et et sequi et quaerat.",
+      "ammName": "Rerum illum recusandae.",
+      "bridgeName": "Aut et iusto voluptatem debitis earum voluptatem.",
+      "dstChainId": "Et ex.",
+      "dstTokenId": "Aut ut rerum praesentium omnis.",
       "enableHedge": true,
       "enableLimiter": false,
-      "relayApiKey": "Ipsam voluptatem consequuntur excepturi.",
-      "relayUri": "Voluptatem sint vel mollitia veniam dolorem.",
-      "srcChainId": "Dolorem eum beatae molestias.",
-      "srcTokenId": "Dolore aut.",
-      "srcWalletId": "Odio ut ratione voluptates.",
-      "walletId": "Aliquam soluta sapiente qui."
+      "relayApiKey": "In ratione labore molestiae.",
+      "relayUri": "Fugiat dolores asperiores velit.",
+      "srcChainId": "Inventore voluptas officiis sed voluptates recusandae.",
+      "srcTokenId": "Quo et.",
+      "srcWalletId": "Vel dolores ullam incidunt labore rem quibusdam.",
+      "walletId": "Aut rerum repellendus."
    }'
 `, os.Args[0])
 }
@@ -1343,7 +1590,7 @@ BridgeDelete implements bridgeDelete.
 
 Example:
     %[1]s bridge-config bridge-delete --body '{
-      "id": "Molestias repudiandae suscipit qui nemo dolores ipsa."
+      "id": "Esse sit quia nesciunt iure."
    }'
 `, os.Args[0])
 }
@@ -1356,7 +1603,7 @@ BridgeTest implements bridgeTest.
 
 Example:
     %[1]s bridge-config bridge-test --body '{
-      "id": "Voluptatum voluptas quo omnis."
+      "id": "Itaque et quasi est."
    }'
 `, os.Args[0])
 }
@@ -1383,13 +1630,13 @@ Get transaction list
 
 Example:
     %[1]s chain-client-transaction transaction-list --body '{
-      "businessId": "Voluptas commodi qui enim.",
-      "chainId": 5639829546441970995,
-      "endTime": 2171339813499125381,
-      "page": 2570734770268816797,
-      "pageSize": 29,
-      "startTime": 7716110597782234222,
-      "status": "Est cum quibusdam debitis quisquam commodi."
+      "businessId": "Sit totam voluptatem.",
+      "chainId": 6225559640257661536,
+      "endTime": 8290123938380857716,
+      "page": 4235913006187879412,
+      "pageSize": 68,
+      "startTime": 3656038887363363400,
+      "status": "Ex sunt quidem dolores est."
    }'
 `, os.Args[0])
 }
@@ -1422,28 +1669,22 @@ Example:
     %[1]s chain-config set-chain-list --body '{
       "chainList": [
          {
-            "chainId": 3132877652705483266,
-            "chainName": "Voluptatem debitis.",
-            "name": "Voluptatem dolorem.",
-            "tokenName": "Voluptas officiis sed voluptates."
+            "chainId": 2217608831006495877,
+            "chainName": "Sit magni est eos molestias dolor.",
+            "name": "Consequuntur saepe nobis laborum.",
+            "tokenName": "Maxime et repudiandae doloribus."
          },
          {
-            "chainId": 3132877652705483266,
-            "chainName": "Voluptatem debitis.",
-            "name": "Voluptatem dolorem.",
-            "tokenName": "Voluptas officiis sed voluptates."
+            "chainId": 2217608831006495877,
+            "chainName": "Sit magni est eos molestias dolor.",
+            "name": "Consequuntur saepe nobis laborum.",
+            "tokenName": "Maxime et repudiandae doloribus."
          },
          {
-            "chainId": 3132877652705483266,
-            "chainName": "Voluptatem debitis.",
-            "name": "Voluptatem dolorem.",
-            "tokenName": "Voluptas officiis sed voluptates."
-         },
-         {
-            "chainId": 3132877652705483266,
-            "chainName": "Voluptatem debitis.",
-            "name": "Voluptatem dolorem.",
-            "tokenName": "Voluptas officiis sed voluptates."
+            "chainId": 2217608831006495877,
+            "chainName": "Sit magni est eos molestias dolor.",
+            "name": "Consequuntur saepe nobis laborum.",
+            "tokenName": "Maxime et repudiandae doloribus."
          }
       ]
    }'
@@ -1458,8 +1699,8 @@ used to delete basic data for a chain
 
 Example:
     %[1]s chain-config del-chain-list --body '{
-      "_id": "Quibusdam cupiditate.",
-      "chainId": 463143466461510957
+      "_id": "Atque qui nobis adipisci nesciunt provident.",
+      "chainId": 2398861740701109720
    }'
 `, os.Args[0])
 }
@@ -1482,9 +1723,9 @@ SetChainGasUsd implements setChainGasUsd.
 
 Example:
     %[1]s chain-config set-chain-gas-usd --body '{
-      "_id": "Consequuntur quod amet.",
-      "chainId": 6285722081445360316,
-      "usd": 5968260089152973796
+      "_id": "Numquam in nam alias in.",
+      "chainId": 5955233810056149118,
+      "usd": 4119041034603447922
    }'
 `, os.Args[0])
 }
@@ -1497,8 +1738,8 @@ SetChainClientConfig implements setChainClientConfig.
 
 Example:
     %[1]s chain-config set-chain-client-config --body '{
-      "chainData": "Occaecati dignissimos.",
-      "chainId": 9119880716659814581
+      "chainData": "Et maiores nihil fugit et.",
+      "chainId": 2050093239715927072
    }'
 `, os.Args[0])
 }
@@ -1529,10 +1770,10 @@ CreateResource implements createResource.
 
 Example:
     %[1]s config-resource create-resource --body '{
-      "appName": "Qui doloremque nam.",
-      "clientId": "Sit sed.",
-      "template": "Sunt dolor ea ducimus doloribus.",
-      "version": "Sint asperiores error nulla quo sunt."
+      "appName": "Iure vel voluptatum excepturi culpa.",
+      "clientId": "Officiis ut quis sequi ut voluptatem voluptas.",
+      "template": "Id alias hic ratione ab laudantium aut.",
+      "version": "Aut deleniti adipisci."
    }'
 `, os.Args[0])
 }
@@ -1545,7 +1786,7 @@ GetResource implements getResource.
 
 Example:
     %[1]s config-resource get-resource --body '{
-      "clientId": "Tenetur numquam velit quia sunt."
+      "clientId": "Voluptatem dolores eos laboriosam laborum maiores quas."
    }'
 `, os.Args[0])
 }
@@ -1578,12 +1819,12 @@ EditResult implements editResult.
 
 Example:
     %[1]s config-resource edit-result --body '{
-      "appName": "Incidunt eos est ipsa aut ratione eum.",
-      "clientId": "Aliquid quibusdam deserunt aut.",
-      "template": "Est quam vel modi.",
-      "templateResult": "Itaque et quasi est.",
-      "version": "Eos earum eveniet adipisci quibusdam nihil.",
-      "versionHash": "Itaque et quo."
+      "appName": "Consequuntur unde quasi molestiae commodi amet non.",
+      "clientId": "Totam saepe ad et.",
+      "template": "Quis a accusantium dolores dicta.",
+      "templateResult": "Ipsa sint voluptatem ea.",
+      "version": "Animi ut rem eveniet.",
+      "versionHash": "Dolore ut ut eos placeat."
    }'
 `, os.Args[0])
 }
@@ -1624,20 +1865,20 @@ CreateDexWallet implements createDexWallet.
 
 Example:
     %[1]s dex-wallet create-dex-wallet --body '{
-      "accountId": "Asperiores quaerat et fuga.",
-      "address": "Corporis voluptas.",
-      "balance": "Sit eum culpa eligendi sit magni est.",
-      "chainId": 2603137450456952286,
-      "chainType": "Fugiat et quas incidunt fugit voluptatem eius.",
-      "id": "Enim consequatur ad consequuntur nihil.",
-      "privateKey": "Sit aspernatur reiciendis voluptas.",
-      "signServiceEndpoint": "Fuga eum.",
-      "storeId": "Accusantium corrupti recusandae tempora quia.",
-      "vaultHostType": "Aliquam delectus non magnam.",
-      "vaultName": "Nisi consequatur maxime nobis.",
-      "vaultSecertType": "Voluptates qui quidem rerum.",
-      "walletName": "Quasi vitae est nobis aperiam.",
-      "walletType": "storeId"
+      "accountId": "Neque possimus libero.",
+      "address": "Blanditiis tempore.",
+      "balance": "Libero sunt temporibus ex sint accusantium.",
+      "chainId": 5918411130612222245,
+      "chainType": "Ut aut magni odit.",
+      "id": "Maiores ullam neque quia voluptas occaecati.",
+      "privateKey": "Commodi est.",
+      "signServiceEndpoint": "Ipsum reprehenderit.",
+      "storeId": "Aut et.",
+      "vaultHostType": "Omnis non doloribus rem numquam quasi.",
+      "vaultName": "Aut repellat sed temporibus cupiditate saepe consequatur.",
+      "vaultSecertType": "Ut maxime harum ut ex et sit.",
+      "walletName": "Eum dolor.",
+      "walletType": "privateKey"
    }'
 `, os.Args[0])
 }
@@ -1650,7 +1891,7 @@ DeleteDexWallet implements deleteDexWallet.
 
 Example:
     %[1]s dex-wallet delete-dex-wallet --body '{
-      "id": "Asperiores a odit et."
+      "id": "Ad sed atque aut soluta."
    }'
 `, os.Args[0])
 }
@@ -1673,8 +1914,32 @@ UpdateLpWallet implements updateLpWallet.
 
 Example:
     %[1]s dex-wallet update-lp-wallet --body '{
-      "relayUrl": "Officiis officia facilis."
+      "relayUrl": "Ut est earum sit rem omnis."
    }'
+`, os.Args[0])
+}
+
+// exchange-ratesUsage displays the usage of the exchange-rates command and its
+// subcommands.
+func exchangeRatesUsage() {
+	fmt.Fprintf(os.Stderr, `Get exchange rate information
+Usage:
+    %[1]s [globalflags] exchange-rates COMMAND [flags]
+
+COMMAND:
+    get-all-rates: Get exchange rate information for all trading pairs
+
+Additional help:
+    %[1]s exchange-rates COMMAND --help
+`, os.Args[0])
+}
+func exchangeRatesGetAllRatesUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] exchange-rates get-all-rates
+
+Get exchange rate information for all trading pairs
+
+Example:
+    %[1]s exchange-rates get-all-rates
 `, os.Args[0])
 }
 
@@ -1712,8 +1977,8 @@ Edit implements edit.
 Example:
     %[1]s hedge edit --body '{
       "hedge": {
-         "hedgeType": "Ratione ab laudantium aut.",
-         "id": "Sequi ut voluptatem voluptas voluptate id alias."
+         "hedgeType": "A non modi dolore.",
+         "id": "A nihil ut fugiat deleniti."
       }
    }'
 `, os.Args[0])
@@ -1727,8 +1992,137 @@ Del implements del.
 
 Example:
     %[1]s hedge del --body '{
-      "id": "A est sint autem dolorem voluptas."
+      "id": "Enim fugit fuga accusantium laborum ea quaerat."
    }'
+`, os.Args[0])
+}
+
+// hedge-tasksUsage displays the usage of the hedge-tasks command and its
+// subcommands.
+func hedgeTasksUsage() {
+	fmt.Fprintf(os.Stderr, `Manage hedge tasks
+Usage:
+    %[1]s [globalflags] hedge-tasks COMMAND [flags]
+
+COMMAND:
+    list-tasks: List all hedge tasks
+    get-task: Get a single hedge task by ID
+    delete-task: Delete specified hedge task
+    create-task: Create new hedge task
+    save-hedge-data: Save hedge data to update an existing hedge configuration
+    close-task: Close a hedge task
+
+Additional help:
+    %[1]s hedge-tasks COMMAND --help
+`, os.Args[0])
+}
+func hedgeTasksListTasksUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] hedge-tasks list-tasks
+
+List all hedge tasks
+
+Example:
+    %[1]s hedge-tasks list-tasks
+`, os.Args[0])
+}
+
+func hedgeTasksGetTaskUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] hedge-tasks get-task -task-id STRING
+
+Get a single hedge task by ID
+    -task-id STRING: Hedge task ID
+
+Example:
+    %[1]s hedge-tasks get-task --task-id "60c72b2f9b1d8e001c8a4d5e"
+`, os.Args[0])
+}
+
+func hedgeTasksDeleteTaskUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] hedge-tasks delete-task -task-id STRING
+
+Delete specified hedge task
+    -task-id STRING: Hedge task ID
+
+Example:
+    %[1]s hedge-tasks delete-task --task-id "60c72b2f9b1d8e001c8a4d5e"
+`, os.Args[0])
+}
+
+func hedgeTasksCreateTaskUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] hedge-tasks create-task -body JSON
+
+Create new hedge task
+    -body JSON: 
+
+Example:
+    %[1]s hedge-tasks create-task --body '{
+      "account_id": "60c72b2f9b1d8e001c8a4d5f",
+      "amm_name": "Uniswap",
+      "bridge_id": "60c72b2f9b1d8e001c8a4d60",
+      "id": "60c72b2f9b1d8e001c8a4d5e",
+      "name": "ETH-USDT Hedge Task"
+   }'
+`, os.Args[0])
+}
+
+func hedgeTasksSaveHedgeDataUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] hedge-tasks save-hedge-data -body JSON
+
+Save hedge data to update an existing hedge configuration
+    -body JSON: 
+
+Example:
+    %[1]s hedge-tasks save-hedge-data --body '{
+      "amm_name": "amm-01",
+      "bridge_id": "67c0175f7aecc30830cac46e",
+      "cex_account_id": "68020ad9378b05e70089f71f",
+      "hedgeTaskId": "6809ffda61342a03ea15124b",
+      "id": "6809ffda61342a03ea15124b",
+      "initialBalances": {
+         "destination": {
+            "cex": "10000",
+            "dex": "1000115.28820246",
+            "token": "USDT",
+            "total": 1010115.28820246,
+            "wallet": "0xCb4284dFA16429762e40d01F5Cff4D4bD0870f42",
+            "walletName": "B1"
+         },
+         "source": {
+            "cex": "10000",
+            "dex": "1000115.28820246",
+            "token": "USDT",
+            "total": 1010115.28820246,
+            "wallet": "0xCb4284dFA16429762e40d01F5Cff4D4bD0870f42",
+            "walletName": "B1"
+         }
+      },
+      "name": "0011",
+      "risk_config": {
+         "auto_hedge": false,
+         "hedge_mode": "SPOT",
+         "max_asset_exposure": {
+            "ETH": 10,
+            "USDC": 10000,
+            "USDT": 10000
+         },
+         "min_hedge_amount": {
+            "ETH": 0.1,
+            "USDC": 100,
+            "USDT": 100
+         }
+      }
+   }'
+`, os.Args[0])
+}
+
+func hedgeTasksCloseTaskUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] hedge-tasks close-task -task-id STRING
+
+Close a hedge task
+    -task-id STRING: Hedge task ID
+
+Example:
+    %[1]s hedge-tasks close-task --task-id "60c72b2f9b1d8e001c8a4d5e"
 `, os.Args[0])
 }
 
@@ -1759,7 +2153,7 @@ ListInstall implements listInstall.
 
 Example:
     %[1]s install-ctrl-panel list-install --body '{
-      "installType": "Quas quod ut quas sint qui laborum."
+      "installType": "Velit voluptas magnam."
    }'
 `, os.Args[0])
 }
@@ -1773,30 +2167,30 @@ InstallLpClient implements installLpClient.
 Example:
     %[1]s install-ctrl-panel install-lp-client --body '{
       "setupConfig": {
-         "awsAccessKeyId": "Vel aperiam aut explicabo sint est voluptas.",
-         "awsSecretAccessKey": "Autem qui qui dignissimos sequi ratione dicta.",
-         "connectionExplorerurl": "Quos deleniti vero ipsa.",
-         "connectionHelperurl": "Molestiae qui sed quia et.",
-         "connectionNodeurl": "Aut nihil dolorem natus dolorum ut.",
-         "connectionWalleturl": "Quia voluptates aliquam.",
-         "containerPort": "Eum molestiae aut.",
+         "awsAccessKeyId": "Officiis a qui mollitia recusandae sit.",
+         "awsSecretAccessKey": "Nostrum cum.",
+         "connectionExplorerurl": "Iusto rerum perferendis ipsum.",
+         "connectionHelperurl": "Beatae velit nesciunt et odio numquam.",
+         "connectionNodeurl": "Ut perspiciatis eveniet autem et.",
+         "connectionWalleturl": "Aut nam et sed officia quia distinctio.",
+         "containerPort": "Accusamus atque tempora molestias libero enim ut.",
          "customEnv": [
             {
-               "key": "Laboriosam maiores.",
-               "value": "Non dolorem."
+               "key": "Consequatur temporibus alias sapiente explicabo rerum.",
+               "value": "Odio illo modi."
             },
             {
-               "key": "Laboriosam maiores.",
-               "value": "Non dolorem."
+               "key": "Consequatur temporibus alias sapiente explicabo rerum.",
+               "value": "Odio illo modi."
             }
          ],
-         "deploymentName": "Totam saepe ad et.",
-         "imageRepository": "Nihil est ea ipsa sint voluptatem.",
+         "deploymentName": "Autem neque distinctio dolor ut dolorem.",
+         "imageRepository": "Aut voluptatem.",
          "install": true,
-         "rpcUrl": "Dolore ut ut eos placeat.",
-         "serviceName": "Id quis a accusantium dolores dicta.",
-         "startBlock": "Animi ut rem eveniet.",
-         "type": "Consequuntur unde quasi molestiae commodi amet non."
+         "rpcUrl": "Vero aperiam sit voluptas voluptatibus aliquid.",
+         "serviceName": "Illum aspernatur non.",
+         "startBlock": "Iusto corrupti explicabo aut dolorum excepturi.",
+         "type": "Earum dicta."
       }
    }'
 `, os.Args[0])
@@ -1811,7 +2205,7 @@ UninstallLpClient implements uninstallLpClient.
 Example:
     %[1]s install-ctrl-panel uninstall-lp-client --body '{
       "setupConfig": {
-         "type": "Perspiciatis libero porro velit adipisci perferendis quam.",
+         "type": "Magnam nam ex odio.",
          "uninstall": false
       }
    }'
@@ -1827,25 +2221,25 @@ InstallDeployment implements installDeployment.
 Example:
     %[1]s install-ctrl-panel install-deployment --body '{
       "setupConfig": {
-         "containerPort": "Maiores ullam neque quia voluptas occaecati.",
+         "containerPort": "Qui laudantium.",
          "customEnv": [
             {
-               "key": "Laboriosam maiores.",
-               "value": "Non dolorem."
+               "key": "Consequatur temporibus alias sapiente explicabo rerum.",
+               "value": "Odio illo modi."
             },
             {
-               "key": "Laboriosam maiores.",
-               "value": "Non dolorem."
+               "key": "Consequatur temporibus alias sapiente explicabo rerum.",
+               "value": "Odio illo modi."
             },
             {
-               "key": "Laboriosam maiores.",
-               "value": "Non dolorem."
+               "key": "Consequatur temporibus alias sapiente explicabo rerum.",
+               "value": "Odio illo modi."
             }
          ],
-         "imageRepository": "Doloremque voluptatibus amet est.",
+         "imageRepository": "Earum ut beatae facilis culpa dolorem.",
          "install": false,
-         "installType": "market",
-         "name": "Commodi commodi est est."
+         "installType": "userApp",
+         "name": "Quidem et id."
       }
    }'
 `, os.Args[0])
@@ -1860,8 +2254,8 @@ UninstallDeployment implements uninstallDeployment.
 Example:
     %[1]s install-ctrl-panel uninstall-deployment --body '{
       "setupConfig": {
-         "installType": "Maxime harum ut.",
-         "name": "Et sit eius ipsum reprehenderit ab.",
+         "installType": "Sunt veniam quis.",
+         "name": "Aperiam delectus est mollitia et aut magnam.",
          "uninstall": false
       }
    }'
@@ -1877,10 +2271,10 @@ UpdateDeployment implements updateDeployment.
 Example:
     %[1]s install-ctrl-panel update-deployment --body '{
       "setupConfig": {
-         "installContext": "Quaerat provident quasi odit sint dignissimos.",
-         "installType": "Autem consequatur dolorum.",
-         "name": "Fugiat vero sed corrupti.",
-         "update": false
+         "installContext": "Quasi ipsa iure nihil similique.",
+         "installType": "Quis et voluptatum.",
+         "name": "Nihil quia ut ullam.",
+         "update": true
       }
    }'
 `, os.Args[0])
@@ -1911,9 +2305,9 @@ add script and save
 
 Example:
     %[1]s lpmonit add-script --body '{
-      "cron": "Id aut eum ex.",
-      "name": "Voluptatem rerum voluptates rerum officia nulla.",
-      "scriptBody": "Est earum sit."
+      "cron": "Ex iusto enim et et.",
+      "name": "Non animi ipsum accusamus.",
+      "scriptBody": "Aut provident et soluta voluptatibus accusantium."
    }'
 `, os.Args[0])
 }
@@ -1936,7 +2330,7 @@ task_list_delete
 
 Example:
     %[1]s lpmonit delete-script --body '{
-      "_id": "Fuga accusantium laborum ea quaerat dolores."
+      "_id": "Nihil corrupti eius veritatis minima aut."
    }'
 `, os.Args[0])
 }
@@ -1949,7 +2343,7 @@ task_run
 
 Example:
     %[1]s lpmonit run-script --body '{
-      "scriptContent": "Dicta illum et et perspiciatis perspiciatis."
+      "scriptContent": "Aut minus repellat sit."
    }'
 `, os.Args[0])
 }
@@ -1962,7 +2356,7 @@ run_result
 
 Example:
     %[1]s lpmonit run-result --body '{
-      "scriptName": "Iusto nihil est nulla asperiores unde."
+      "scriptName": "Nulla occaecati non omnis."
    }'
 `, os.Args[0])
 }
@@ -1989,9 +2383,9 @@ List implements list.
 
 Example:
     %[1]s order-center list --body '{
-      "page": 6519182324104343169,
-      "pageSize": 5314196073863440385,
-      "status": 4997415571965835507
+      "page": 2529123906448328127,
+      "pageSize": 2529816562305037648,
+      "status": 485386676866224174
    }'
 `, os.Args[0])
 }
@@ -2065,8 +2459,8 @@ RegisterAccount implements registerAccount.
 
 Example:
     %[1]s relay-account register-account --body '{
-      "profile": "Accusamus atque tempora molestias libero enim ut.",
-      "relayUrl": "Officiis a qui mollitia recusandae sit."
+      "profile": "Eos alias molestiae voluptatem natus.",
+      "relayUrl": "Qui temporibus."
    }'
 `, os.Args[0])
 }
@@ -2079,7 +2473,7 @@ DeleteAccount implements deleteAccount.
 
 Example:
     %[1]s relay-account delete-account --body '{
-      "id": "In est eius."
+      "id": "Et qui maxime non aut."
    }'
 `, os.Args[0])
 }
@@ -2129,7 +2523,7 @@ Settings implements settings.
 
 Example:
     %[1]s settings settings --body '{
-      "relayUri": "Et id eos aliquam aut et eos."
+      "relayUri": "Quis et nostrum laboriosam dolorum est doloribus."
    }'
 `, os.Args[0])
 }
@@ -2193,7 +2587,7 @@ TaskDeploy implements taskDeploy.
 
 Example:
     %[1]s task-manager task-deploy --body '{
-      "_id": "Nihil similique."
+      "_id": "Necessitatibus ipsa non sapiente."
    }'
 `, os.Args[0])
 }
@@ -2206,7 +2600,7 @@ UnDeploy implements unDeploy.
 
 Example:
     %[1]s task-manager un-deploy --body '{
-      "_id": "Ut molestias quaerat."
+      "_id": "Ut tempore officiis a explicabo sed."
    }'
 `, os.Args[0])
 }
@@ -2219,12 +2613,12 @@ TaskCreate implements taskCreate.
 
 Example:
     %[1]s task-manager task-create --body '{
-      "_id": "Illo non quisquam et.",
-      "deployMessage": "Enim et et ex aut.",
+      "_id": "Est in nostrum quia officia doloremque et.",
+      "deployMessage": "Mollitia alias.",
       "deployed": true,
-      "schedule": "Non animi ipsum accusamus.",
-      "scriptBody": "Quis veritatis sequi voluptas hic neque ut.",
-      "scriptPath": "Et soluta voluptatibus accusantium harum.",
+      "schedule": "Molestias sapiente aut eveniet maiores ut repellendus.",
+      "scriptBody": "Et ducimus rem in in rerum.",
+      "scriptPath": "Iure deleniti ad velit.",
       "taskType": "customize"
    }'
 `, os.Args[0])
@@ -2264,15 +2658,15 @@ TokenCreate implements tokenCreate.
 
 Example:
     %[1]s token-manager token-create --body '{
-      "_id": "Eius veritatis minima.",
-      "address": "Sed totam aut.",
-      "chainId": 6067014032755977977,
-      "chainType": "Dolorem aut molestiae quidem deserunt repellat voluptas.",
-      "coinType": "stable_coin",
-      "marketName": "Accusantium tempora et aperiam.",
-      "precision": 10,
-      "tokenId": "Suscipit nihil sint amet.",
-      "tokenName": "Repellat sit consequatur impedit."
+      "_id": "Placeat asperiores.",
+      "address": "Iusto dolor quas vel.",
+      "chainId": 3687644424907941917,
+      "chainType": "Id et et ipsam dicta.",
+      "coinType": "coin",
+      "marketName": "Sunt est id dolorem id.",
+      "precision": 16,
+      "tokenId": "Ex hic id mollitia modi.",
+      "tokenName": "Quae qui aliquam sequi et omnis sequi."
    }'
 `, os.Args[0])
 }
@@ -2285,7 +2679,7 @@ TokenDelete implements tokenDelete.
 
 Example:
     %[1]s token-manager token-delete --body '{
-      "_id": "Illum illum laborum."
+      "_id": "Maxime quidem et."
    }'
 `, os.Args[0])
 }

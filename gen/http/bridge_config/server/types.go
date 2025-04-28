@@ -104,7 +104,9 @@ type ListBridgeItemResponseBody struct {
 	SrcToken          *string `form:"srcToken,omitempty" json:"srcToken,omitempty" xml:"srcToken,omitempty"`
 	WalletName        *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
 	WalletID          *string `form:"walletId,omitempty" json:"walletId,omitempty" xml:"walletId,omitempty"`
-	EnableHedge       *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	// receiving wallet id
+	SrcWalletID *string `form:"srcWalletId,omitempty" json:"srcWalletId,omitempty" xml:"srcWalletId,omitempty"`
+	EnableHedge *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
 	// Source chain token balance
 	SrcTokenBalance string `form:"srcTokenBalance" json:"srcTokenBalance" xml:"srcTokenBalance"`
 	// Destination chain token balance

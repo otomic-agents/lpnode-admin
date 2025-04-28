@@ -160,6 +160,7 @@ func marshalBridgeconfigListBridgeItemToListBridgeItemResponseBody(v *bridgeconf
 		SrcToken:          v.SrcToken,
 		WalletName:        v.WalletName,
 		WalletID:          v.WalletID,
+		SrcWalletID:       v.SrcWalletID,
 		EnableHedge:       v.EnableHedge,
 		SrcTokenBalance:   v.SrcTokenBalance,
 		DstTokenBalance:   v.DstTokenBalance,

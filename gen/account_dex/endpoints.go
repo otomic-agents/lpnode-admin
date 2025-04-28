@@ -15,19 +15,22 @@ import (
 
 // Endpoints wraps the "accountDex" service endpoints.
 type Endpoints struct {
-	WalletInfo goa.Endpoint
+	WalletInfo      goa.Endpoint
+	GetWalletAssets goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "accountDex" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		WalletInfo: NewWalletInfoEndpoint(s),
+		WalletInfo:      NewWalletInfoEndpoint(s),
+		GetWalletAssets: NewGetWalletAssetsEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "accountDex" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
 	e.WalletInfo = m(e.WalletInfo)
+	e.GetWalletAssets = m(e.GetWalletAssets)
 }
 
 // NewWalletInfoEndpoint returns an endpoint function that calls the method
@@ -36,5 +39,14 @@ func NewWalletInfoEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
 		p := req.(*WalletInfoPayload)
 		return s.WalletInfo(ctx, p)
+	}
+}
+
+// NewGetWalletAssetsEndpoint returns an endpoint function that calls the
+// method "getWalletAssets" of service "accountDex".
+func NewGetWalletAssetsEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*GetWalletAssetsPayload)
+		return s.GetWalletAssets(ctx, p)
 	}
 }

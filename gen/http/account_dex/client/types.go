@@ -11,40 +11,109 @@ import (
 	accountdex "admin-panel/gen/account_dex"
 )
 
-// WalletInfoRequestBody is the type of the "accountDex" service "walletInfo"
-// endpoint HTTP request body.
-type WalletInfoRequestBody struct {
-	// chain Id
-	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
-}
-
 // WalletInfoResponseBody is the type of the "accountDex" service "walletInfo"
 // endpoint HTTP response body.
 type WalletInfoResponseBody struct {
 	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// result
-	Data    []*DexAccountBalanceResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
-	Message *string                          `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	// Wallet information
+	Result  *ADBWalletInfoResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	Message *string                    `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
 }
 
-// DexAccountBalanceResponseBody is used to define fields on response body
+// GetWalletAssetsResponseBody is the type of the "accountDex" service
+// "getWalletAssets" endpoint HTTP response body.
+type GetWalletAssetsResponseBody struct {
+	// Status code
+	Code *int `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
+	// Wallet asset data
+	Result *ADBWalletAssetResponseResponseBody `form:"result,omitempty" json:"result,omitempty" xml:"result,omitempty"`
+	// Response message
+	Message *string `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+}
+
+// ADBWalletInfoResponseBody is used to define fields on response body types.
+type ADBWalletInfoResponseBody struct {
+	// Wallet ID
+	ID *string `form:"_id,omitempty" json:"_id,omitempty" xml:"_id,omitempty"`
+	// Wallet name
+	WalletName *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
+	// Wallet address
+	Address *string `form:"address,omitempty" json:"address,omitempty" xml:"address,omitempty"`
+	// Lowercase wallet address
+	AddressLower *string `form:"addressLower,omitempty" json:"addressLower,omitempty" xml:"addressLower,omitempty"`
+	// Chain type
+	ChainType *string `form:"chainType,omitempty" json:"chainType,omitempty" xml:"chainType,omitempty"`
+	// Chain ID
+	ChainID *int `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
+	// Wallet type
+	WalletType *string `form:"walletType,omitempty" json:"walletType,omitempty" xml:"walletType,omitempty"`
+	// Signature service endpoint
+	SignServiceEndpoint *string `form:"signServiceEndpoint,omitempty" json:"signServiceEndpoint,omitempty" xml:"signServiceEndpoint,omitempty"`
+}
+
+// ADBWalletAssetResponseResponseBody is used to define fields on response body
 // types.
-type DexAccountBalanceResponseBody struct {
-	Token     *string `form:"token,omitempty" json:"token,omitempty" xml:"token,omitempty"`
-	TokenName *string `form:"tokenName,omitempty" json:"tokenName,omitempty" xml:"tokenName,omitempty"`
-	Amount    *string `form:"amount,omitempty" json:"amount,omitempty" xml:"amount,omitempty"`
-	Free      *string `form:"free,omitempty" json:"free,omitempty" xml:"free,omitempty"`
-	Locked    *string `form:"locked,omitempty" json:"locked,omitempty" xml:"locked,omitempty"`
-	Price     *string `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
+type ADBWalletAssetResponseResponseBody struct {
+	// Number of monitored addresses
+	TotalAddresses *int `form:"totalAddresses,omitempty" json:"totalAddresses,omitempty" xml:"totalAddresses,omitempty"`
+	// Last update time
+	LastUpdated *string `form:"lastUpdated,omitempty" json:"lastUpdated,omitempty" xml:"lastUpdated,omitempty"`
+	// Total asset value (USD)
+	TotalValue *string `form:"totalValue,omitempty" json:"totalValue,omitempty" xml:"totalValue,omitempty"`
+	// List of chain assets
+	ChainAssets []*ADBChainAssetGroupResponseBody `form:"chainAssets,omitempty" json:"chainAssets,omitempty" xml:"chainAssets,omitempty"`
 }
 
-// NewWalletInfoRequestBody builds the HTTP request body from the payload of
-// the "walletInfo" endpoint of the "accountDex" service.
-func NewWalletInfoRequestBody(p *accountdex.WalletInfoPayload) *WalletInfoRequestBody {
-	body := &WalletInfoRequestBody{
-		ChainID: p.ChainID,
-	}
-	return body
+// ADBChainAssetGroupResponseBody is used to define fields on response body
+// types.
+type ADBChainAssetGroupResponseBody struct {
+	// Chain ID
+	ChainID *int `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
+	// Chain name
+	ChainName *string `form:"chainName,omitempty" json:"chainName,omitempty" xml:"chainName,omitempty"`
+	// Chain type
+	ChainType *string `form:"chainType,omitempty" json:"chainType,omitempty" xml:"chainType,omitempty"`
+	// Native token name
+	NativeToken *string `form:"nativeToken,omitempty" json:"nativeToken,omitempty" xml:"nativeToken,omitempty"`
+	// Chain Logo URL
+	ChainLogo *string `form:"chainLogo,omitempty" json:"chainLogo,omitempty" xml:"chainLogo,omitempty"`
+	// List of address assets
+	AddressAssets []*ADBAddressAssetGroupResponseBody `form:"addressAssets,omitempty" json:"addressAssets,omitempty" xml:"addressAssets,omitempty"`
+	// Total value on chain (USD)
+	TotalValue *string `form:"totalValue,omitempty" json:"totalValue,omitempty" xml:"totalValue,omitempty"`
+}
+
+// ADBAddressAssetGroupResponseBody is used to define fields on response body
+// types.
+type ADBAddressAssetGroupResponseBody struct {
+	// Wallet address
+	WalletAddress *string `form:"walletAddress,omitempty" json:"walletAddress,omitempty" xml:"walletAddress,omitempty"`
+	// List of wallet names
+	WalletNames []string `form:"walletNames,omitempty" json:"walletNames,omitempty" xml:"walletNames,omitempty"`
+	// List of token balances
+	Tokens []*ADBTokenBalanceResponseBody `form:"tokens,omitempty" json:"tokens,omitempty" xml:"tokens,omitempty"`
+	// Total value of the address (USD)
+	TotalValue *string `form:"totalValue,omitempty" json:"totalValue,omitempty" xml:"totalValue,omitempty"`
+}
+
+// ADBTokenBalanceResponseBody is used to define fields on response body types.
+type ADBTokenBalanceResponseBody struct {
+	// Token contract address
+	TokenAddress *string `form:"tokenAddress,omitempty" json:"tokenAddress,omitempty" xml:"tokenAddress,omitempty"`
+	// Token symbol
+	Symbol *string `form:"symbol,omitempty" json:"symbol,omitempty" xml:"symbol,omitempty"`
+	// Formatted balance
+	FormattedBalance *string `form:"formattedBalance,omitempty" json:"formattedBalance,omitempty" xml:"formattedBalance,omitempty"`
+	// Token decimals
+	Decimals *int `form:"decimals,omitempty" json:"decimals,omitempty" xml:"decimals,omitempty"`
+	// Whether it's a native token
+	IsNative *bool `form:"isNative,omitempty" json:"isNative,omitempty" xml:"isNative,omitempty"`
+	// Token price (USD)
+	Price *string `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
+	// Token value (USD)
+	Value *string `form:"value,omitempty" json:"value,omitempty" xml:"value,omitempty"`
+	// Update time
+	UpdatedAt *string `form:"updatedAt,omitempty" json:"updatedAt,omitempty" xml:"updatedAt,omitempty"`
 }
 
 // NewWalletInfoResultOK builds a "accountDex" service "walletInfo" endpoint
@@ -54,11 +123,27 @@ func NewWalletInfoResultOK(body *WalletInfoResponseBody) *accountdex.WalletInfoR
 		Code:    body.Code,
 		Message: body.Message,
 	}
-	if body.Data != nil {
-		v.Data = make([]*accountdex.DexAccountBalance, len(body.Data))
-		for i, val := range body.Data {
-			v.Data[i] = unmarshalDexAccountBalanceResponseBodyToAccountdexDexAccountBalance(val)
-		}
+	if body.Result != nil {
+		v.Result = unmarshalADBWalletInfoResponseBodyToAccountdexADBWalletInfo(body.Result)
+	}
+
+	return v
+}
+
+// NewGetWalletAssetsResultOK builds a "accountDex" service "getWalletAssets"
+// endpoint result from a HTTP "OK" response.
+func NewGetWalletAssetsResultOK(body *GetWalletAssetsResponseBody) *accountdex.GetWalletAssetsResult {
+	v := &accountdex.GetWalletAssetsResult{
+		Code: body.Code,
+	}
+	if body.Message != nil {
+		v.Message = *body.Message
+	}
+	if body.Result != nil {
+		v.Result = unmarshalADBWalletAssetResponseResponseBodyToAccountdexADBWalletAssetResponse(body.Result)
+	}
+	if body.Message == nil {
+		v.Message = "success"
 	}
 
 	return v

@@ -6,3 +6,88 @@
 // $ goa gen admin-panel/design
 
 package client
+
+import (
+	accountcex "admin-panel/gen/account_cex"
+	"encoding/json"
+	"fmt"
+)
+
+// BuildGetAllTokenBalancesPayload builds the payload for the accountCex
+// getAllTokenBalances endpoint from CLI flags.
+func BuildGetAllTokenBalancesPayload(accountCexGetAllTokenBalancesAccountID string) (*accountcex.GetAllTokenBalancesPayload, error) {
+	var accountID string
+	{
+		accountID = accountCexGetAllTokenBalancesAccountID
+	}
+	v := &accountcex.GetAllTokenBalancesPayload{}
+	v.AccountID = accountID
+
+	return v, nil
+}
+
+// BuildTokenBalancePayload builds the payload for the accountCex tokenBalance
+// endpoint from CLI flags.
+func BuildTokenBalancePayload(accountCexTokenBalanceAccountID string, accountCexTokenBalanceSymbol string) (*accountcex.TokenBalancePayload, error) {
+	var accountID string
+	{
+		accountID = accountCexTokenBalanceAccountID
+	}
+	var symbol string
+	{
+		symbol = accountCexTokenBalanceSymbol
+	}
+	v := &accountcex.TokenBalancePayload{}
+	v.AccountID = accountID
+	v.Symbol = symbol
+
+	return v, nil
+}
+
+// BuildWalletInfoPayload builds the payload for the accountCex walletInfo
+// endpoint from CLI flags.
+func BuildWalletInfoPayload(accountCexWalletInfoAccountID string) (*accountcex.WalletInfoPayload, error) {
+	var accountID string
+	{
+		accountID = accountCexWalletInfoAccountID
+	}
+	v := &accountcex.WalletInfoPayload{}
+	v.AccountID = accountID
+
+	return v, nil
+}
+
+// BuildCreateAccountPayload builds the payload for the accountCex
+// createAccount endpoint from CLI flags.
+func BuildCreateAccountPayload(accountCexCreateAccountBody string) (*accountcex.CACexAccountPayload, error) {
+	var err error
+	var body CreateAccountRequestBody
+	{
+		err = json.Unmarshal([]byte(accountCexCreateAccountBody), &body)
+		if err != nil {
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"api_key\": \"abc123def456\",\n      \"api_secret\": \"xyz789uvw101\",\n      \"exchange\": \"binance\",\n      \"name\": \"Binance Hedge Account 1\",\n      \"passphrase\": \"mysecretpassphrase\"\n   }'")
+		}
+	}
+	v := &accountcex.CACexAccountPayload{
+		Name:       body.Name,
+		Exchange:   body.Exchange,
+		APIKey:     body.APIKey,
+		APISecret:  body.APISecret,
+		Passphrase: body.Passphrase,
+	}
+
+	return v, nil
+}
+
+// BuildDeleteAccountPayload builds the payload for the accountCex
+// deleteAccount endpoint from CLI flags.
+func BuildDeleteAccountPayload(accountCexDeleteAccountAccountID string) (*accountcex.DeleteAccountPayload, error) {
+	var accountID string
+	{
+		accountID = accountCexDeleteAccountAccountID
+	}
+	v := &accountcex.DeleteAccountPayload{}
+	v.AccountID = accountID
+
+	return v, nil
+}

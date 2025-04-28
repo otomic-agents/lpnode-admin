@@ -151,6 +151,7 @@ func (s *bridgeConfigsrvc) BridgeList(ctx context.Context) (res *bridgeconfig.Br
 			SrcToken:          ptr.String(v.SrcToken),
 			WalletName:        ptr.String(v.WalletName),
 			WalletID:          ptr.String(v.Wallet_ID.Hex()),
+			SrcWalletID:       ptr.String(v.Src_Wallet_Id.Hex()),
 			EnableHedge:       ptr.Bool(v.EnableHedge),
 			SrcTokenBalance:   srcTokenBalance,
 			DstTokenBalance:   dstTokenBalance,

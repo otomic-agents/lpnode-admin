@@ -36,7 +36,7 @@ func BuildTransactionListPayload(chainClientTransactionTransactionListBody strin
 	{
 		err = json.Unmarshal([]byte(chainClientTransactionTransactionListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"businessId\": \"Voluptas commodi qui enim.\",\n      \"chainId\": 5639829546441970995,\n      \"endTime\": 2171339813499125381,\n      \"page\": 2570734770268816797,\n      \"pageSize\": 29,\n      \"startTime\": 7716110597782234222,\n      \"status\": \"Est cum quibusdam debitis quisquam commodi.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"businessId\": \"Sit totam voluptatem.\",\n      \"chainId\": 6225559640257661536,\n      \"endTime\": 8290123938380857716,\n      \"page\": 4235913006187879412,\n      \"pageSize\": 68,\n      \"startTime\": 3656038887363363400,\n      \"status\": \"Ex sunt quidem dolores est.\"\n   }'")
 		}
 	}
 	v := &chainclienttransaction.DSGCTListTransactionPayload{

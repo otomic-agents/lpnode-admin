@@ -123,7 +123,9 @@ type ListBridgeItem struct {
 	SrcToken          *string
 	WalletName        *string
 	WalletID          *string
-	EnableHedge       *bool
+	// receiving wallet id
+	SrcWalletID *string
+	EnableHedge *bool
 	// Source chain token balance
 	SrcTokenBalance string
 	// Destination chain token balance

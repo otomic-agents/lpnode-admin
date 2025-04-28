@@ -7,7 +7,36 @@
 
 package client
 
+import (
+	"fmt"
+)
+
+// GetAllTokenBalancesAccountCexPath returns the URL path to the accountCex service getAllTokenBalances HTTP endpoint.
+func GetAllTokenBalancesAccountCexPath(accountID string) string {
+	return fmt.Sprintf("/lpnode/lpnode_admin_panel/account/cex/%v/tokens", accountID)
+}
+
+// TokenBalanceAccountCexPath returns the URL path to the accountCex service tokenBalance HTTP endpoint.
+func TokenBalanceAccountCexPath(accountID string, symbol string) string {
+	return fmt.Sprintf("/lpnode/lpnode_admin_panel/account/cex/%v/token/%v", accountID, symbol)
+}
+
 // WalletInfoAccountCexPath returns the URL path to the accountCex service walletInfo HTTP endpoint.
-func WalletInfoAccountCexPath() string {
-	return "/lpnode/lpnode_admin_panel/account/cex/walletInfo"
+func WalletInfoAccountCexPath(accountID string) string {
+	return fmt.Sprintf("/lpnode/lpnode_admin_panel/account/cex/%v/walletInfo", accountID)
+}
+
+// CreateAccountAccountCexPath returns the URL path to the accountCex service createAccount HTTP endpoint.
+func CreateAccountAccountCexPath() string {
+	return "/lpnode/lpnode_admin_panel/account/cex"
+}
+
+// ListAccountsAccountCexPath returns the URL path to the accountCex service listAccounts HTTP endpoint.
+func ListAccountsAccountCexPath() string {
+	return "/lpnode/lpnode_admin_panel/account/cex"
+}
+
+// DeleteAccountAccountCexPath returns the URL path to the accountCex service deleteAccount HTTP endpoint.
+func DeleteAccountAccountCexPath(accountID string) string {
+	return fmt.Sprintf("/lpnode/lpnode_admin_panel/account/cex/%v", accountID)
 }
