@@ -92,9 +92,11 @@ type UpdateHedgeParams struct {
 	Status       string
 }
 type WalletInfo struct {
-	Address string
-	Name    string
-	Token   string
+	Address      string
+	Name         string
+	Token        string
+	TokenAddress string
+	ChainId      int64
 }
 type UpdateHedgeDataParams struct {
 	ID                string

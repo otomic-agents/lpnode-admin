@@ -21,7 +21,7 @@ func BuildBridgeCreatePayload(bridgeConfigBridgeCreateBody string) (*bridgeconfi
 	{
 		err = json.Unmarshal([]byte(bridgeConfigBridgeCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"ammName\": \"Rerum illum recusandae.\",\n      \"bridgeName\": \"Aut et iusto voluptatem debitis earum voluptatem.\",\n      \"dstChainId\": \"Et ex.\",\n      \"dstTokenId\": \"Aut ut rerum praesentium omnis.\",\n      \"enableHedge\": true,\n      \"enableLimiter\": false,\n      \"relayApiKey\": \"In ratione labore molestiae.\",\n      \"relayUri\": \"Fugiat dolores asperiores velit.\",\n      \"srcChainId\": \"Inventore voluptas officiis sed voluptates recusandae.\",\n      \"srcTokenId\": \"Quo et.\",\n      \"srcWalletId\": \"Vel dolores ullam incidunt labore rem quibusdam.\",\n      \"walletId\": \"Aut rerum repellendus.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"ammName\": \"Ab occaecati dignissimos cupiditate nisi.\",\n      \"bridgeName\": \"Aut rerum repellendus.\",\n      \"dstChainId\": \"Rerum illum recusandae.\",\n      \"dstTokenId\": \"Fugiat dolores asperiores velit.\",\n      \"enableHedge\": false,\n      \"enableLimiter\": true,\n      \"relayApiKey\": \"Magnam sed.\",\n      \"relayUri\": \"Qui doloremque nam.\",\n      \"srcChainId\": \"Vel dolores ullam incidunt labore rem quibusdam.\",\n      \"srcTokenId\": \"In ratione labore molestiae.\",\n      \"srcWalletId\": \"Voluptatem ut ipsa et.\",\n      \"walletId\": \"Harum consequuntur quod amet ratione ducimus.\"\n   }'")
 		}
 	}
 	v := &bridgeconfig.BridgeItem{
@@ -62,7 +62,7 @@ func BuildBridgeDeletePayload(bridgeConfigBridgeDeleteBody string) (*bridgeconfi
 	{
 		err = json.Unmarshal([]byte(bridgeConfigBridgeDeleteBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Esse sit quia nesciunt iure.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Adipisci quibusdam nihil fugit itaque et.\"\n   }'")
 		}
 	}
 	v := &bridgeconfig.DeleteBridgeFilter{
@@ -80,7 +80,7 @@ func BuildBridgeTestPayload(bridgeConfigBridgeTestBody string) (*bridgeconfig.Br
 	{
 		err = json.Unmarshal([]byte(bridgeConfigBridgeTestBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Itaque et quasi est.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"id\": \"Delectus atque dolorem.\"\n   }'")
 		}
 	}
 	v := &bridgeconfig.BridgeTestPayload{

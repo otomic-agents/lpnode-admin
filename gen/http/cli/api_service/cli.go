@@ -25,6 +25,7 @@ import (
 	lpregisterc "admin-panel/gen/http/lp_register/client"
 	lpmonitc "admin-panel/gen/http/lpmonit/client"
 	mainlogicc "admin-panel/gen/http/main_logic/client"
+	marketpricesc "admin-panel/gen/http/market_prices/client"
 	ordercenterc "admin-panel/gen/http/order_center/client"
 	relayaccountc "admin-panel/gen/http/relay_account/client"
 	relaylistc "admin-panel/gen/http/relay_list/client"
@@ -69,6 +70,7 @@ settings settings
 status-list stat-list
 task-manager (task-list|task-deploy|un-deploy|task-create)
 token-manager (token-list|token-create|token-delete)
+market-prices get-all-prices
 `
 }
 
@@ -76,12 +78,12 @@ token-manager (token-list|token-create|token-delete)
 func UsageExamples() string {
 	return os.Args[0] + ` main-logic main-logic` + "\n" +
 		os.Args[0] + ` account-cex get-all-token-balances --account-id "68020ad9378b05e70089f71f"` + "\n" +
-		os.Args[0] + ` account-dex wallet-info --id "Nam totam adipisci."` + "\n" +
+		os.Args[0] + ` account-dex wallet-info --id "Accusamus consectetur dolorem eum beatae molestias quasi."` + "\n" +
 		os.Args[0] + ` amm-order-center list --body '{
-      "ammName": "Suscipit quia assumenda rerum sed.",
-      "page": 9025772668383392293,
-      "pageSize": 7271879471297109181,
-      "status": 7661082466357357072
+      "ammName": "Nihil fugiat et quia dolore ex.",
+      "page": 6332931082897643526,
+      "pageSize": 1752814350481105352,
+      "status": 5768036956203467588
    }'` + "\n" +
 		os.Args[0] + ` authentication-limiter get-authentication-limiter` + "\n" +
 		""
@@ -349,6 +351,10 @@ func ParseEndpoint(
 
 		tokenManagerTokenDeleteFlags    = flag.NewFlagSet("token-delete", flag.ExitOnError)
 		tokenManagerTokenDeleteBodyFlag = tokenManagerTokenDeleteFlags.String("body", "REQUIRED", "")
+
+		marketPricesFlags = flag.NewFlagSet("market-prices", flag.ContinueOnError)
+
+		marketPricesGetAllPricesFlags = flag.NewFlagSet("get-all-prices", flag.ExitOnError)
 	)
 	mainLogicFlags.Usage = mainLogicUsage
 	mainLogicMainLogicFlags.Usage = mainLogicMainLogicUsage
@@ -473,6 +479,9 @@ func ParseEndpoint(
 	tokenManagerTokenCreateFlags.Usage = tokenManagerTokenCreateUsage
 	tokenManagerTokenDeleteFlags.Usage = tokenManagerTokenDeleteUsage
 
+	marketPricesFlags.Usage = marketPricesUsage
+	marketPricesGetAllPricesFlags.Usage = marketPricesGetAllPricesUsage
+
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
 	}
@@ -536,6 +545,8 @@ func ParseEndpoint(
 			svcf = taskManagerFlags
 		case "token-manager":
 			svcf = tokenManagerFlags
+		case "market-prices":
+			svcf = marketPricesFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -869,6 +880,13 @@ func ParseEndpoint(
 
 			case "token-delete":
 				epf = tokenManagerTokenDeleteFlags
+
+			}
+
+		case "market-prices":
+			switch epn {
+			case "get-all-prices":
+				epf = marketPricesGetAllPricesFlags
 
 			}
 
@@ -1213,6 +1231,13 @@ func ParseEndpoint(
 				endpoint = c.TokenDelete()
 				data, err = tokenmanagerc.BuildTokenDeletePayload(*tokenManagerTokenDeleteBodyFlag)
 			}
+		case "market-prices":
+			c := marketpricesc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "get-all-prices":
+				endpoint = c.GetAllPrices()
+				data = nil
+			}
 		}
 	}
 	if err != nil {
@@ -1370,7 +1395,7 @@ WalletInfo implements walletInfo.
     -id STRING: 
 
 Example:
-    %[1]s account-dex wallet-info --id "Nam totam adipisci."
+    %[1]s account-dex wallet-info --id "Accusamus consectetur dolorem eum beatae molestias quasi."
 `, os.Args[0])
 }
 
@@ -1386,9 +1411,10 @@ GetWalletAssets implements getWalletAssets.
 
 Example:
     %[1]s account-dex get-wallet-assets --addresses '[
-      "Consequuntur excepturi omnis voluptatem sint vel.",
-      "Veniam dolorem quod numquam accusamus deleniti."
-   ]' --currency "CNY" --hide-zero-balance true --hide-small-balance false --small-balance-threshold "Placeat consequatur."
+      "Qui est sint maiores minima ex.",
+      "Et facilis deleniti ea sit praesentium.",
+      "Odio velit odit nobis."
+   ]' --currency "JPY" --hide-zero-balance false --hide-small-balance true --small-balance-threshold "Quidem officiis ipsam distinctio ducimus ipsum."
 `, os.Args[0])
 }
 
@@ -1414,10 +1440,10 @@ List implements list.
 
 Example:
     %[1]s amm-order-center list --body '{
-      "ammName": "Suscipit quia assumenda rerum sed.",
-      "page": 9025772668383392293,
-      "pageSize": 7271879471297109181,
-      "status": 7661082466357357072
+      "ammName": "Nihil fugiat et quia dolore ex.",
+      "page": 6332931082897643526,
+      "pageSize": 1752814350481105352,
+      "status": 5768036956203467588
    }'
 `, os.Args[0])
 }
@@ -1456,7 +1482,7 @@ set limit information
 
 Example:
     %[1]s authentication-limiter set-authentication-limiter --body '{
-      "authenticationLimiter": "Occaecati rerum eum voluptas commodi qui enim."
+      "authenticationLimiter": "Natus eaque."
    }'
 `, os.Args[0])
 }
@@ -1526,7 +1552,7 @@ Get wallet list with their associated tokens
 
 Example:
     %[1]s base-data get-wallet-and-tokens --body '{
-      "chainId": 3283168463868168616
+      "chainId": 9103559256304136920
    }'
 `, os.Args[0])
 }
@@ -1556,18 +1582,18 @@ used to create cross-chain config
 
 Example:
     %[1]s bridge-config bridge-create --body '{
-      "ammName": "Rerum illum recusandae.",
-      "bridgeName": "Aut et iusto voluptatem debitis earum voluptatem.",
-      "dstChainId": "Et ex.",
-      "dstTokenId": "Aut ut rerum praesentium omnis.",
-      "enableHedge": true,
-      "enableLimiter": false,
-      "relayApiKey": "In ratione labore molestiae.",
-      "relayUri": "Fugiat dolores asperiores velit.",
-      "srcChainId": "Inventore voluptas officiis sed voluptates recusandae.",
-      "srcTokenId": "Quo et.",
-      "srcWalletId": "Vel dolores ullam incidunt labore rem quibusdam.",
-      "walletId": "Aut rerum repellendus."
+      "ammName": "Ab occaecati dignissimos cupiditate nisi.",
+      "bridgeName": "Aut rerum repellendus.",
+      "dstChainId": "Rerum illum recusandae.",
+      "dstTokenId": "Fugiat dolores asperiores velit.",
+      "enableHedge": false,
+      "enableLimiter": true,
+      "relayApiKey": "Magnam sed.",
+      "relayUri": "Qui doloremque nam.",
+      "srcChainId": "Vel dolores ullam incidunt labore rem quibusdam.",
+      "srcTokenId": "In ratione labore molestiae.",
+      "srcWalletId": "Voluptatem ut ipsa et.",
+      "walletId": "Harum consequuntur quod amet ratione ducimus."
    }'
 `, os.Args[0])
 }
@@ -1590,7 +1616,7 @@ BridgeDelete implements bridgeDelete.
 
 Example:
     %[1]s bridge-config bridge-delete --body '{
-      "id": "Esse sit quia nesciunt iure."
+      "id": "Adipisci quibusdam nihil fugit itaque et."
    }'
 `, os.Args[0])
 }
@@ -1603,7 +1629,7 @@ BridgeTest implements bridgeTest.
 
 Example:
     %[1]s bridge-config bridge-test --body '{
-      "id": "Itaque et quasi est."
+      "id": "Delectus atque dolorem."
    }'
 `, os.Args[0])
 }
@@ -1630,13 +1656,13 @@ Get transaction list
 
 Example:
     %[1]s chain-client-transaction transaction-list --body '{
-      "businessId": "Sit totam voluptatem.",
-      "chainId": 6225559640257661536,
-      "endTime": 8290123938380857716,
-      "page": 4235913006187879412,
-      "pageSize": 68,
-      "startTime": 3656038887363363400,
-      "status": "Ex sunt quidem dolores est."
+      "businessId": "Ut quis.",
+      "chainId": 7269344385708768816,
+      "endTime": 4971505189451005895,
+      "page": 2572381125687282007,
+      "pageSize": 93,
+      "startTime": 4579287033939316323,
+      "status": "Iure et blanditiis unde beatae soluta."
    }'
 `, os.Args[0])
 }
@@ -1669,22 +1695,22 @@ Example:
     %[1]s chain-config set-chain-list --body '{
       "chainList": [
          {
-            "chainId": 2217608831006495877,
-            "chainName": "Sit magni est eos molestias dolor.",
-            "name": "Consequuntur saepe nobis laborum.",
-            "tokenName": "Maxime et repudiandae doloribus."
+            "chainId": 6413527922062017598,
+            "chainName": "Asperiores a odit et.",
+            "name": "Omnis labore architecto ex eius ut.",
+            "tokenName": "Praesentium commodi error in."
          },
          {
-            "chainId": 2217608831006495877,
-            "chainName": "Sit magni est eos molestias dolor.",
-            "name": "Consequuntur saepe nobis laborum.",
-            "tokenName": "Maxime et repudiandae doloribus."
+            "chainId": 6413527922062017598,
+            "chainName": "Asperiores a odit et.",
+            "name": "Omnis labore architecto ex eius ut.",
+            "tokenName": "Praesentium commodi error in."
          },
          {
-            "chainId": 2217608831006495877,
-            "chainName": "Sit magni est eos molestias dolor.",
-            "name": "Consequuntur saepe nobis laborum.",
-            "tokenName": "Maxime et repudiandae doloribus."
+            "chainId": 6413527922062017598,
+            "chainName": "Asperiores a odit et.",
+            "name": "Omnis labore architecto ex eius ut.",
+            "tokenName": "Praesentium commodi error in."
          }
       ]
    }'
@@ -1699,8 +1725,8 @@ used to delete basic data for a chain
 
 Example:
     %[1]s chain-config del-chain-list --body '{
-      "_id": "Atque qui nobis adipisci nesciunt provident.",
-      "chainId": 2398861740701109720
+      "_id": "Voluptatem ut quo maxime minus quis.",
+      "chainId": 5345806893991050280
    }'
 `, os.Args[0])
 }
@@ -1723,9 +1749,9 @@ SetChainGasUsd implements setChainGasUsd.
 
 Example:
     %[1]s chain-config set-chain-gas-usd --body '{
-      "_id": "Numquam in nam alias in.",
-      "chainId": 5955233810056149118,
-      "usd": 4119041034603447922
+      "_id": "Cupiditate reiciendis accusamus et maiores.",
+      "chainId": 4806724831848111354,
+      "usd": 6244577948730322776
    }'
 `, os.Args[0])
 }
@@ -1738,8 +1764,8 @@ SetChainClientConfig implements setChainClientConfig.
 
 Example:
     %[1]s chain-config set-chain-client-config --body '{
-      "chainData": "Et maiores nihil fugit et.",
-      "chainId": 2050093239715927072
+      "chainData": "Voluptatum excepturi culpa eligendi aut deleniti.",
+      "chainId": 5481822444870245769
    }'
 `, os.Args[0])
 }
@@ -1770,10 +1796,10 @@ CreateResource implements createResource.
 
 Example:
     %[1]s config-resource create-resource --body '{
-      "appName": "Iure vel voluptatum excepturi culpa.",
-      "clientId": "Officiis ut quis sequi ut voluptatem voluptas.",
-      "template": "Id alias hic ratione ab laudantium aut.",
-      "version": "Aut deleniti adipisci."
+      "appName": "Id alias hic ratione ab laudantium aut.",
+      "clientId": "Sit dolores sunt.",
+      "template": "A est sint autem dolorem voluptas.",
+      "version": "Et omnis in laboriosam repellendus."
    }'
 `, os.Args[0])
 }
@@ -1786,7 +1812,7 @@ GetResource implements getResource.
 
 Example:
     %[1]s config-resource get-resource --body '{
-      "clientId": "Voluptatem dolores eos laboriosam laborum maiores quas."
+      "clientId": "Autem voluptatem."
    }'
 `, os.Args[0])
 }
@@ -1819,12 +1845,12 @@ EditResult implements editResult.
 
 Example:
     %[1]s config-resource edit-result --body '{
-      "appName": "Consequuntur unde quasi molestiae commodi amet non.",
-      "clientId": "Totam saepe ad et.",
-      "template": "Quis a accusantium dolores dicta.",
-      "templateResult": "Ipsa sint voluptatem ea.",
-      "version": "Animi ut rem eveniet.",
-      "versionHash": "Dolore ut ut eos placeat."
+      "appName": "Aut nihil dolorem natus dolorum ut.",
+      "clientId": "Dolore ut ut eos placeat.",
+      "template": "Animi ut rem eveniet.",
+      "templateResult": "Unde quasi molestiae commodi amet non.",
+      "version": "Quia voluptates aliquam.",
+      "versionHash": "Molestiae qui sed quia et."
    }'
 `, os.Args[0])
 }
@@ -1865,20 +1891,20 @@ CreateDexWallet implements createDexWallet.
 
 Example:
     %[1]s dex-wallet create-dex-wallet --body '{
-      "accountId": "Neque possimus libero.",
-      "address": "Blanditiis tempore.",
-      "balance": "Libero sunt temporibus ex sint accusantium.",
-      "chainId": 5918411130612222245,
-      "chainType": "Ut aut magni odit.",
-      "id": "Maiores ullam neque quia voluptas occaecati.",
-      "privateKey": "Commodi est.",
-      "signServiceEndpoint": "Ipsum reprehenderit.",
-      "storeId": "Aut et.",
-      "vaultHostType": "Omnis non doloribus rem numquam quasi.",
-      "vaultName": "Aut repellat sed temporibus cupiditate saepe consequatur.",
-      "vaultSecertType": "Ut maxime harum ut ex et sit.",
-      "walletName": "Eum dolor.",
-      "walletType": "privateKey"
+      "accountId": "Dolores aut et recusandae omnis non.",
+      "address": "Ut aut magni odit.",
+      "balance": "Blanditiis ipsa.",
+      "chainId": 877131424548279901,
+      "chainType": "Neque possimus libero.",
+      "id": "Eum dolor.",
+      "privateKey": "Blanditiis tempore.",
+      "signServiceEndpoint": "Sunt temporibus ex.",
+      "storeId": "Numquam quasi explicabo aut repellat.",
+      "vaultHostType": "Temporibus cupiditate saepe consequatur ullam ut maxime.",
+      "vaultName": "Ut ex et.",
+      "vaultSecertType": "Eius ipsum reprehenderit ab consequuntur.",
+      "walletName": "Commodi est.",
+      "walletType": "storeId"
    }'
 `, os.Args[0])
 }
@@ -1891,7 +1917,7 @@ DeleteDexWallet implements deleteDexWallet.
 
 Example:
     %[1]s dex-wallet delete-dex-wallet --body '{
-      "id": "Ad sed atque aut soluta."
+      "id": "Sed atque aut soluta."
    }'
 `, os.Args[0])
 }
@@ -2081,16 +2107,20 @@ Example:
       "initialBalances": {
          "destination": {
             "cex": "10000",
+            "chainId": 1,
             "dex": "1000115.28820246",
             "token": "USDT",
+            "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
             "total": 1010115.28820246,
             "wallet": "0xCb4284dFA16429762e40d01F5Cff4D4bD0870f42",
             "walletName": "B1"
          },
          "source": {
             "cex": "10000",
+            "chainId": 1,
             "dex": "1000115.28820246",
             "token": "USDT",
+            "tokenAddress": "0xdac17f958d2ee523a2206206994597c13d831ec7",
             "total": 1010115.28820246,
             "wallet": "0xCb4284dFA16429762e40d01F5Cff4D4bD0870f42",
             "walletName": "B1"
@@ -2681,5 +2711,29 @@ Example:
     %[1]s token-manager token-delete --body '{
       "_id": "Maxime quidem et."
    }'
+`, os.Args[0])
+}
+
+// market-pricesUsage displays the usage of the market-prices command and its
+// subcommands.
+func marketPricesUsage() {
+	fmt.Fprintf(os.Stderr, `Cryptocurrency market price service
+Usage:
+    %[1]s [globalflags] market-prices COMMAND [flags]
+
+COMMAND:
+    get-all-prices: Get current USDT prices for all available tokens
+
+Additional help:
+    %[1]s market-prices COMMAND --help
+`, os.Args[0])
+}
+func marketPricesGetAllPricesUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] market-prices get-all-prices
+
+Get current USDT prices for all available tokens
+
+Example:
+    %[1]s market-prices get-all-prices
 `, os.Args[0])
 }

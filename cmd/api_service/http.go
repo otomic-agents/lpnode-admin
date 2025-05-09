@@ -31,6 +31,7 @@ import (
 	lpregistersvr "admin-panel/gen/http/lp_register/server"
 	lpmonitsvr "admin-panel/gen/http/lpmonit/server"
 	mainlogicsvr "admin-panel/gen/http/main_logic/server"
+	marketpricessvr "admin-panel/gen/http/market_prices/server"
 	ordercentersvr "admin-panel/gen/http/order_center/server"
 	relayaccountsvr "admin-panel/gen/http/relay_account/server"
 	relaylistsvr "admin-panel/gen/http/relay_list/server"
@@ -42,6 +43,7 @@ import (
 	lpregister "admin-panel/gen/lp_register"
 	lpmonit "admin-panel/gen/lpmonit"
 	mainlogic "admin-panel/gen/main_logic"
+	marketprices "admin-panel/gen/market_prices"
 	ordercenter "admin-panel/gen/order_center"
 	relayaccount "admin-panel/gen/relay_account"
 	relaylist "admin-panel/gen/relay_list"
@@ -64,7 +66,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainlogic.Endpoints, accountCexEndpoints *accountcex.Endpoints, accountDexEndpoints *accountdex.Endpoints, ammOrderCenterEndpoints *ammordercenter.Endpoints, authenticationLimiterEndpoints *authenticationlimiter.Endpoints, baseDataEndpoints *basedata.Endpoints, bridgeConfigEndpoints *bridgeconfig.Endpoints, chainClientTransactionEndpoints *chainclienttransaction.Endpoints, chainConfigEndpoints *chainconfig.Endpoints, configResourceEndpoints *configresource.Endpoints, dexWalletEndpoints *dexwallet.Endpoints, exchangeRatesEndpoints *exchangerates.Endpoints, hedgeEndpoints *hedge.Endpoints, hedgeTasksEndpoints *hedgetasks.Endpoints, installCtrlPanelEndpoints *installctrlpanel.Endpoints, lpmonitEndpoints *lpmonit.Endpoints, orderCenterEndpoints *ordercenter.Endpoints, lpRegisterEndpoints *lpregister.Endpoints, relayAccountEndpoints *relayaccount.Endpoints, relayListEndpoints *relaylist.Endpoints, settingsEndpoints *settings.Endpoints, statusListEndpoints *statuslist.Endpoints, taskManagerEndpoints *taskmanager.Endpoints, tokenManagerEndpoints *tokenmanager.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainlogic.Endpoints, accountCexEndpoints *accountcex.Endpoints, accountDexEndpoints *accountdex.Endpoints, ammOrderCenterEndpoints *ammordercenter.Endpoints, authenticationLimiterEndpoints *authenticationlimiter.Endpoints, baseDataEndpoints *basedata.Endpoints, bridgeConfigEndpoints *bridgeconfig.Endpoints, chainClientTransactionEndpoints *chainclienttransaction.Endpoints, chainConfigEndpoints *chainconfig.Endpoints, configResourceEndpoints *configresource.Endpoints, dexWalletEndpoints *dexwallet.Endpoints, exchangeRatesEndpoints *exchangerates.Endpoints, hedgeEndpoints *hedge.Endpoints, hedgeTasksEndpoints *hedgetasks.Endpoints, installCtrlPanelEndpoints *installctrlpanel.Endpoints, lpmonitEndpoints *lpmonit.Endpoints, orderCenterEndpoints *ordercenter.Endpoints, lpRegisterEndpoints *lpregister.Endpoints, relayAccountEndpoints *relayaccount.Endpoints, relayListEndpoints *relaylist.Endpoints, settingsEndpoints *settings.Endpoints, statusListEndpoints *statuslist.Endpoints, taskManagerEndpoints *taskmanager.Endpoints, tokenManagerEndpoints *tokenmanager.Endpoints, marketPricesEndpoints *marketprices.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -119,6 +121,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 		statusListServer             *statuslistsvr.Server
 		taskManagerServer            *taskmanagersvr.Server
 		tokenManagerServer           *tokenmanagersvr.Server
+		marketPricesServer           *marketpricessvr.Server
 	)
 	{
 		eh := errorHandler(logger)
@@ -146,6 +149,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 		statusListServer = statuslistsvr.New(statusListEndpoints, mux, dec, enc, eh, nil)
 		taskManagerServer = taskmanagersvr.New(taskManagerEndpoints, mux, dec, enc, eh, nil)
 		tokenManagerServer = tokenmanagersvr.New(tokenManagerEndpoints, mux, dec, enc, eh, nil)
+		marketPricesServer = marketpricessvr.New(marketPricesEndpoints, mux, dec, enc, eh, nil)
 		if debug {
 			servers := goahttp.Servers{
 				mainLogicServer,
@@ -172,6 +176,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 				statusListServer,
 				taskManagerServer,
 				tokenManagerServer,
+				marketPricesServer,
 			}
 			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
 		}
@@ -201,6 +206,7 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 	statuslistsvr.Mount(mux, statusListServer)
 	taskmanagersvr.Mount(mux, taskManagerServer)
 	tokenmanagersvr.Mount(mux, tokenManagerServer)
+	marketpricessvr.Mount(mux, marketPricesServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
@@ -283,6 +289,9 @@ func handleHTTPServer(ctx context.Context, u *url.URL, mainLogicEndpoints *mainl
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 	for _, m := range tokenManagerServer.Mounts {
+		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
+	}
+	for _, m := range marketPricesServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 

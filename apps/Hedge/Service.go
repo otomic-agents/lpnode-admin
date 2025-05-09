@@ -378,7 +378,9 @@ func (s *HedgeService) UpdateHedgeData(ctx context.Context, params UpdateHedgeDa
 
 	// Prepare chain pair data
 	chainPair := []string{params.SourceWallet.Token, params.DestinationWallet.Token}
-
+	chainAddress := []string{params.SourceWallet.TokenAddress, params.DestinationWallet.TokenAddress}
+	chainIdList := []int64{params.SourceWallet.ChainId, params.DestinationWallet.ChainId}
+	walletList := []string{params.SourceWallet.Address, params.DestinationWallet.Address}
 	// Prepare update fields
 	updateFields := bson.M{
 		"name":             params.Name,
@@ -388,6 +390,9 @@ func (s *HedgeService) UpdateHedgeData(ctx context.Context, params UpdateHedgeDa
 		"initial_snapshot": initialSnapshotData,
 		"risk_config":      riskConfigData,
 		"chain_pair":       chainPair,
+		"chain_address":    chainAddress,
+		"chain_id_list":    chainIdList,
+		"wallet_list":      walletList,
 		"status":           "active", // Set status to active as data is saved
 		"status_desc":      "Hedge task initialized with data",
 		"updated_at":       now,

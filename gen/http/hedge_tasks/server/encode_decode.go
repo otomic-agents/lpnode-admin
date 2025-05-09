@@ -228,12 +228,14 @@ func unmarshalHTTokenBalanceRequestBodyToHedgetasksHTTokenBalance(v *HTTokenBala
 		return nil
 	}
 	res := &hedgetasks.HTTokenBalance{
-		Token:      v.Token,
-		Cex:        v.Cex,
-		Dex:        v.Dex,
-		Total:      v.Total,
-		Wallet:     v.Wallet,
-		WalletName: v.WalletName,
+		Token:        v.Token,
+		TokenAddress: v.TokenAddress,
+		Cex:          v.Cex,
+		Dex:          v.Dex,
+		Total:        v.Total,
+		Wallet:       v.Wallet,
+		WalletName:   v.WalletName,
+		ChainID:      v.ChainID,
 	}
 
 	return res

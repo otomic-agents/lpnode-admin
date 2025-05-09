@@ -1,3 +1,4 @@
+export PATH=/home/coder/.sdkman/candidates/java/current/bin:/usr/lib/code-server/lib/vscode/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/lib/jvm/jdk-21/bin:/home/coder/.local/bin
 export REDIS_HOST=redis-cluster-proxy.user-system-magicdog
 export REDIS_PASS=VHu45iILTJz1DgnmxPvvwgN9TbjTMscRiFG4omNYBvvp8lw6kYdyJfJUBHPd7Jpb
 export MONGODB_HOST=mongo-cluster-mongos.user-system-magicdog

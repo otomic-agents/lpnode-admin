@@ -59,6 +59,7 @@ func (s *CexAccountService) CreateAccount(ctx context.Context, payload *CreateCe
 		Status:     "active", // Default status
 		CreatedAt:  now,
 		UpdatedAt:  now,
+		IsDeleted:  false,
 	}
 
 	// Insert into database
@@ -114,7 +115,13 @@ func (s *CexAccountService) GetAccount(ctx context.Context, id string) (*CexAcco
 
 // ListAccounts retrieves all CEX accounts
 func (s *CexAccountService) ListAccounts(ctx context.Context) ([]*CexAccount, error) {
-	err, cursor := database.FindAll("main", "cex_accounts", bson.M{})
+	queryOpt := bson.M{
+		"$or": []bson.M{
+			{"is_deleted": false},
+			{"is_deleted": bson.M{"$exists": false}},
+		},
+	}
+	err, cursor := database.FindAll("main", "cex_accounts", queryOpt)
 	if err != nil {
 		return nil, fmt.Errorf("database error: %w", err)
 	}
@@ -192,12 +199,42 @@ func (s *CexAccountService) DeleteAccount(ctx context.Context, id string) error 
 		return fmt.Errorf("invalid account ID format: %w", err)
 	}
 
-	deletedCount, err := database.DeleteOne("main", "cex_accounts", bson.M{"_id": objectID})
+	// First, check if there are any active hedge tasks using this account
+	activeTasksCount, err := database.Count("main", "hedge_tasks", bson.M{
+		"cex_account_id": objectID,
+		"status":         "active",
+	})
 	if err != nil {
-		return fmt.Errorf("database error: %w", err)
+		return fmt.Errorf("failed to check active hedge tasks: %w", err)
+	}
+	if activeTasksCount > 0 {
+		log.Printf("Deletion prevented: Account has %d active hedge tasks", activeTasksCount)
+		return fmt.Errorf("cannot delete account: %d active hedge tasks are using this account", activeTasksCount)
 	}
 
-	if deletedCount == 0 {
+	// Instead of deleting, mark the account as deleted
+	err = database.Update(
+		"main",
+		"cex_accounts",
+		bson.M{"_id": objectID},
+		bson.M{"$set": bson.M{
+			"is_deleted": true,
+			"deleted_at": time.Now(),
+		}},
+	)
+	if err != nil {
+		return fmt.Errorf("database error while marking account as deleted: %w", err)
+	}
+
+	// Check if the account was found and updated
+	count, err := database.Count("main", "cex_accounts", bson.M{
+		"_id":        objectID,
+		"is_deleted": true,
+	})
+	if err != nil {
+		return fmt.Errorf("error checking if account was updated: %w", err)
+	}
+	if count == 0 {
 		return fmt.Errorf("account not found")
 	}
 

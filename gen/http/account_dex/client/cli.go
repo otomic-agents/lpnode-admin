@@ -38,7 +38,7 @@ func BuildGetWalletAssetsPayload(accountDexGetWalletAssetsAddresses string, acco
 		if accountDexGetWalletAssetsAddresses != "" {
 			err = json.Unmarshal([]byte(accountDexGetWalletAssetsAddresses), &addresses)
 			if err != nil {
-				return nil, fmt.Errorf("invalid JSON for addresses, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      \"Consequuntur excepturi omnis voluptatem sint vel.\",\n      \"Veniam dolorem quod numquam accusamus deleniti.\"\n   ]'")
+				return nil, fmt.Errorf("invalid JSON for addresses, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      \"Qui est sint maiores minima ex.\",\n      \"Et facilis deleniti ea sit praesentium.\",\n      \"Odio velit odit nobis.\"\n   ]'")
 			}
 		}
 	}

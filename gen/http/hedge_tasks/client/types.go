@@ -137,6 +137,8 @@ type HTInitialBalancesRequestBody struct {
 type HTTokenBalanceRequestBody struct {
 	// Token symbol
 	Token *string `form:"token,omitempty" json:"token,omitempty" xml:"token,omitempty"`
+	// Token contract address
+	TokenAddress *string `form:"tokenAddress,omitempty" json:"tokenAddress,omitempty" xml:"tokenAddress,omitempty"`
 	// CEX balance
 	Cex *string `form:"cex,omitempty" json:"cex,omitempty" xml:"cex,omitempty"`
 	// DEX balance
@@ -147,6 +149,8 @@ type HTTokenBalanceRequestBody struct {
 	Wallet *string `form:"wallet,omitempty" json:"wallet,omitempty" xml:"wallet,omitempty"`
 	// Wallet name
 	WalletName *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
+	// Chain ID
+	ChainID *int64 `form:"chainId,omitempty" json:"chainId,omitempty" xml:"chainId,omitempty"`
 }
 
 // HTRiskConfigRequestBody is used to define fields on request body types.

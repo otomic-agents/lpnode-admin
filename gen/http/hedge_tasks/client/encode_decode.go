@@ -451,12 +451,14 @@ func marshalHedgetasksHTTokenBalanceToHTTokenBalanceRequestBody(v *hedgetasks.HT
 		return nil
 	}
 	res := &HTTokenBalanceRequestBody{
-		Token:      v.Token,
-		Cex:        v.Cex,
-		Dex:        v.Dex,
-		Total:      v.Total,
-		Wallet:     v.Wallet,
-		WalletName: v.WalletName,
+		Token:        v.Token,
+		TokenAddress: v.TokenAddress,
+		Cex:          v.Cex,
+		Dex:          v.Dex,
+		Total:        v.Total,
+		Wallet:       v.Wallet,
+		WalletName:   v.WalletName,
+		ChainID:      v.ChainID,
 	}
 
 	return res
@@ -512,12 +514,14 @@ func marshalHTTokenBalanceRequestBodyToHedgetasksHTTokenBalance(v *HTTokenBalanc
 		return nil
 	}
 	res := &hedgetasks.HTTokenBalance{
-		Token:      v.Token,
-		Cex:        v.Cex,
-		Dex:        v.Dex,
-		Total:      v.Total,
-		Wallet:     v.Wallet,
-		WalletName: v.WalletName,
+		Token:        v.Token,
+		TokenAddress: v.TokenAddress,
+		Cex:          v.Cex,
+		Dex:          v.Dex,
+		Total:        v.Total,
+		Wallet:       v.Wallet,
+		WalletName:   v.WalletName,
+		ChainID:      v.ChainID,
 	}
 
 	return res

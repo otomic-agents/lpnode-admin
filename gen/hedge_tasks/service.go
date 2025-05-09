@@ -182,6 +182,8 @@ type HTSaveHedgeDataResult struct {
 type HTTokenBalance struct {
 	// Token symbol
 	Token *string
+	// Token contract address
+	TokenAddress *string
 	// CEX balance
 	Cex *string
 	// DEX balance
@@ -192,6 +194,8 @@ type HTTokenBalance struct {
 	Wallet *string
 	// Wallet name
 	WalletName *string
+	// Chain ID
+	ChainID *int64
 }
 
 // ListTasksResult is the result type of the hedgeTasks service listTasks

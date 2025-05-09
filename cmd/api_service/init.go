@@ -126,6 +126,7 @@ func init() {
 	if err != nil {
 		log.Println("init Monitor failed", err)
 	}
+	InitMarketPriceLoop()
 	onAppUp()
 	fistrtSetup()
 

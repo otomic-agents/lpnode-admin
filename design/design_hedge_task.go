@@ -37,11 +37,13 @@ var HT_CreateTaskPayload = Type("HT_CreateTaskPayload", func() {
 var HT_TokenBalance = Type("HT_TokenBalance", func() {
 	Description("Token balance information")
 	Attribute("token", String, "Token symbol", func() { Example("USDT") })
+	Attribute("tokenAddress", String, "Token contract address", func() { Example("0xdac17f958d2ee523a2206206994597c13d831ec7") })
 	Attribute("cex", String, "CEX balance", func() { Example("10000") })
 	Attribute("dex", String, "DEX balance", func() { Example("1000115.28820246") })
 	Attribute("total", Float64, "Total balance", func() { Example(1010115.28820246) })
 	Attribute("wallet", String, "Wallet address", func() { Example("0xCb4284dFA16429762e40d01F5Cff4D4bD0870f42") })
 	Attribute("walletName", String, "Wallet name", func() { Example("B1") })
+	Attribute("chainId", Int64, "Chain ID", func() { Example(1) })
 })
 
 // HT_InitialBalances defines the initial balances structure

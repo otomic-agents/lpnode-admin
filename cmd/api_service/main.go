@@ -19,6 +19,7 @@ import (
 	lpregister "admin-panel/gen/lp_register"
 	lpmonit "admin-panel/gen/lpmonit"
 	mainlogic "admin-panel/gen/main_logic"
+	marketprices "admin-panel/gen/market_prices"
 	ordercenter "admin-panel/gen/order_center"
 	relayaccount "admin-panel/gen/relay_account"
 	relaylist "admin-panel/gen/relay_list"
@@ -84,6 +85,7 @@ func main() {
 		statusListSvc             statuslist.Service
 		taskManagerSvc            taskmanager.Service
 		tokenManagerSvc           tokenmanager.Service
+		marketPricesSvc           marketprices.Service
 	)
 	{
 		mainLogicSvc = adminapiservice.NewMainLogic(logger)
@@ -110,6 +112,7 @@ func main() {
 		statusListSvc = adminapiservice.NewStatusList(logger)
 		taskManagerSvc = adminapiservice.NewTaskManager(logger)
 		tokenManagerSvc = adminapiservice.NewTokenManager(logger)
+		marketPricesSvc = adminapiservice.NewMarketPrices(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
@@ -139,6 +142,7 @@ func main() {
 		statusListEndpoints             *statuslist.Endpoints
 		taskManagerEndpoints            *taskmanager.Endpoints
 		tokenManagerEndpoints           *tokenmanager.Endpoints
+		marketPricesEndpoints           *marketprices.Endpoints
 	)
 	{
 		mainLogicEndpoints = mainlogic.NewEndpoints(mainLogicSvc)
@@ -165,6 +169,7 @@ func main() {
 		statusListEndpoints = statuslist.NewEndpoints(statusListSvc)
 		taskManagerEndpoints = taskmanager.NewEndpoints(taskManagerSvc)
 		tokenManagerEndpoints = tokenmanager.NewEndpoints(tokenManagerSvc)
+		marketPricesEndpoints = marketprices.NewEndpoints(marketPricesSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -206,7 +211,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainClientTransactionEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, exchangeRatesEndpoints, hedgeEndpoints, hedgeTasksEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainClientTransactionEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, exchangeRatesEndpoints, hedgeEndpoints, hedgeTasksEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, marketPricesEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

@@ -24,15 +24,17 @@ type CexAccount struct {
 
 // DBCexAccount represents the database model for CEX accounts
 type DBCexAccount struct {
-	ID         primitive.ObjectID `bson:"_id,omitempty"`
-	Name       string             `bson:"name"`
-	Exchange   string             `bson:"exchange"`
-	APIKey     string             `bson:"api_key"`
-	APISecret  string             `bson:"api_secret"`
-	Passphrase string             `bson:"passphrase,omitempty"`
-	Status     string             `bson:"status"`
-	CreatedAt  primitive.DateTime `bson:"created_at"`
-	UpdatedAt  primitive.DateTime `bson:"updated_at"`
+	ID         primitive.ObjectID  `bson:"_id,omitempty"`
+	Name       string              `bson:"name"`
+	Exchange   string              `bson:"exchange"`
+	APIKey     string              `bson:"api_key"`
+	APISecret  string              `bson:"api_secret"`
+	Passphrase string              `bson:"passphrase,omitempty"`
+	Status     string              `bson:"status"`
+	CreatedAt  primitive.DateTime  `bson:"created_at"`
+	UpdatedAt  primitive.DateTime  `bson:"updated_at"`
+	IsDeleted  bool                `bson:"is_deleted,omitempty"`
+	DeletedAt  *primitive.DateTime `bson:"deleted_at,omitempty"`
 }
 
 // TokenBalance represents the balance information for a single token

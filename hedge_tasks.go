@@ -282,14 +282,18 @@ func (s *hedgeTaskssrvc) SaveHedgeData(ctx context.Context, p *hedgetasks.HTSave
 		InitialSnapshot: initialSnapshot,
 		RiskConfig:      riskConfig,
 		SourceWallet: apps_hedge.WalletInfo{
-			Address: ptr.ToString(p.InitialBalances.Source.Wallet),
-			Name:    ptr.ToString(p.InitialBalances.Source.WalletName),
-			Token:   ptr.ToString(p.InitialBalances.Source.Token),
+			Address:      ptr.ToString(p.InitialBalances.Source.Wallet),
+			Name:         ptr.ToString(p.InitialBalances.Source.WalletName),
+			Token:        ptr.ToString(p.InitialBalances.Source.Token),
+			TokenAddress: ptr.ToString(p.InitialBalances.Source.TokenAddress),
+			ChainId:      ptr.ToInt64(p.InitialBalances.Source.ChainID),
 		},
 		DestinationWallet: apps_hedge.WalletInfo{
-			Address: ptr.ToString(p.InitialBalances.Destination.Wallet),
-			Name:    ptr.ToString(p.InitialBalances.Destination.WalletName),
-			Token:   ptr.ToString(p.InitialBalances.Destination.Token),
+			Address:      ptr.ToString(p.InitialBalances.Destination.Wallet),
+			Name:         ptr.ToString(p.InitialBalances.Destination.WalletName),
+			Token:        ptr.ToString(p.InitialBalances.Destination.Token),
+			TokenAddress: ptr.ToString(p.InitialBalances.Destination.TokenAddress),
+			ChainId:      ptr.ToInt64(p.InitialBalances.Destination.ChainID),
 		},
 	}
 
@@ -312,6 +316,7 @@ func (s *hedgeTaskssrvc) SaveHedgeData(ctx context.Context, p *hedgetasks.HTSave
 
 	return res, nil
 }
+
 // Close a hedge task
 func (s *hedgeTaskssrvc) CloseTask(ctx context.Context, p *hedgetasks.CloseTaskPayload) (res *hedgetasks.CloseTaskResult, err error) {
 	s.logger.Printf("hedgeTasks.closeTask with ID: %s", p.TaskID)

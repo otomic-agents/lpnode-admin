@@ -21,7 +21,7 @@ func BuildSetChainListPayload(chainConfigSetChainListBody string) (*chainconfig.
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainList\": [\n         {\n            \"chainId\": 2217608831006495877,\n            \"chainName\": \"Sit magni est eos molestias dolor.\",\n            \"name\": \"Consequuntur saepe nobis laborum.\",\n            \"tokenName\": \"Maxime et repudiandae doloribus.\"\n         },\n         {\n            \"chainId\": 2217608831006495877,\n            \"chainName\": \"Sit magni est eos molestias dolor.\",\n            \"name\": \"Consequuntur saepe nobis laborum.\",\n            \"tokenName\": \"Maxime et repudiandae doloribus.\"\n         },\n         {\n            \"chainId\": 2217608831006495877,\n            \"chainName\": \"Sit magni est eos molestias dolor.\",\n            \"name\": \"Consequuntur saepe nobis laborum.\",\n            \"tokenName\": \"Maxime et repudiandae doloribus.\"\n         }\n      ]\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainList\": [\n         {\n            \"chainId\": 6413527922062017598,\n            \"chainName\": \"Asperiores a odit et.\",\n            \"name\": \"Omnis labore architecto ex eius ut.\",\n            \"tokenName\": \"Praesentium commodi error in.\"\n         },\n         {\n            \"chainId\": 6413527922062017598,\n            \"chainName\": \"Asperiores a odit et.\",\n            \"name\": \"Omnis labore architecto ex eius ut.\",\n            \"tokenName\": \"Praesentium commodi error in.\"\n         },\n         {\n            \"chainId\": 6413527922062017598,\n            \"chainName\": \"Asperiores a odit et.\",\n            \"name\": \"Omnis labore architecto ex eius ut.\",\n            \"tokenName\": \"Praesentium commodi error in.\"\n         }\n      ]\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainListPayload{}
@@ -43,7 +43,7 @@ func BuildDelChainListPayload(chainConfigDelChainListBody string) (*chainconfig.
 	{
 		err = json.Unmarshal([]byte(chainConfigDelChainListBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Atque qui nobis adipisci nesciunt provident.\",\n      \"chainId\": 2398861740701109720\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Voluptatem ut quo maxime minus quis.\",\n      \"chainId\": 5345806893991050280\n   }'")
 		}
 	}
 	v := &chainconfig.DelChainListPayload{
@@ -62,7 +62,7 @@ func BuildSetChainGasUsdPayload(chainConfigSetChainGasUsdBody string) (*chaincon
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainGasUsdBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Numquam in nam alias in.\",\n      \"chainId\": 5955233810056149118,\n      \"usd\": 4119041034603447922\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Cupiditate reiciendis accusamus et maiores.\",\n      \"chainId\": 4806724831848111354,\n      \"usd\": 6244577948730322776\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainGasUsdPayload{
@@ -82,7 +82,7 @@ func BuildSetChainClientConfigPayload(chainConfigSetChainClientConfigBody string
 	{
 		err = json.Unmarshal([]byte(chainConfigSetChainClientConfigBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainData\": \"Et maiores nihil fugit et.\",\n      \"chainId\": 2050093239715927072\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainData\": \"Voluptatum excepturi culpa eligendi aut deleniti.\",\n      \"chainId\": 5481822444870245769\n   }'")
 		}
 	}
 	v := &chainconfig.SetChainClientConfigPayload{
