@@ -8,16 +8,21 @@ import (
 	authenticationlimiter "admin-panel/gen/authentication_limiter"
 	basedata "admin-panel/gen/base_data"
 	bridgeconfig "admin-panel/gen/bridge_config"
+	chainclienttransaction "admin-panel/gen/chain_client_transaction"
 	chainconfig "admin-panel/gen/chain_config"
 	configresource "admin-panel/gen/config_resource"
 	dexwallet "admin-panel/gen/dex_wallet"
+	exchangerates "admin-panel/gen/exchange_rates"
 	hedge "admin-panel/gen/hedge"
+	hedgetasks "admin-panel/gen/hedge_tasks"
 	installctrlpanel "admin-panel/gen/install_ctrl_panel"
 	lpregister "admin-panel/gen/lp_register"
 	lpmonit "admin-panel/gen/lpmonit"
 	mainlogic "admin-panel/gen/main_logic"
+	marketprices "admin-panel/gen/market_prices"
 	ordercenter "admin-panel/gen/order_center"
 	relayaccount "admin-panel/gen/relay_account"
+	relaylist "admin-panel/gen/relay_list"
 	settings "admin-panel/gen/settings"
 	statuslist "admin-panel/gen/status_list"
 	taskmanager "admin-panel/gen/task_manager"
@@ -56,26 +61,31 @@ func main() {
 
 	// Initialize the services.
 	var (
-		mainLogicSvc             mainlogic.Service
-		accountCexSvc            accountcex.Service
-		accountDexSvc            accountdex.Service
-		ammOrderCenterSvc        ammordercenter.Service
-		authenticationLimiterSvc authenticationlimiter.Service
-		baseDataSvc              basedata.Service
-		bridgeConfigSvc          bridgeconfig.Service
-		chainConfigSvc           chainconfig.Service
-		configResourceSvc        configresource.Service
-		dexWalletSvc             dexwallet.Service
-		hedgeSvc                 hedge.Service
-		installCtrlPanelSvc      installctrlpanel.Service
-		lpmonitSvc               lpmonit.Service
-		orderCenterSvc           ordercenter.Service
-		lpRegisterSvc            lpregister.Service
-		relayAccountSvc          relayaccount.Service
-		settingsSvc              settings.Service
-		statusListSvc            statuslist.Service
-		taskManagerSvc           taskmanager.Service
-		tokenManagerSvc          tokenmanager.Service
+		mainLogicSvc              mainlogic.Service
+		accountCexSvc             accountcex.Service
+		accountDexSvc             accountdex.Service
+		ammOrderCenterSvc         ammordercenter.Service
+		authenticationLimiterSvc  authenticationlimiter.Service
+		baseDataSvc               basedata.Service
+		bridgeConfigSvc           bridgeconfig.Service
+		chainClientTransactionSvc chainclienttransaction.Service
+		chainConfigSvc            chainconfig.Service
+		configResourceSvc         configresource.Service
+		dexWalletSvc              dexwallet.Service
+		exchangeRatesSvc          exchangerates.Service
+		hedgeSvc                  hedge.Service
+		hedgeTasksSvc             hedgetasks.Service
+		installCtrlPanelSvc       installctrlpanel.Service
+		lpmonitSvc                lpmonit.Service
+		orderCenterSvc            ordercenter.Service
+		lpRegisterSvc             lpregister.Service
+		relayAccountSvc           relayaccount.Service
+		relayListSvc              relaylist.Service
+		settingsSvc               settings.Service
+		statusListSvc             statuslist.Service
+		taskManagerSvc            taskmanager.Service
+		tokenManagerSvc           tokenmanager.Service
+		marketPricesSvc           marketprices.Service
 	)
 	{
 		mainLogicSvc = adminapiservice.NewMainLogic(logger)
@@ -85,44 +95,54 @@ func main() {
 		authenticationLimiterSvc = adminapiservice.NewAuthenticationLimiter(logger)
 		baseDataSvc = adminapiservice.NewBaseData(logger)
 		bridgeConfigSvc = adminapiservice.NewBridgeConfig(logger)
+		chainClientTransactionSvc = adminapiservice.NewChainClientTransaction(logger)
 		chainConfigSvc = adminapiservice.NewChainConfig(logger)
 		configResourceSvc = adminapiservice.NewConfigResource(logger)
 		dexWalletSvc = adminapiservice.NewDexWallet(logger)
+		exchangeRatesSvc = adminapiservice.NewExchangeRates(logger)
 		hedgeSvc = adminapiservice.NewHedge(logger)
+		hedgeTasksSvc = adminapiservice.NewHedgeTasks(logger)
 		installCtrlPanelSvc = adminapiservice.NewInstallCtrlPanel(logger)
 		lpmonitSvc = adminapiservice.NewLpmonit(logger)
 		orderCenterSvc = adminapiservice.NewOrderCenter(logger)
 		lpRegisterSvc = adminapiservice.NewLpRegister(logger)
 		relayAccountSvc = adminapiservice.NewRelayAccount(logger)
+		relayListSvc = adminapiservice.NewRelayList(logger)
 		settingsSvc = adminapiservice.NewSettings(logger)
 		statusListSvc = adminapiservice.NewStatusList(logger)
 		taskManagerSvc = adminapiservice.NewTaskManager(logger)
 		tokenManagerSvc = adminapiservice.NewTokenManager(logger)
+		marketPricesSvc = adminapiservice.NewMarketPrices(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		mainLogicEndpoints             *mainlogic.Endpoints
-		accountCexEndpoints            *accountcex.Endpoints
-		accountDexEndpoints            *accountdex.Endpoints
-		ammOrderCenterEndpoints        *ammordercenter.Endpoints
-		authenticationLimiterEndpoints *authenticationlimiter.Endpoints
-		baseDataEndpoints              *basedata.Endpoints
-		bridgeConfigEndpoints          *bridgeconfig.Endpoints
-		chainConfigEndpoints           *chainconfig.Endpoints
-		configResourceEndpoints        *configresource.Endpoints
-		dexWalletEndpoints             *dexwallet.Endpoints
-		hedgeEndpoints                 *hedge.Endpoints
-		installCtrlPanelEndpoints      *installctrlpanel.Endpoints
-		lpmonitEndpoints               *lpmonit.Endpoints
-		orderCenterEndpoints           *ordercenter.Endpoints
-		lpRegisterEndpoints            *lpregister.Endpoints
-		relayAccountEndpoints          *relayaccount.Endpoints
-		settingsEndpoints              *settings.Endpoints
-		statusListEndpoints            *statuslist.Endpoints
-		taskManagerEndpoints           *taskmanager.Endpoints
-		tokenManagerEndpoints          *tokenmanager.Endpoints
+		mainLogicEndpoints              *mainlogic.Endpoints
+		accountCexEndpoints             *accountcex.Endpoints
+		accountDexEndpoints             *accountdex.Endpoints
+		ammOrderCenterEndpoints         *ammordercenter.Endpoints
+		authenticationLimiterEndpoints  *authenticationlimiter.Endpoints
+		baseDataEndpoints               *basedata.Endpoints
+		bridgeConfigEndpoints           *bridgeconfig.Endpoints
+		chainClientTransactionEndpoints *chainclienttransaction.Endpoints
+		chainConfigEndpoints            *chainconfig.Endpoints
+		configResourceEndpoints         *configresource.Endpoints
+		dexWalletEndpoints              *dexwallet.Endpoints
+		exchangeRatesEndpoints          *exchangerates.Endpoints
+		hedgeEndpoints                  *hedge.Endpoints
+		hedgeTasksEndpoints             *hedgetasks.Endpoints
+		installCtrlPanelEndpoints       *installctrlpanel.Endpoints
+		lpmonitEndpoints                *lpmonit.Endpoints
+		orderCenterEndpoints            *ordercenter.Endpoints
+		lpRegisterEndpoints             *lpregister.Endpoints
+		relayAccountEndpoints           *relayaccount.Endpoints
+		relayListEndpoints              *relaylist.Endpoints
+		settingsEndpoints               *settings.Endpoints
+		statusListEndpoints             *statuslist.Endpoints
+		taskManagerEndpoints            *taskmanager.Endpoints
+		tokenManagerEndpoints           *tokenmanager.Endpoints
+		marketPricesEndpoints           *marketprices.Endpoints
 	)
 	{
 		mainLogicEndpoints = mainlogic.NewEndpoints(mainLogicSvc)
@@ -132,19 +152,24 @@ func main() {
 		authenticationLimiterEndpoints = authenticationlimiter.NewEndpoints(authenticationLimiterSvc)
 		baseDataEndpoints = basedata.NewEndpoints(baseDataSvc)
 		bridgeConfigEndpoints = bridgeconfig.NewEndpoints(bridgeConfigSvc)
+		chainClientTransactionEndpoints = chainclienttransaction.NewEndpoints(chainClientTransactionSvc)
 		chainConfigEndpoints = chainconfig.NewEndpoints(chainConfigSvc)
 		configResourceEndpoints = configresource.NewEndpoints(configResourceSvc)
 		dexWalletEndpoints = dexwallet.NewEndpoints(dexWalletSvc)
+		exchangeRatesEndpoints = exchangerates.NewEndpoints(exchangeRatesSvc)
 		hedgeEndpoints = hedge.NewEndpoints(hedgeSvc)
+		hedgeTasksEndpoints = hedgetasks.NewEndpoints(hedgeTasksSvc)
 		installCtrlPanelEndpoints = installctrlpanel.NewEndpoints(installCtrlPanelSvc)
 		lpmonitEndpoints = lpmonit.NewEndpoints(lpmonitSvc)
 		orderCenterEndpoints = ordercenter.NewEndpoints(orderCenterSvc)
 		lpRegisterEndpoints = lpregister.NewEndpoints(lpRegisterSvc)
 		relayAccountEndpoints = relayaccount.NewEndpoints(relayAccountSvc)
+		relayListEndpoints = relaylist.NewEndpoints(relayListSvc)
 		settingsEndpoints = settings.NewEndpoints(settingsSvc)
 		statusListEndpoints = statuslist.NewEndpoints(statusListSvc)
 		taskManagerEndpoints = taskmanager.NewEndpoints(taskManagerSvc)
 		tokenManagerEndpoints = tokenmanager.NewEndpoints(tokenManagerSvc)
+		marketPricesEndpoints = marketprices.NewEndpoints(marketPricesSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -186,7 +211,7 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, hedgeEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, mainLogicEndpoints, accountCexEndpoints, accountDexEndpoints, ammOrderCenterEndpoints, authenticationLimiterEndpoints, baseDataEndpoints, bridgeConfigEndpoints, chainClientTransactionEndpoints, chainConfigEndpoints, configResourceEndpoints, dexWalletEndpoints, exchangeRatesEndpoints, hedgeEndpoints, hedgeTasksEndpoints, installCtrlPanelEndpoints, lpmonitEndpoints, orderCenterEndpoints, lpRegisterEndpoints, relayAccountEndpoints, relayListEndpoints, settingsEndpoints, statusListEndpoints, taskManagerEndpoints, tokenManagerEndpoints, marketPricesEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:

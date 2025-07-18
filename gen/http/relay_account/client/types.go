@@ -16,7 +16,8 @@ import (
 // RegisterAccountRequestBody is the type of the "relayAccount" service
 // "registerAccount" endpoint HTTP request body.
 type RegisterAccountRequestBody struct {
-	Profile *string `form:"profile,omitempty" json:"profile,omitempty" xml:"profile,omitempty"`
+	RelayURL string `form:"relayUrl" json:"relayUrl" xml:"relayUrl"`
+	Profile  string `form:"profile" json:"profile" xml:"profile"`
 }
 
 // DeleteAccountRequestBody is the type of the "relayAccount" service
@@ -57,13 +58,15 @@ type RelayAccountItemResponseBody struct {
 	LpIDFake     *string `form:"lpIdFake,omitempty" json:"lpIdFake,omitempty" xml:"lpIdFake,omitempty"`
 	LpNodeAPIKey *string `form:"lpNodeApiKey,omitempty" json:"lpNodeApiKey,omitempty" xml:"lpNodeApiKey,omitempty"`
 	RelayAPIKey  *string `form:"relayApiKey,omitempty" json:"relayApiKey,omitempty" xml:"relayApiKey,omitempty"`
+	RelayURL     *string `form:"relayUrl,omitempty" json:"relayUrl,omitempty" xml:"relayUrl,omitempty"`
 }
 
 // NewRegisterAccountRequestBody builds the HTTP request body from the payload
 // of the "registerAccount" endpoint of the "relayAccount" service.
 func NewRegisterAccountRequestBody(p *relayaccount.RegisterAccountPayload) *RegisterAccountRequestBody {
 	body := &RegisterAccountRequestBody{
-		Profile: p.Profile,
+		RelayURL: p.RelayURL,
+		Profile:  p.Profile,
 	}
 	return body
 }

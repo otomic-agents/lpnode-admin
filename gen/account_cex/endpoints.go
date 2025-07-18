@@ -15,25 +15,85 @@ import (
 
 // Endpoints wraps the "accountCex" service endpoints.
 type Endpoints struct {
-	WalletInfo goa.Endpoint
+	GetAllTokenBalances goa.Endpoint
+	TokenBalance        goa.Endpoint
+	WalletInfo          goa.Endpoint
+	CreateAccount       goa.Endpoint
+	ListAccounts        goa.Endpoint
+	DeleteAccount       goa.Endpoint
 }
 
 // NewEndpoints wraps the methods of the "accountCex" service with endpoints.
 func NewEndpoints(s Service) *Endpoints {
 	return &Endpoints{
-		WalletInfo: NewWalletInfoEndpoint(s),
+		GetAllTokenBalances: NewGetAllTokenBalancesEndpoint(s),
+		TokenBalance:        NewTokenBalanceEndpoint(s),
+		WalletInfo:          NewWalletInfoEndpoint(s),
+		CreateAccount:       NewCreateAccountEndpoint(s),
+		ListAccounts:        NewListAccountsEndpoint(s),
+		DeleteAccount:       NewDeleteAccountEndpoint(s),
 	}
 }
 
 // Use applies the given middleware to all the "accountCex" service endpoints.
 func (e *Endpoints) Use(m func(goa.Endpoint) goa.Endpoint) {
+	e.GetAllTokenBalances = m(e.GetAllTokenBalances)
+	e.TokenBalance = m(e.TokenBalance)
 	e.WalletInfo = m(e.WalletInfo)
+	e.CreateAccount = m(e.CreateAccount)
+	e.ListAccounts = m(e.ListAccounts)
+	e.DeleteAccount = m(e.DeleteAccount)
+}
+
+// NewGetAllTokenBalancesEndpoint returns an endpoint function that calls the
+// method "getAllTokenBalances" of service "accountCex".
+func NewGetAllTokenBalancesEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*GetAllTokenBalancesPayload)
+		return s.GetAllTokenBalances(ctx, p)
+	}
+}
+
+// NewTokenBalanceEndpoint returns an endpoint function that calls the method
+// "tokenBalance" of service "accountCex".
+func NewTokenBalanceEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*TokenBalancePayload)
+		return s.TokenBalance(ctx, p)
+	}
 }
 
 // NewWalletInfoEndpoint returns an endpoint function that calls the method
 // "walletInfo" of service "accountCex".
 func NewWalletInfoEndpoint(s Service) goa.Endpoint {
 	return func(ctx context.Context, req interface{}) (interface{}, error) {
-		return s.WalletInfo(ctx)
+		p := req.(*WalletInfoPayload)
+		return s.WalletInfo(ctx, p)
+	}
+}
+
+// NewCreateAccountEndpoint returns an endpoint function that calls the method
+// "createAccount" of service "accountCex".
+func NewCreateAccountEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*CACexAccountPayload)
+		return s.CreateAccount(ctx, p)
+	}
+}
+
+// NewListAccountsEndpoint returns an endpoint function that calls the method
+// "listAccounts" of service "accountCex".
+func NewListAccountsEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		return s.ListAccounts(ctx)
+	}
+}
+
+// NewDeleteAccountEndpoint returns an endpoint function that calls the method
+// "deleteAccount" of service "accountCex".
+func NewDeleteAccountEndpoint(s Service) goa.Endpoint {
+	return func(ctx context.Context, req interface{}) (interface{}, error) {
+		p := req.(*DeleteAccountPayload)
+		return s.DeleteAccount(ctx, p)
 	}
 }

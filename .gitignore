@@ -13,3 +13,8 @@ data.txt
 env.json
 build.sh
 setup/task/dev/setup_*.yaml
+pm.js
+pm.mongodb.js
+result.log
+
+*.mongodb.js

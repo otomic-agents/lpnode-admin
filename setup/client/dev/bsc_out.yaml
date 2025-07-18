@@ -11,9 +11,8 @@ spec:
     - protocol: TCP
       name: chain-client-evm-bsc-api-9006
       port: 9100
-      targetPort: 9100
+      targetPort: 80
 ---
-# Source: chain-client-evm/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,13 +31,14 @@ spec:
         app: chain-client-evm-bsc-9006
     spec:
       containers:
-        - name: chain-client-evm-bsc-9006
+        # Message producer container
+        - name: message-producer
           image: "{{.Deployment.Image}}"
+          command: ["node"]
+          args: ["dist/message-producer"]
           ports:
-            - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}9100{{ end }}
+            - containerPort: 3001
           env:
-            - name: CLEAR_PADDING
-              value: 'true'
             - name: "STATUS_KEY"
               value: "chain-client-status-report-{{.Deployment.Name}}"
             - name: CHAIN_TYPE
@@ -49,8 +49,6 @@ spec:
             {{end}}
             - name: REDIS_PASSWORD
               value: "{{.Deployment.RedisPass}}"
-            - name: EVM_CLIENT_PORT
-              value: "9100"
             - name: REDIS_HOST
               value: "{{.Deployment.RedisHost}}"
             - name: REDIS_PORT
@@ -59,20 +57,300 @@ spec:
               value: "9006"
             - name: CHAIN_ID
               value: "97"
-            - name: OS_API_KEY
-              value: "{{.Deployment.OsApiKey}}"
-            - name: OS_API_SECRET
-              value: "{{.Deployment.OsApiSecret}}"
-            - name: OS_SYSTEM_SERVER
-              value: "{{.Deployment.OsSystemServer}}"
+            - name: MESSAGE_PRODUCER_PORT
+              value: "3001"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_PASSWORD
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_AUTH_SOURCE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+          resources:
+            requests:
+              cpu: 1m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 800Mi
+
+        # Monitor container
+        - name: monitor
+          image: "{{.Deployment.Image}}"
+          command: ["node"]
+          args: ["dist/monitor"]
+          ports:
+            - containerPort: 3002
+          env:
+            - name: "STATUS_KEY"
+              value: "chain-client-status-report-{{.Deployment.Name}}"
+            - name: CHAIN_TYPE
+              value: "evm"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: MONITOR_NAME
+              value: chain-client-evm-bsc-9006-monitor
+            - name: LOGGER_LEVEL
+              value: "debug"
+            - name: SYSTEM_CHAIN_ID
+              value: "9006"
+            - name: CHAIN_ID
+              value: "97"
             - name: CONTRACT_ADDRESS
               value: "0xcb24e8aEDB15981F4C088214722D8E3809e817eB"
-
             - name: START_BLOCK
               value: "{{ if .Deployment.StartBlock }}{{.Deployment.StartBlock}}{{ else }}24345141{{ end }}"
-            - name: RPC_URL
+            - name: RPCS
               value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://blockchain2.byte-trade.com:31267/bsc-archive-testnet{{ end }}"
-# START_BLOCK
-# RPC_URL
-# image
-# image = {{.Deployment.Image}}
+            - name: RPC_TIMEOUT
+              value: "30000"
+            - name: BLOCK_MARGIN
+              value: "3"
+            - name: BLOCK_MODE_SWITCH_THRESHOLD
+              value: "50"
+            - name: BLOCK_INTERVAL
+              value: "3000"
+            - name: BATCH_SIZE
+              value: "5000"
+            - name: ADMIN_SERVICE_URL
+              value: "http://lpnode-admin-server:18006"
+            - name: ADMIN_SERVICE_POLLING_INTERVAL
+              value: "15000"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_PASSWORD
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_AUTH_SOURCE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+          resources:
+            requests:
+              cpu: 1m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 800Mi
+
+        # Public service container
+        - name: public-service
+          image: "{{.Deployment.Image}}"
+          command: ["node"]
+          args: ["dist/public-service"]
+          ports:
+            - containerPort: 3003
+          env:
+            - name: "STATUS_KEY"
+              value: "chain-client-status-report-{{.Deployment.Name}}"
+            - name: CHAIN_TYPE
+              value: "evm"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: PUBLIC_SERVICE_PORT
+              value: "3003"
+            - name: SYSTEM_CHAIN_ID
+              value: "9006"
+            - name: CHAIN_ID
+              value: "97"
+            - name: RPCS
+              value: "{{ if .Deployment.RpcUrl }}{{.Deployment.RpcUrl}}{{ else }}https://blockchain2.byte-trade.com:31267/bsc-archive-testnet{{ end }}"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_PASSWORD
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_AUTH_SOURCE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+          resources:
+            requests:
+              cpu: 1m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 800Mi
+
+        # Sender container
+        - name: sender
+          image: "{{.Deployment.Image}}"
+          command: ["node"]
+          args: ["dist/sender"]
+          ports:
+            - containerPort: 3004
+          env:
+            - name: "STATUS_KEY"
+              value: "chain-client-status-report-{{.Deployment.Name}}"
+            - name: CHAIN_TYPE
+              value: "evm"
+            {{range .Deployment.CustomEnv}}
+            - name: "{{.Key}}"
+              value: "{{.Value}}"
+            {{end}}
+            - name: SENDER_SERVICE_PORT
+              value: "3004"
+            - name: SYSTEM_CHAIN_ID
+              value: "9006"
+            - name: CHAIN_ID
+              value: "97"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_PASSWORD
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_PORT
+              value: "27017"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: MONGODB_AUTH_SOURCE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: CONTRACT_ADDRESS
+              value: "0xcb24e8aEDB15981F4C088214722D8E3809e817eB"
+            - name: SENDER_RPC_URL
+              value: "https://bsc-dataseed.binance.org"
+          resources:
+            requests:
+              cpu: 1m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 800Mi
+        # Nginx proxy container
+        - name: nginx-proxy
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: NGINX_WORKER_PROCESSES
+              value: "1"
+          volumeMounts:
+            - name: nginx-config
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+          resources:
+            requests:
+              cpu: 100m
+              memory: 56Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      volumes:
+        - name: nginx-config
+          configMap:
+            name: chain-client-evm-bsc-server-9006-nginx-conf
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chain-client-evm-bsc-server-9006-nginx-conf
+  namespace: "{{.Deployment.Namespace}}"
+data:
+  default.conf: |
+    user  nginx;
+    worker_processes  1;
+
+    error_log  /var/log/nginx/error.log notice;
+    pid        /var/run/nginx.pid;
+
+    events {
+        worker_connections  1024;
+    }
+
+    http {
+        include       /etc/nginx/mime.types;
+        default_type  application/octet-stream;
+
+        log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                         '$status $body_bytes_sent "$http_referer" '
+                         '"$http_user_agent" "$http_x_forwarded_for"';
+
+        access_log  /var/log/nginx/access.log  main;
+
+        sendfile        on;
+        keepalive_timeout  65;
+
+        server {
+            listen 80;
+
+            # Message Producer endpoints
+            location ~ ^/producer/getNextEvent {
+                proxy_pass http://localhost:3001;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            location ~ ^/producer/getLatestEvent {
+                proxy_pass http://localhost:3001;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Public Service endpoints
+            location ~ ^/evm-client-[0-9]+/lpnode/get_wallets {
+                proxy_pass http://localhost:3003;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            location ~ ^/evm-client-[0-9]+/lpnode/get_wallet_balances {
+                proxy_pass http://localhost:3003;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Sender endpoints
+            location = /submitTokenTransfer {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            location ~ "/queryJobStatus/[a-f0-9]+" {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Sender lpnode endpoints
+            location ~ ^/evm-client-[0-9]+/lpnode/(transfer_in|confirm|refund|sign_message_712|single_chain/sign_message_712|single_swap/confirm_swap) {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Sender relay endpoints
+            location ~ ^/evm-client-[0-9]+/relay/(get_hashlock|get_system_fee|get_signer_from_eip712) {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+            # Sender relay behalf endpoints
+            location ~ ^/evm-client-[0-9]+/relay/behalf/(confirm_out|confirm_in|refund_out|refund_in) {
+                proxy_pass http://localhost:3004;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+            }
+
+            # Default fallback route
+            location / {
+                return 404;
+            }
+        }
+    }

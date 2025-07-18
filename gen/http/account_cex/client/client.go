@@ -17,9 +17,29 @@ import (
 
 // Client lists the accountCex service endpoint HTTP clients.
 type Client struct {
+	// GetAllTokenBalances Doer is the HTTP client used to make requests to the
+	// getAllTokenBalances endpoint.
+	GetAllTokenBalancesDoer goahttp.Doer
+
+	// TokenBalance Doer is the HTTP client used to make requests to the
+	// tokenBalance endpoint.
+	TokenBalanceDoer goahttp.Doer
+
 	// WalletInfo Doer is the HTTP client used to make requests to the walletInfo
 	// endpoint.
 	WalletInfoDoer goahttp.Doer
+
+	// CreateAccount Doer is the HTTP client used to make requests to the
+	// createAccount endpoint.
+	CreateAccountDoer goahttp.Doer
+
+	// ListAccounts Doer is the HTTP client used to make requests to the
+	// listAccounts endpoint.
+	ListAccountsDoer goahttp.Doer
+
+	// DeleteAccount Doer is the HTTP client used to make requests to the
+	// deleteAccount endpoint.
+	DeleteAccountDoer goahttp.Doer
 
 	// RestoreResponseBody controls whether the response bodies are reset after
 	// decoding so they can be read again.
@@ -41,12 +61,55 @@ func NewClient(
 	restoreBody bool,
 ) *Client {
 	return &Client{
-		WalletInfoDoer:      doer,
-		RestoreResponseBody: restoreBody,
-		scheme:              scheme,
-		host:                host,
-		decoder:             dec,
-		encoder:             enc,
+		GetAllTokenBalancesDoer: doer,
+		TokenBalanceDoer:        doer,
+		WalletInfoDoer:          doer,
+		CreateAccountDoer:       doer,
+		ListAccountsDoer:        doer,
+		DeleteAccountDoer:       doer,
+		RestoreResponseBody:     restoreBody,
+		scheme:                  scheme,
+		host:                    host,
+		decoder:                 dec,
+		encoder:                 enc,
+	}
+}
+
+// GetAllTokenBalances returns an endpoint that makes HTTP requests to the
+// accountCex service getAllTokenBalances server.
+func (c *Client) GetAllTokenBalances() goa.Endpoint {
+	var (
+		decodeResponse = DecodeGetAllTokenBalancesResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildGetAllTokenBalancesRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.GetAllTokenBalancesDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("accountCex", "getAllTokenBalances", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// TokenBalance returns an endpoint that makes HTTP requests to the accountCex
+// service tokenBalance server.
+func (c *Client) TokenBalance() goa.Endpoint {
+	var (
+		decodeResponse = DecodeTokenBalanceResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildTokenBalanceRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.TokenBalanceDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("accountCex", "tokenBalance", err)
+		}
+		return decodeResponse(resp)
 	}
 }
 
@@ -64,6 +127,68 @@ func (c *Client) WalletInfo() goa.Endpoint {
 		resp, err := c.WalletInfoDoer.Do(req)
 		if err != nil {
 			return nil, goahttp.ErrRequestError("accountCex", "walletInfo", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// CreateAccount returns an endpoint that makes HTTP requests to the accountCex
+// service createAccount server.
+func (c *Client) CreateAccount() goa.Endpoint {
+	var (
+		encodeRequest  = EncodeCreateAccountRequest(c.encoder)
+		decodeResponse = DecodeCreateAccountResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildCreateAccountRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		err = encodeRequest(req, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.CreateAccountDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("accountCex", "createAccount", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// ListAccounts returns an endpoint that makes HTTP requests to the accountCex
+// service listAccounts server.
+func (c *Client) ListAccounts() goa.Endpoint {
+	var (
+		decodeResponse = DecodeListAccountsResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildListAccountsRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.ListAccountsDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("accountCex", "listAccounts", err)
+		}
+		return decodeResponse(resp)
+	}
+}
+
+// DeleteAccount returns an endpoint that makes HTTP requests to the accountCex
+// service deleteAccount server.
+func (c *Client) DeleteAccount() goa.Endpoint {
+	var (
+		decodeResponse = DecodeDeleteAccountResponse(c.decoder, c.RestoreResponseBody)
+	)
+	return func(ctx context.Context, v interface{}) (interface{}, error) {
+		req, err := c.BuildDeleteAccountRequest(ctx, v)
+		if err != nil {
+			return nil, err
+		}
+		resp, err := c.DeleteAccountDoer.Do(req)
+		if err != nil {
+			return nil, goahttp.ErrRequestError("accountCex", "deleteAccount", err)
 		}
 		return decodeResponse(resp)
 	}

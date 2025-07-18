@@ -9,7 +9,7 @@ spec:
   type: ClusterIP
   ports:
     - protocol: TCP
-      name: amm-market-{{.Deployment.Name}}-service
+      name: "amm-market-{{.Deployment.Name}}-service"
       port: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18080{{ end }}
       targetPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18080{{ end }}
 ---
@@ -17,6 +17,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "amm-market-{{.Deployment.Name}}"
+  namespace: "{{.Deployment.Namespace}}"
   labels:
     app: "amm-market-{{.Deployment.Name}}"
 spec:
@@ -32,6 +33,18 @@ spec:
       containers:
         - name: "amm-market-{{.Deployment.Name}}"
           image: "{{.Deployment.Image}}"
+          command:
+            - python3
+            - ./app.py
+          workingDir: /app
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 300m
+              memory: 512Mi
           ports:
             - containerPort: {{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18080{{ end }}
           env:
@@ -47,8 +60,6 @@ spec:
             - name: "{{.Key}}"
               value: "{{.Value}}"
             {{end}}
-            - name: "GO_ENV"
-              value: "production"
             - name: "SERVICE_PORT"
               value: "{{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18080{{ end }}"
             - name: MONGODB_HOST
@@ -61,4 +72,49 @@ spec:
               value: "{{.Deployment.MongodbPass}}"
             - name: MONGODB_DBNAME_LP_STORE
               value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
 
+        - name: "amm-market-{{.Deployment.Name}}-ccxt"
+          image: "{{.Deployment.Image}}"
+          command:
+            - ts-node
+            - ./src/App.ts
+          workingDir: /app/otmoic-ccxt-market
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              cpu: 300m
+              memory: 600Mi
+          env:
+            - name: "STATUS_KEY"
+              value: "amm-market-status-report-{{.Deployment.Name}}"
+            - name: REDIS_HOST
+              value: "{{.Deployment.RedisHost}}"
+            - name: REDIS_PORT
+              value: "{{.Deployment.RedisPort}}"
+            - name: REDIS_PASSWORD
+              value: "{{.Deployment.RedisPass}}"
+            - name: "SERVICE_PORT"
+              value: "{{ if .Deployment.ContainerPort }}{{.Deployment.ContainerPort}}{{ else }}18080{{ end }}"
+            - name: MONGODB_HOST
+              value: "{{.Deployment.MongodbHost}}"
+            - name: MONGODB_PORT
+              value: "{{.Deployment.MongodbPort}}"
+            - name: MONGODB_ACCOUNT
+              value: "{{.Deployment.MongodbAccount}}"
+            - name: MONGODB_PASSWORD
+              value: "{{.Deployment.MongodbPass}}"
+            - name: MONGODB_DBNAME_LP_STORE
+              value: "{{.Deployment.MongodbDbnameLpStore}}"
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace

@@ -18,10 +18,153 @@ import (
 	goahttp "goa.design/goa/v3/http"
 )
 
+// BuildGetAllTokenBalancesRequest instantiates a HTTP request object with
+// method and path set to call the "accountCex" service "getAllTokenBalances"
+// endpoint
+func (c *Client) BuildGetAllTokenBalancesRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		accountID string
+	)
+	{
+		p, ok := v.(*accountcex.GetAllTokenBalancesPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("accountCex", "getAllTokenBalances", "*accountcex.GetAllTokenBalancesPayload", v)
+		}
+		accountID = p.AccountID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: GetAllTokenBalancesAccountCexPath(accountID)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("accountCex", "getAllTokenBalances", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeGetAllTokenBalancesResponse returns a decoder for responses returned
+// by the accountCex getAllTokenBalances endpoint. restoreBody controls whether
+// the response body should be restored after having been read.
+func DecodeGetAllTokenBalancesResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body GetAllTokenBalancesResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("accountCex", "getAllTokenBalances", err)
+			}
+			err = ValidateGetAllTokenBalancesResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("accountCex", "getAllTokenBalances", err)
+			}
+			res := NewGetAllTokenBalancesResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("accountCex", "getAllTokenBalances", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildTokenBalanceRequest instantiates a HTTP request object with method and
+// path set to call the "accountCex" service "tokenBalance" endpoint
+func (c *Client) BuildTokenBalanceRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		accountID string
+		symbol    string
+	)
+	{
+		p, ok := v.(*accountcex.TokenBalancePayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("accountCex", "tokenBalance", "*accountcex.TokenBalancePayload", v)
+		}
+		accountID = p.AccountID
+		symbol = p.Symbol
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: TokenBalanceAccountCexPath(accountID, symbol)}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("accountCex", "tokenBalance", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeTokenBalanceResponse returns a decoder for responses returned by the
+// accountCex tokenBalance endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+func DecodeTokenBalanceResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body TokenBalanceResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("accountCex", "tokenBalance", err)
+			}
+			err = ValidateTokenBalanceResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("accountCex", "tokenBalance", err)
+			}
+			res := NewTokenBalanceResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("accountCex", "tokenBalance", resp.StatusCode, string(body))
+		}
+	}
+}
+
 // BuildWalletInfoRequest instantiates a HTTP request object with method and
 // path set to call the "accountCex" service "walletInfo" endpoint
 func (c *Client) BuildWalletInfoRequest(ctx context.Context, v interface{}) (*http.Request, error) {
-	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: WalletInfoAccountCexPath()}
+	var (
+		accountID string
+	)
+	{
+		p, ok := v.(*accountcex.WalletInfoPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("accountCex", "walletInfo", "*accountcex.WalletInfoPayload", v)
+		}
+		accountID = p.AccountID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: WalletInfoAccountCexPath(accountID)}
 	req, err := http.NewRequest("GET", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("accountCex", "walletInfo", u.String(), err)
@@ -60,6 +203,10 @@ func DecodeWalletInfoResponse(decoder func(*http.Response) goahttp.Decoder, rest
 			if err != nil {
 				return nil, goahttp.ErrDecodingError("accountCex", "walletInfo", err)
 			}
+			err = ValidateWalletInfoResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("accountCex", "walletInfo", err)
+			}
 			res := NewWalletInfoResultOK(&body)
 			return res, nil
 		default:
@@ -69,19 +216,235 @@ func DecodeWalletInfoResponse(decoder func(*http.Response) goahttp.Decoder, rest
 	}
 }
 
-// unmarshalCexAccountBalanceResponseBodyToAccountcexCexAccountBalance builds a
-// value of type *accountcex.CexAccountBalance from a value of type
-// *CexAccountBalanceResponseBody.
-func unmarshalCexAccountBalanceResponseBodyToAccountcexCexAccountBalance(v *CexAccountBalanceResponseBody) *accountcex.CexAccountBalance {
-	if v == nil {
+// BuildCreateAccountRequest instantiates a HTTP request object with method and
+// path set to call the "accountCex" service "createAccount" endpoint
+func (c *Client) BuildCreateAccountRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: CreateAccountAccountCexPath()}
+	req, err := http.NewRequest("POST", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("accountCex", "createAccount", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// EncodeCreateAccountRequest returns an encoder for requests sent to the
+// accountCex createAccount server.
+func EncodeCreateAccountRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*accountcex.CACexAccountPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("accountCex", "createAccount", "*accountcex.CACexAccountPayload", v)
+		}
+		body := NewCreateAccountRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("accountCex", "createAccount", err)
+		}
 		return nil
 	}
-	res := &accountcex.CexAccountBalance{
-		Asset:  v.Asset,
-		Total:  v.Total,
-		Free:   v.Free,
-		Locked: v.Locked,
+}
+
+// DecodeCreateAccountResponse returns a decoder for responses returned by the
+// accountCex createAccount endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+func DecodeCreateAccountResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusCreated:
+			var (
+				body CreateAccountResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("accountCex", "createAccount", err)
+			}
+			err = ValidateCreateAccountResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("accountCex", "createAccount", err)
+			}
+			res := NewCreateAccountResultCreated(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("accountCex", "createAccount", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildListAccountsRequest instantiates a HTTP request object with method and
+// path set to call the "accountCex" service "listAccounts" endpoint
+func (c *Client) BuildListAccountsRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: ListAccountsAccountCexPath()}
+	req, err := http.NewRequest("GET", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("accountCex", "listAccounts", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeListAccountsResponse returns a decoder for responses returned by the
+// accountCex listAccounts endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+func DecodeListAccountsResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body ListAccountsResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("accountCex", "listAccounts", err)
+			}
+			err = ValidateListAccountsResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("accountCex", "listAccounts", err)
+			}
+			res := NewListAccountsResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("accountCex", "listAccounts", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// BuildDeleteAccountRequest instantiates a HTTP request object with method and
+// path set to call the "accountCex" service "deleteAccount" endpoint
+func (c *Client) BuildDeleteAccountRequest(ctx context.Context, v interface{}) (*http.Request, error) {
+	var (
+		accountID string
+	)
+	{
+		p, ok := v.(*accountcex.DeleteAccountPayload)
+		if !ok {
+			return nil, goahttp.ErrInvalidType("accountCex", "deleteAccount", "*accountcex.DeleteAccountPayload", v)
+		}
+		accountID = p.AccountID
+	}
+	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: DeleteAccountAccountCexPath(accountID)}
+	req, err := http.NewRequest("DELETE", u.String(), nil)
+	if err != nil {
+		return nil, goahttp.ErrInvalidURL("accountCex", "deleteAccount", u.String(), err)
+	}
+	if ctx != nil {
+		req = req.WithContext(ctx)
+	}
+
+	return req, nil
+}
+
+// DecodeDeleteAccountResponse returns a decoder for responses returned by the
+// accountCex deleteAccount endpoint. restoreBody controls whether the response
+// body should be restored after having been read.
+func DecodeDeleteAccountResponse(decoder func(*http.Response) goahttp.Decoder, restoreBody bool) func(*http.Response) (interface{}, error) {
+	return func(resp *http.Response) (interface{}, error) {
+		if restoreBody {
+			b, err := io.ReadAll(resp.Body)
+			if err != nil {
+				return nil, err
+			}
+			resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			defer func() {
+				resp.Body = io.NopCloser(bytes.NewBuffer(b))
+			}()
+		} else {
+			defer resp.Body.Close()
+		}
+		switch resp.StatusCode {
+		case http.StatusOK:
+			var (
+				body DeleteAccountResponseBody
+				err  error
+			)
+			err = decoder(resp).Decode(&body)
+			if err != nil {
+				return nil, goahttp.ErrDecodingError("accountCex", "deleteAccount", err)
+			}
+			err = ValidateDeleteAccountResponseBody(&body)
+			if err != nil {
+				return nil, goahttp.ErrValidationError("accountCex", "deleteAccount", err)
+			}
+			res := NewDeleteAccountResultOK(&body)
+			return res, nil
+		default:
+			body, _ := io.ReadAll(resp.Body)
+			return nil, goahttp.ErrInvalidResponse("accountCex", "deleteAccount", resp.StatusCode, string(body))
+		}
+	}
+}
+
+// unmarshalCATokenBalanceResponseBodyToAccountcexCATokenBalance builds a value
+// of type *accountcex.CATokenBalance from a value of type
+// *CATokenBalanceResponseBody.
+func unmarshalCATokenBalanceResponseBodyToAccountcexCATokenBalance(v *CATokenBalanceResponseBody) *accountcex.CATokenBalance {
+	res := &accountcex.CATokenBalance{
+		Asset:  *v.Asset,
+		Free:   *v.Free,
+		Locked: *v.Locked,
+		Total:  *v.Total,
+	}
+
+	return res
+}
+
+// unmarshalCACexAccountBalanceResponseBodyToAccountcexCACexAccountBalance
+// builds a value of type *accountcex.CACexAccountBalance from a value of type
+// *CACexAccountBalanceResponseBody.
+func unmarshalCACexAccountBalanceResponseBodyToAccountcexCACexAccountBalance(v *CACexAccountBalanceResponseBody) *accountcex.CACexAccountBalance {
+	res := &accountcex.CACexAccountBalance{
+		Asset:  *v.Asset,
+		Total:  *v.Total,
+		Free:   *v.Free,
+		Locked: *v.Locked,
 		Price:  v.Price,
+	}
+
+	return res
+}
+
+// unmarshalCACexAccountResponseBodyToAccountcexCACexAccount builds a value of
+// type *accountcex.CACexAccount from a value of type *CACexAccountResponseBody.
+func unmarshalCACexAccountResponseBodyToAccountcexCACexAccount(v *CACexAccountResponseBody) *accountcex.CACexAccount {
+	res := &accountcex.CACexAccount{
+		ID:       v.ID,
+		Name:     *v.Name,
+		Exchange: *v.Exchange,
+		APIKey:   *v.APIKey,
+		Status:   *v.Status,
 	}
 
 	return res

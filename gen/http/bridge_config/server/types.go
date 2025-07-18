@@ -31,7 +31,11 @@ type BridgeCreateRequestBody struct {
 	// mongodb primary key, from walletlist
 	SrcWalletID *string `form:"srcWalletId,omitempty" json:"srcWalletId,omitempty" xml:"srcWalletId,omitempty"`
 	// amm name at install
-	AmmName       *string `form:"ammName,omitempty" json:"ammName,omitempty" xml:"ammName,omitempty"`
+	AmmName *string `form:"ammName,omitempty" json:"ammName,omitempty" xml:"ammName,omitempty"`
+	// relay api key
+	RelayAPIKey *string `form:"relayApiKey,omitempty" json:"relayApiKey,omitempty" xml:"relayApiKey,omitempty"`
+	// relayUri
+	RelayURI      *string `form:"relayUri,omitempty" json:"relayUri,omitempty" xml:"relayUri,omitempty"`
 	EnableHedge   *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
 	EnableLimiter *bool   `form:"enableLimiter,omitempty" json:"enableLimiter,omitempty" xml:"enableLimiter,omitempty"`
 }
@@ -100,7 +104,17 @@ type ListBridgeItemResponseBody struct {
 	SrcToken          *string `form:"srcToken,omitempty" json:"srcToken,omitempty" xml:"srcToken,omitempty"`
 	WalletName        *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
 	WalletID          *string `form:"walletId,omitempty" json:"walletId,omitempty" xml:"walletId,omitempty"`
-	EnableHedge       *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	// receiving wallet id
+	SrcWalletID *string `form:"srcWalletId,omitempty" json:"srcWalletId,omitempty" xml:"srcWalletId,omitempty"`
+	EnableHedge *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	// Source chain token balance
+	SrcTokenBalance string `form:"srcTokenBalance" json:"srcTokenBalance" xml:"srcTokenBalance"`
+	// Destination chain token balance
+	DstTokenBalance string `form:"dstTokenBalance" json:"dstTokenBalance" xml:"dstTokenBalance"`
+	// Source token decimals
+	SrcTokenDecimals int64 `form:"srcTokenDecimals" json:"srcTokenDecimals" xml:"srcTokenDecimals"`
+	// Destination token decimals
+	DstTokenDecimals int64 `form:"dstTokenDecimals" json:"dstTokenDecimals" xml:"dstTokenDecimals"`
 }
 
 // NewBridgeCreateResponseBody builds the HTTP response body from the result of
@@ -162,6 +176,8 @@ func NewBridgeCreateBridgeItem(body *BridgeCreateRequestBody) *bridgeconfig.Brid
 		WalletID:    *body.WalletID,
 		SrcWalletID: *body.SrcWalletID,
 		AmmName:     *body.AmmName,
+		RelayAPIKey: *body.RelayAPIKey,
+		RelayURI:    *body.RelayURI,
 	}
 	if body.EnableHedge != nil {
 		v.EnableHedge = *body.EnableHedge
@@ -225,6 +241,12 @@ func ValidateBridgeCreateRequestBody(body *BridgeCreateRequestBody) (err error) 
 	}
 	if body.AmmName == nil {
 		err = goa.MergeErrors(err, goa.MissingFieldError("ammName", "body"))
+	}
+	if body.RelayAPIKey == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("relayApiKey", "body"))
+	}
+	if body.RelayURI == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("relayUri", "body"))
 	}
 	return
 }

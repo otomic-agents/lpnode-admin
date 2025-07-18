@@ -76,9 +76,10 @@ func install_init_chain_client_item(result ChainListRow) (err error) {
 	// log.Println(bson.M{"installType": "ammClient", "name": result.ChainName})
 	database.FindOne("main", "install", bson.M{"installType": "ammClient", "name": chainName}, &v)
 	if v.Id.Hex() != types.MongoEmptyIdHex {
-		err = fmt.Errorf("the ammClient program already exists,chainName:%s", chainName)
-		logger.System.Warn(err)
-		return
+		// if exists, continue to update instead of returning error
+		// err = fmt.Errorf("the ammClient program already exists,chainName:%s", chainName)
+		// logger.System.Warn(err)
+		// return
 	}
 	installContextJson := `{}`
 	name := chainName
@@ -96,25 +97,32 @@ func install_init_chain_client_item(result ChainListRow) (err error) {
 		}
 		// envArraySet = append(envArraySet, v)
 	}
-	database.Insert("main", "install", bson.M{
-		"installType":    installType,
-		"chainType":      result.ChainType,
-		"chainId":        result.ChainId,
-		"name":           name,
-		"deployName":     result.DeployName,
-		"configStatus":   0,
-		"lastinstall":    time.Now().UnixNano() / 1e6,
-		"status":         1,
-		"stderr":         "",
-		"stdout":         "init install",
-		"yaml":           "",
-		"envList":        envArraySet,
-		"installContext": installContextJson,
-		"namespace":      os.Getenv("POD_NAMESPACE"),
-		"un_stderr":      "",
-		"un_stdout":      "",
-		"serviceName":    serviceName,
-	})
+
+	// change Insert to FindOneAndUpdate
+	_, err = database.FindOneAndUpdate(
+		"main",
+		"install",
+		bson.M{"installType": "ammClient", "name": chainName},
+		bson.M{"$set": bson.M{
+			"installType":    installType,
+			"chainType":      result.ChainType,
+			"chainId":        result.ChainId,
+			"name":           name,
+			"deployName":     result.DeployName,
+			"configStatus":   0,
+			"lastinstall":    time.Now().UnixNano() / 1e6,
+			"status":         1,
+			"stderr":         "",
+			"stdout":         "init install",
+			"yaml":           "",
+			"envList":        envArraySet,
+			"installContext": installContextJson,
+			"namespace":      os.Getenv("POD_NAMESPACE"),
+			"un_stderr":      "",
+			"un_stdout":      "",
+			"serviceName":    serviceName,
+		}},
+	)
 	return
 }
 func install_init_amm_client() (err error) {
@@ -125,8 +133,9 @@ func install_init_amm_client() (err error) {
 	}{}
 	database.FindOne("main", "install", bson.M{"installType": "amm"}, &v)
 	if v.Id.Hex() != types.MongoEmptyIdHex {
-		err = errors.New("the amm program already exists")
-		return
+		// if exists, continue to update instead of returning error
+		// err = errors.New("the amm program already exists")
+		// return
 	}
 	installContextJson := `{}`
 	name := "amm-01"
@@ -136,24 +145,31 @@ func install_init_amm_client() (err error) {
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.namespace", os.Getenv("POD_NAMESPACE"))
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.name", name)
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.image", image)
-	database.Insert("main", "install", bson.M{
-		"installType":  installType,
-		"name":         name,
-		"deployName":   deployName,
-		"configStatus": 0,
-		"lastinstall":  time.Now().UnixNano() / 1e6,
-		"status":       1,
-		"stderr":       "",
-		"stdout":       "init install",
-		"yaml":         "",
-		"envList": bson.A{
-			bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("amm-status-report-%s", name)},
-		},
-		"installContext": installContextJson,
-		"namespace":      os.Getenv("POD_NAMESPACE"),
-		"un_stderr":      "",
-		"un_stdout":      "",
-	})
+
+	// change Insert to FindOneAndUpdate
+	_, err = database.FindOneAndUpdate(
+		"main",
+		"install",
+		bson.M{"installType": "amm"},
+		bson.M{"$set": bson.M{
+			"installType":  installType,
+			"name":         name,
+			"deployName":   deployName,
+			"configStatus": 0,
+			"lastinstall":  time.Now().UnixNano() / 1e6,
+			"status":       1,
+			"stderr":       "",
+			"stdout":       "init install",
+			"yaml":         "",
+			"envList": bson.A{
+				bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("amm-status-report-%s", name)},
+			},
+			"installContext": installContextJson,
+			"namespace":      os.Getenv("POD_NAMESPACE"),
+			"un_stderr":      "",
+			"un_stdout":      "",
+		}},
+	)
 	return
 }
 func install_init_market_adapter() (err error) {
@@ -164,8 +180,9 @@ func install_init_market_adapter() (err error) {
 	}{}
 	database.FindOne("main", "install", bson.M{"installType": "market"}, &v)
 	if v.Id.Hex() != types.MongoEmptyIdHex {
-		err = errors.New("the market program already exists")
-		return
+		// if exists, continue to update instead of returning error
+		// err = errors.New("the market program already exists")
+		// return
 	}
 	installContextJson := `{}`
 	name := "price"
@@ -175,23 +192,30 @@ func install_init_market_adapter() (err error) {
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.namespace", os.Getenv("POD_NAMESPACE"))
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.name", name)
 	installContextJson, _ = sjson.Set(installContextJson, "deployment.image", image)
-	database.Insert("main", "install", bson.M{
-		"installType":  installType,
-		"name":         "price",
-		"deployName":   deployName,
-		"configStatus": 0,
-		"lastinstall":  time.Now().UnixNano() / 1e6,
-		"status":       1,
-		"stderr":       "",
-		"stdout":       "init install",
-		"yaml":         "",
-		"envList": bson.A{
-			bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("amm-market-status-report-%s", "price")},
-		},
-		"installContext": installContextJson,
-		"namespace":      os.Getenv("POD_NAMESPACE"),
-		"un_stderr":      "",
-		"un_stdout":      "",
-	})
+
+	// change Insert to FindOneAndUpdate
+	_, err = database.FindOneAndUpdate(
+		"main",
+		"install",
+		bson.M{"installType": "market"},
+		bson.M{"$set": bson.M{
+			"installType":  installType,
+			"name":         "price",
+			"deployName":   deployName,
+			"configStatus": 0,
+			"lastinstall":  time.Now().UnixNano() / 1e6,
+			"status":       1,
+			"stderr":       "",
+			"stdout":       "init install",
+			"yaml":         "",
+			"envList": bson.A{
+				bson.M{"name": "STATUS_KEY", "value": fmt.Sprintf("amm-market-status-report-%s", "price")},
+			},
+			"installContext": installContextJson,
+			"namespace":      os.Getenv("POD_NAMESPACE"),
+			"un_stderr":      "",
+			"un_stdout":      "",
+		}},
+	)
 	return
 }

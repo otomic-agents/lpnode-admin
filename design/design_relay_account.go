@@ -11,6 +11,7 @@ var relayAccount_AccountItem = Type("relayAccountItem", func() {
 	Attribute("lpIdFake", String)
 	Attribute("lpNodeApiKey", String)
 	Attribute("relayApiKey", String)
+	Attribute("relayUrl", String)
 })
 var _ = Service("relayAccount", func() {
 	Description("used to manage lp account on relay")
@@ -29,8 +30,9 @@ var _ = Service("relayAccount", func() {
 	Method("registerAccount", func() {
 		Payload(func() {
 			// Attribute("name", String)
+			Attribute("relayUrl", String)
 			Attribute("profile", String)
-			// Required("name")
+			Required("relayUrl", "profile")
 		})
 		Result(func() {
 			Attribute("code", Int64, "")

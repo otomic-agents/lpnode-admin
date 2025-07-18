@@ -10,10 +10,70 @@ package server
 import (
 	accountcex "admin-panel/gen/account_cex"
 	"context"
+	"io"
 	"net/http"
 
 	goahttp "goa.design/goa/v3/http"
+	goa "goa.design/goa/v3/pkg"
 )
+
+// EncodeGetAllTokenBalancesResponse returns an encoder for responses returned
+// by the accountCex getAllTokenBalances endpoint.
+func EncodeGetAllTokenBalancesResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*accountcex.GetAllTokenBalancesResult)
+		enc := encoder(ctx, w)
+		body := NewGetAllTokenBalancesResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetAllTokenBalancesRequest returns a decoder for requests sent to the
+// accountCex getAllTokenBalances endpoint.
+func DecodeGetAllTokenBalancesRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			accountID string
+
+			params = mux.Vars(r)
+		)
+		accountID = params["account_id"]
+		payload := NewGetAllTokenBalancesPayload(accountID)
+
+		return payload, nil
+	}
+}
+
+// EncodeTokenBalanceResponse returns an encoder for responses returned by the
+// accountCex tokenBalance endpoint.
+func EncodeTokenBalanceResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*accountcex.TokenBalanceResult)
+		enc := encoder(ctx, w)
+		body := NewTokenBalanceResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeTokenBalanceRequest returns a decoder for requests sent to the
+// accountCex tokenBalance endpoint.
+func DecodeTokenBalanceRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			accountID string
+			symbol    string
+
+			params = mux.Vars(r)
+		)
+		accountID = params["account_id"]
+		symbol = params["symbol"]
+		payload := NewTokenBalancePayload(accountID, symbol)
+
+		return payload, nil
+	}
+}
 
 // EncodeWalletInfoResponse returns an encoder for responses returned by the
 // accountCex walletInfo endpoint.
@@ -27,19 +87,137 @@ func EncodeWalletInfoResponse(encoder func(context.Context, http.ResponseWriter)
 	}
 }
 
-// marshalAccountcexCexAccountBalanceToCexAccountBalanceResponseBody builds a
-// value of type *CexAccountBalanceResponseBody from a value of type
-// *accountcex.CexAccountBalance.
-func marshalAccountcexCexAccountBalanceToCexAccountBalanceResponseBody(v *accountcex.CexAccountBalance) *CexAccountBalanceResponseBody {
-	if v == nil {
-		return nil
+// DecodeWalletInfoRequest returns a decoder for requests sent to the
+// accountCex walletInfo endpoint.
+func DecodeWalletInfoRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			accountID string
+
+			params = mux.Vars(r)
+		)
+		accountID = params["account_id"]
+		payload := NewWalletInfoPayload(accountID)
+
+		return payload, nil
 	}
-	res := &CexAccountBalanceResponseBody{
+}
+
+// EncodeCreateAccountResponse returns an encoder for responses returned by the
+// accountCex createAccount endpoint.
+func EncodeCreateAccountResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*accountcex.CreateAccountResult)
+		enc := encoder(ctx, w)
+		body := NewCreateAccountResponseBody(res)
+		w.WriteHeader(http.StatusCreated)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeCreateAccountRequest returns a decoder for requests sent to the
+// accountCex createAccount endpoint.
+func DecodeCreateAccountRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body CreateAccountRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateCreateAccountRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewCreateAccountCACexAccountPayload(&body)
+
+		return payload, nil
+	}
+}
+
+// EncodeListAccountsResponse returns an encoder for responses returned by the
+// accountCex listAccounts endpoint.
+func EncodeListAccountsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*accountcex.ListAccountsResult)
+		enc := encoder(ctx, w)
+		body := NewListAccountsResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// EncodeDeleteAccountResponse returns an encoder for responses returned by the
+// accountCex deleteAccount endpoint.
+func EncodeDeleteAccountResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*accountcex.DeleteAccountResult)
+		enc := encoder(ctx, w)
+		body := NewDeleteAccountResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeDeleteAccountRequest returns a decoder for requests sent to the
+// accountCex deleteAccount endpoint.
+func DecodeDeleteAccountRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			accountID string
+
+			params = mux.Vars(r)
+		)
+		accountID = params["account_id"]
+		payload := NewDeleteAccountPayload(accountID)
+
+		return payload, nil
+	}
+}
+
+// marshalAccountcexCATokenBalanceToCATokenBalanceResponseBody builds a value
+// of type *CATokenBalanceResponseBody from a value of type
+// *accountcex.CATokenBalance.
+func marshalAccountcexCATokenBalanceToCATokenBalanceResponseBody(v *accountcex.CATokenBalance) *CATokenBalanceResponseBody {
+	res := &CATokenBalanceResponseBody{
+		Asset:  v.Asset,
+		Free:   v.Free,
+		Locked: v.Locked,
+		Total:  v.Total,
+	}
+
+	return res
+}
+
+// marshalAccountcexCACexAccountBalanceToCACexAccountBalanceResponseBody builds
+// a value of type *CACexAccountBalanceResponseBody from a value of type
+// *accountcex.CACexAccountBalance.
+func marshalAccountcexCACexAccountBalanceToCACexAccountBalanceResponseBody(v *accountcex.CACexAccountBalance) *CACexAccountBalanceResponseBody {
+	res := &CACexAccountBalanceResponseBody{
 		Asset:  v.Asset,
 		Total:  v.Total,
 		Free:   v.Free,
 		Locked: v.Locked,
 		Price:  v.Price,
+	}
+
+	return res
+}
+
+// marshalAccountcexCACexAccountToCACexAccountResponseBody builds a value of
+// type *CACexAccountResponseBody from a value of type *accountcex.CACexAccount.
+func marshalAccountcexCACexAccountToCACexAccountResponseBody(v *accountcex.CACexAccount) *CACexAccountResponseBody {
+	res := &CACexAccountResponseBody{
+		ID:       v.ID,
+		Name:     v.Name,
+		Exchange: v.Exchange,
+		APIKey:   v.APIKey,
+		Status:   v.Status,
 	}
 
 	return res

@@ -10,8 +10,8 @@ package server
 import (
 	accountdex "admin-panel/gen/account_dex"
 	"context"
-	"io"
 	"net/http"
+	"strconv"
 
 	goahttp "goa.design/goa/v3/http"
 	goa "goa.design/goa/v3/pkg"
@@ -34,36 +34,204 @@ func EncodeWalletInfoResponse(encoder func(context.Context, http.ResponseWriter)
 func DecodeWalletInfoRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
 	return func(r *http.Request) (interface{}, error) {
 		var (
-			body WalletInfoRequestBody
-			err  error
+			id  string
+			err error
 		)
-		err = decoder(r).Decode(&body)
-		if err != nil {
-			if err == io.EOF {
-				return nil, goa.MissingPayloadError()
-			}
-			return nil, goa.DecodePayloadError(err.Error())
+		id = r.URL.Query().Get("id")
+		if id == "" {
+			err = goa.MergeErrors(err, goa.MissingFieldError("id", "query string"))
 		}
-		payload := NewWalletInfoPayload(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewWalletInfoPayload(id)
 
 		return payload, nil
 	}
 }
 
-// marshalAccountdexDexAccountBalanceToDexAccountBalanceResponseBody builds a
-// value of type *DexAccountBalanceResponseBody from a value of type
-// *accountdex.DexAccountBalance.
-func marshalAccountdexDexAccountBalanceToDexAccountBalanceResponseBody(v *accountdex.DexAccountBalance) *DexAccountBalanceResponseBody {
+// EncodeGetWalletAssetsResponse returns an encoder for responses returned by
+// the accountDex getWalletAssets endpoint.
+func EncodeGetWalletAssetsResponse(encoder func(context.Context, http.ResponseWriter) goahttp.Encoder) func(context.Context, http.ResponseWriter, interface{}) error {
+	return func(ctx context.Context, w http.ResponseWriter, v interface{}) error {
+		res, _ := v.(*accountdex.GetWalletAssetsResult)
+		enc := encoder(ctx, w)
+		body := NewGetWalletAssetsResponseBody(res)
+		w.WriteHeader(http.StatusOK)
+		return enc.Encode(body)
+	}
+}
+
+// DecodeGetWalletAssetsRequest returns a decoder for requests sent to the
+// accountDex getWalletAssets endpoint.
+func DecodeGetWalletAssetsRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			addresses             []string
+			currency              string
+			hideZeroBalance       bool
+			hideSmallBalance      bool
+			smallBalanceThreshold string
+			err                   error
+		)
+		addresses = r.URL.Query()["addresses"]
+		currencyRaw := r.URL.Query().Get("currency")
+		if currencyRaw != "" {
+			currency = currencyRaw
+		} else {
+			currency = "USD"
+		}
+		if !(currency == "USD" || currency == "EUR" || currency == "CNY" || currency == "JPY" || currency == "GBP") {
+			err = goa.MergeErrors(err, goa.InvalidEnumValueError("currency", currency, []interface{}{"USD", "EUR", "CNY", "JPY", "GBP"}))
+		}
+		{
+			hideZeroBalanceRaw := r.URL.Query().Get("hideZeroBalance")
+			if hideZeroBalanceRaw != "" {
+				v, err2 := strconv.ParseBool(hideZeroBalanceRaw)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("hideZeroBalance", hideZeroBalanceRaw, "boolean"))
+				}
+				hideZeroBalance = v
+			}
+		}
+		{
+			hideSmallBalanceRaw := r.URL.Query().Get("hideSmallBalance")
+			if hideSmallBalanceRaw == "" {
+				hideSmallBalance = true
+			} else {
+				v, err2 := strconv.ParseBool(hideSmallBalanceRaw)
+				if err2 != nil {
+					err = goa.MergeErrors(err, goa.InvalidFieldTypeError("hideSmallBalance", hideSmallBalanceRaw, "boolean"))
+				}
+				hideSmallBalance = v
+			}
+		}
+		smallBalanceThresholdRaw := r.URL.Query().Get("smallBalanceThreshold")
+		if smallBalanceThresholdRaw != "" {
+			smallBalanceThreshold = smallBalanceThresholdRaw
+		} else {
+			smallBalanceThreshold = "1.0"
+		}
+		if err != nil {
+			return nil, err
+		}
+		payload := NewGetWalletAssetsPayload(addresses, currency, hideZeroBalance, hideSmallBalance, smallBalanceThreshold)
+
+		return payload, nil
+	}
+}
+
+// marshalAccountdexADBWalletInfoToADBWalletInfoResponseBody builds a value of
+// type *ADBWalletInfoResponseBody from a value of type
+// *accountdex.ADBWalletInfo.
+func marshalAccountdexADBWalletInfoToADBWalletInfoResponseBody(v *accountdex.ADBWalletInfo) *ADBWalletInfoResponseBody {
 	if v == nil {
 		return nil
 	}
-	res := &DexAccountBalanceResponseBody{
-		Token:     v.Token,
-		TokenName: v.TokenName,
-		Amount:    v.Amount,
-		Free:      v.Free,
-		Locked:    v.Locked,
-		Price:     v.Price,
+	res := &ADBWalletInfoResponseBody{
+		ID:                  v.ID,
+		WalletName:          v.WalletName,
+		Address:             v.Address,
+		AddressLower:        v.AddressLower,
+		ChainType:           v.ChainType,
+		ChainID:             v.ChainID,
+		WalletType:          v.WalletType,
+		SignServiceEndpoint: v.SignServiceEndpoint,
+	}
+
+	return res
+}
+
+// marshalAccountdexADBWalletAssetResponseToADBWalletAssetResponseResponseBody
+// builds a value of type *ADBWalletAssetResponseResponseBody from a value of
+// type *accountdex.ADBWalletAssetResponse.
+func marshalAccountdexADBWalletAssetResponseToADBWalletAssetResponseResponseBody(v *accountdex.ADBWalletAssetResponse) *ADBWalletAssetResponseResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &ADBWalletAssetResponseResponseBody{
+		TotalAddresses: v.TotalAddresses,
+		LastUpdated:    v.LastUpdated,
+		TotalValue:     v.TotalValue,
+	}
+	if v.ChainAssets != nil {
+		res.ChainAssets = make([]*ADBChainAssetGroupResponseBody, len(v.ChainAssets))
+		for i, val := range v.ChainAssets {
+			res.ChainAssets[i] = marshalAccountdexADBChainAssetGroupToADBChainAssetGroupResponseBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalAccountdexADBChainAssetGroupToADBChainAssetGroupResponseBody builds a
+// value of type *ADBChainAssetGroupResponseBody from a value of type
+// *accountdex.ADBChainAssetGroup.
+func marshalAccountdexADBChainAssetGroupToADBChainAssetGroupResponseBody(v *accountdex.ADBChainAssetGroup) *ADBChainAssetGroupResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &ADBChainAssetGroupResponseBody{
+		ChainID:     v.ChainID,
+		ChainName:   v.ChainName,
+		ChainType:   v.ChainType,
+		NativeToken: v.NativeToken,
+		ChainLogo:   v.ChainLogo,
+		TotalValue:  v.TotalValue,
+	}
+	if v.AddressAssets != nil {
+		res.AddressAssets = make([]*ADBAddressAssetGroupResponseBody, len(v.AddressAssets))
+		for i, val := range v.AddressAssets {
+			res.AddressAssets[i] = marshalAccountdexADBAddressAssetGroupToADBAddressAssetGroupResponseBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalAccountdexADBAddressAssetGroupToADBAddressAssetGroupResponseBody
+// builds a value of type *ADBAddressAssetGroupResponseBody from a value of
+// type *accountdex.ADBAddressAssetGroup.
+func marshalAccountdexADBAddressAssetGroupToADBAddressAssetGroupResponseBody(v *accountdex.ADBAddressAssetGroup) *ADBAddressAssetGroupResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &ADBAddressAssetGroupResponseBody{
+		WalletAddress: v.WalletAddress,
+		TotalValue:    v.TotalValue,
+	}
+	if v.WalletNames != nil {
+		res.WalletNames = make([]string, len(v.WalletNames))
+		for i, val := range v.WalletNames {
+			res.WalletNames[i] = val
+		}
+	}
+	if v.Tokens != nil {
+		res.Tokens = make([]*ADBTokenBalanceResponseBody, len(v.Tokens))
+		for i, val := range v.Tokens {
+			res.Tokens[i] = marshalAccountdexADBTokenBalanceToADBTokenBalanceResponseBody(val)
+		}
+	}
+
+	return res
+}
+
+// marshalAccountdexADBTokenBalanceToADBTokenBalanceResponseBody builds a value
+// of type *ADBTokenBalanceResponseBody from a value of type
+// *accountdex.ADBTokenBalance.
+func marshalAccountdexADBTokenBalanceToADBTokenBalanceResponseBody(v *accountdex.ADBTokenBalance) *ADBTokenBalanceResponseBody {
+	if v == nil {
+		return nil
+	}
+	res := &ADBTokenBalanceResponseBody{
+		TokenAddress:     v.TokenAddress,
+		Symbol:           v.Symbol,
+		FormattedBalance: v.FormattedBalance,
+		Decimals:         v.Decimals,
+		IsNative:         v.IsNative,
+		Price:            v.Price,
+		Value:            v.Value,
+		UpdatedAt:        v.UpdatedAt,
 	}
 
 	return res

@@ -1,55 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "amm-{{.Deployment.Name}}-analyze"
-  labels:
-    app: "amm-{{.Deployment.Name}}-analyze"
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: "amm-{{.Deployment.Name}}-analyze"
-  template:
-    metadata:
-      labels:
-        app: "amm-{{.Deployment.Name}}-analyze"
-    spec:
-      containers:
-        - name: "amm-{{.Deployment.Name}}-analyze"
-          image: "otmoic/otmoic-lpnode-amm-analyze:latest"
-          imagePullPolicy: "Always"
-          env:
-            - name: APP_NAME
-              value: "{{.Deployment.Name}}-analyze"
-            - name: NODE_ENV
-              value: "production"
-            - name: APP_VERSION
-              value: "otmoic/otmoic-lpnode-amm-analyze:latest"
-            - name: REDIS_HOST
-              value: "{{.Deployment.RedisHost}}"
-            - name: REDIS_PASSWORD
-              value: "{{.Deployment.RedisPass}}"
-            - name: REDIS_PORT
-              value: "{{.Deployment.RedisPort}}"
-            - name: MONGODB_HOST
-              value: "{{.Deployment.MongodbHost}}"
-            - name: MONGODB_PORT
-              value: "{{.Deployment.MongodbPort}}"
-            - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
-              value: "http://lpnode-admin-server:18006"
-            - name: MONGODB_ACCOUNT
-              value: "{{.Deployment.MongodbAccount}}"
-            - name: MONGODB_PASSWORD
-              value: "{{.Deployment.MongodbPass}}"
-            - name: MONGODB_DBNAME_LP_STORE
-              value: "{{.Deployment.MongodbDbnameLpStore}}"
-            - name: MONGODB_DBNAME_HISTORY
-              value: "{{.Deployment.MongodbDbnameHistory}}"
-
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: "amm-{{.Deployment.Name}}"
   labels:
     app: "amm-{{.Deployment.Name}}"
@@ -92,7 +43,7 @@ spec:
             - name: NODE_ENV
               value: "production"
             - name: LP_MARKET_SERVICE_HOST
-              value: "lpnode-market"
+              value: "amm-market-price-service"
             - name: "LP_ADMIN_PANEL_ACCESS_BASEURL"
               value: "http://lpnode-admin-server:18006"
             - name: MONGODB_PASSWORD

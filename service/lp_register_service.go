@@ -74,6 +74,9 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 		Interval: 2000,
 		MaxCount: 15,
 	})
+	log.Println("sendData:________")
+	log.Println(dataStr)
+	log.Println("___________________")
 	err = retryer.Repet(func() error {
 		_, ok, err := utils.NewHttpCall().PostJsonCall(&utils.HttpCallRequestOption{
 			Url:     url,
@@ -94,14 +97,10 @@ func (lprls *LpRegisterLogicService) RegisterItem(installId string, serviceName 
 		}
 	})
 
-	log.Println("sendData:________")
-	log.Println(dataStr)
-	log.Println("___________________")
 	if err != nil {
 		err = errors.WithMessage(err, fmt.Sprintf("register error,install_id: %s", installId))
 		return
 	}
-	log.Println("🩳🩳🩳🩳")
 	status = true
 	return
 }
@@ -163,6 +162,10 @@ func (lprls *LpRegisterLogicService) RegisterItemWithoutRestart(installId string
 		Interval: 2000,
 		MaxCount: 15,
 	})
+	log.Println("sendData:________")
+	log.Println("url", url)
+	log.Println(dataStr)
+	log.Println("___________________")
 	err = retryer.Repet(func() error {
 		_, ok, err := utils.NewHttpCall().PostJsonCall(&utils.HttpCallRequestOption{
 			Url:     url,
@@ -183,15 +186,11 @@ func (lprls *LpRegisterLogicService) RegisterItemWithoutRestart(installId string
 		}
 	})
 
-	log.Println("sendData:________")
-	log.Println("url", url)
-	log.Println(dataStr)
-	log.Println("___________________")
+
 	if err != nil {
 		err = errors.WithMessage(err, fmt.Sprintf("register error,install_id: %s", installId))
 		return
 	}
-	log.Println("🩳🩳🩳🩳")
 	status = true
 	return
 }

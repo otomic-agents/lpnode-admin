@@ -16,9 +16,11 @@ var DexWallet_WalletRow = Type("walletRow", func() {
 	Attribute("vaultHostType", String)
 	Attribute("vaultName", String)
 	Attribute("vaultSecertType", String)
+	Attribute("signServiceEndpoint", String)
 	Attribute("walletType", String, func() {
 		Enum("privateKey", "storeId")
 	})
+	Attribute("balance", String)
 	Required("walletName", "chainId", "chainType", "walletType")
 })
 var DexWallet_VaultRow = Type("vaultRow", func() {
@@ -84,7 +86,10 @@ var _ = Service("dexWallet", func() {
 		})
 	})
 	Method("updateLpWallet", func() {
-		Payload(func() {})
+		Payload(func() {
+			Attribute("relayUrl", String, "relayUrl")
+			Required("relayUrl")
+		})
 		Result(func() {
 			Attribute("code", Int64, "")
 			Attribute("result", String, "list")

@@ -252,6 +252,7 @@ func marshalInstallctrlpanelCtrlDeploayItemToCtrlDeploayItemResponseBody(v *inst
 		Status:         v.Status,
 		InstallContext: v.InstallContext,
 		Yaml:           v.Yaml,
+		RPC:            v.RPC,
 	}
 
 	return res

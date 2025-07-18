@@ -21,7 +21,7 @@ func BuildTaskDeployPayload(taskManagerTaskDeployBody string) (*taskmanager.Task
 	{
 		err = json.Unmarshal([]byte(taskManagerTaskDeployBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Totam saepe ad et.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Necessitatibus ipsa non sapiente.\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskDeploy2{
@@ -39,7 +39,7 @@ func BuildUnDeployPayload(taskManagerUnDeployBody string) (*taskmanager.TaskDepl
 	{
 		err = json.Unmarshal([]byte(taskManagerUnDeployBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Non labore animi.\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Ut tempore officiis a explicabo sed.\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskDeploy2{
@@ -57,7 +57,7 @@ func BuildTaskCreatePayload(taskManagerTaskCreateBody string) (*taskmanager.Task
 	{
 		err = json.Unmarshal([]byte(taskManagerTaskCreateBody), &body)
 		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Eos placeat.\",\n      \"deployMessage\": \"Aliquam dicta molestiae qui sed quia.\",\n      \"deployed\": false,\n      \"schedule\": \"Aut nihil dolorem natus dolorum ut.\",\n      \"scriptBody\": \"Aperiam aut explicabo sint est voluptas.\",\n      \"scriptPath\": \"Enim quos deleniti vero ipsa omnis.\",\n      \"taskType\": \"customize\"\n   }'")
+			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"_id\": \"Est in nostrum quia officia doloremque et.\",\n      \"deployMessage\": \"Mollitia alias.\",\n      \"deployed\": true,\n      \"schedule\": \"Molestias sapiente aut eveniet maiores ut repellendus.\",\n      \"scriptBody\": \"Et ducimus rem in in rerum.\",\n      \"scriptPath\": \"Iure deleniti ad velit.\",\n      \"taskType\": \"customize\"\n   }'")
 		}
 	}
 	v := &taskmanager.TaskItem{

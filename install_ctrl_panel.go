@@ -15,6 +15,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/pkg/errors"
 
 	"github.com/aws/smithy-go/ptr"
@@ -204,13 +205,15 @@ func (s *installCtrlPanelsrvc) ListInstall(ctx context.Context, p *installctrlpa
 		return
 	}
 	for _, v := range list {
-		res.Result = append(res.Result, &installctrlpanel.CtrlDeploayItem{
+		valueRow := &installctrlpanel.CtrlDeploayItem{
 			Name:           ptr.String(v.Name),
 			Yaml:           ptr.String(v.Yaml),
 			Status:         ptr.Int64(v.Status),
 			InstallType:    ptr.String(v.InstallType),
 			InstallContext: ptr.String(v.InstallContext),
-		})
+			RPC:            ptr.String(v.EnvRpc),
+		}
+		res.Result = append(res.Result, valueRow)
 	}
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
@@ -284,21 +287,47 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 		Name  string
 		Value string
 	}, name string) string {
+		log.Printf("====== Start searching for env var ======")
+		log.Printf("Looking for env var name: '%s'", name)
+		log.Printf("Total env vars available: %d", len(envList))
+
+		// Print all available env vars for debugging
+		// for i, env := range envList {
+		// 	log.Printf("Available env[%d]: Name='%s', Value='%s'", i, env.Name, env.Value)
+		// }
+
 		for _, env := range envList {
+			// log.Printf("Comparing '%s' with '%s'", env.Name, name)
 			if env.Name == name {
-				log.Println("find .... a ", env.Value)
+				log.Printf("Match found! Value='%s'", env.Value)
 				return env.Value
 			}
 		}
-		// 如果没有找到，返回空字符串或者错误值
+
+		log.Printf("No match found for name: '%s'", name)
+		log.Printf("====== End searching for env var ======")
 		return ""
 	}
 	if p.SetupConfig.InstallType == "ammClient" {
-		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("chain-client-evm-%s-%d", installRow.Name, installRow.ChainId))
+		var chainType string
+		if installRow.ChainId == 501 {
+			chainType = "solana"
+		} else {
+			chainType = "evm"
+		}
+
+		envList, env_err := service.NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), fmt.Sprintf("chain-client-%s-%s-%d", chainType, installRow.Name, installRow.ChainId))
+		spew.Dump(envList)
 		fmt.Println(envList, env_err, fmt.Sprintf("|%s|", os.Getenv("NAMESPACE")))
 		setupConfig.Deployment.RedisHost = findValueByName(envList, "REDIS_HOST")
 		setupConfig.Deployment.RedisPort = findValueByName(envList, "REDIS_PORT")
 		setupConfig.Deployment.RedisPass = findValueByName(envList, "REDIS_PASSWORD")
+		setupConfig.Deployment.MongodbHost = findValueByName(envList, "MONGODB_HOST")
+		setupConfig.Deployment.MongodbPort = findValueByName(envList, "MONGODB_PORT")
+		setupConfig.Deployment.MongodbAccount = findValueByName(envList, "MONGODB_ACCOUNT")
+		setupConfig.Deployment.MongodbPass = findValueByName(envList, "MONGODB_PASSWORD")
+		setupConfig.Deployment.MongodbDbnameLpStore = findValueByName(envList, "MONGODB_DBNAME_LP_STORE")
+		setupConfig.Deployment.MongodbDbnameHistory = findValueByName(envList, "MONGODB_DBNAME_HISTORY")
 		setupConfig.Deployment.OsApiKey = findValueByName(envList, "OS_API_KEY")
 		setupConfig.Deployment.OsApiSecret = findValueByName(envList, "OS_API_SECRET")
 		setupConfig.Deployment.OsSystemServer = findValueByName(envList, "OS_SYSTEM_SERVER")
@@ -345,9 +374,13 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 		setupConfig.Deployment.MongodbPass = findValueByName(envList, "MONGODB_PASS")
 		setupConfig.Deployment.MongodbDbnameLpStore = findValueByName(envList, "MONGODB_DBNAME_LP_STORE")
 	}
+	log.Println("Get environment variables from existing containers")
+	spew.Dump(setupConfig.Deployment)
 
-	log.Println("000______", updateConfig.Deployment)
 	setupConfig = *cps.MergeSetupConfig(&setupConfig, &updateConfig)
+	log.Println("After merge")
+	spew.Dump(setupConfig)
+
 	logger.System.Debug("🤼🤼🤼🤼", len(setupConfig.Deployment.CustomEnv))
 
 	tmpWriter := &types.TemplateWriter{}
@@ -363,6 +396,8 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 		return
 	}
 	logger.System.Debug("start generating update yaml file", outputPath)
+	content := string(tmpWriter.ByteBuffer)
+	log.Printf("File content to be written:\n%s", content)
 	os.WriteFile(outputPath, tmpWriter.ByteBuffer, 0755)
 	if p.SetupConfig.InstallType == "ammClient" {
 		chainType, err = service.NewDeploymentService().GetEnv(outputPath, "CHAIN_TYPE")
@@ -391,10 +426,11 @@ func (s *installCtrlPanelsrvc) UpdateDeployment(ctx context.Context, p *installc
 		"installContext": string(installContextByte),
 		"chainType":      chainType,
 		"updateResult": bson.M{
-			"stdout":     res.Result.CmdStdout,
-			"stderr":     res.Result.CmdStderr,
-			"updateYaml": string(tmpWriter.ByteBuffer),
-			"lastupdate": int64(time.Now().UnixNano() / 1e6),
+			"latestConfig": setupConfig,
+			"stdout":       res.Result.CmdStdout,
+			"stderr":       res.Result.CmdStderr,
+			"updateYaml":   string(tmpWriter.ByteBuffer),
+			"lastupdate":   int64(time.Now().UnixNano() / 1e6),
 		},
 	}})
 	return

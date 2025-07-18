@@ -15,22 +15,83 @@ import (
 
 // Client is the "accountCex" service client.
 type Client struct {
-	WalletInfoEndpoint goa.Endpoint
+	GetAllTokenBalancesEndpoint goa.Endpoint
+	TokenBalanceEndpoint        goa.Endpoint
+	WalletInfoEndpoint          goa.Endpoint
+	CreateAccountEndpoint       goa.Endpoint
+	ListAccountsEndpoint        goa.Endpoint
+	DeleteAccountEndpoint       goa.Endpoint
 }
 
 // NewClient initializes a "accountCex" service client given the endpoints.
-func NewClient(walletInfo goa.Endpoint) *Client {
+func NewClient(getAllTokenBalances, tokenBalance, walletInfo, createAccount, listAccounts, deleteAccount goa.Endpoint) *Client {
 	return &Client{
-		WalletInfoEndpoint: walletInfo,
+		GetAllTokenBalancesEndpoint: getAllTokenBalances,
+		TokenBalanceEndpoint:        tokenBalance,
+		WalletInfoEndpoint:          walletInfo,
+		CreateAccountEndpoint:       createAccount,
+		ListAccountsEndpoint:        listAccounts,
+		DeleteAccountEndpoint:       deleteAccount,
 	}
 }
 
-// WalletInfo calls the "walletInfo" endpoint of the "accountCex" service.
-func (c *Client) WalletInfo(ctx context.Context) (res *WalletInfoResult, err error) {
+// GetAllTokenBalances calls the "getAllTokenBalances" endpoint of the
+// "accountCex" service.
+func (c *Client) GetAllTokenBalances(ctx context.Context, p *GetAllTokenBalancesPayload) (res *GetAllTokenBalancesResult, err error) {
 	var ires interface{}
-	ires, err = c.WalletInfoEndpoint(ctx, nil)
+	ires, err = c.GetAllTokenBalancesEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*GetAllTokenBalancesResult), nil
+}
+
+// TokenBalance calls the "tokenBalance" endpoint of the "accountCex" service.
+func (c *Client) TokenBalance(ctx context.Context, p *TokenBalancePayload) (res *TokenBalanceResult, err error) {
+	var ires interface{}
+	ires, err = c.TokenBalanceEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*TokenBalanceResult), nil
+}
+
+// WalletInfo calls the "walletInfo" endpoint of the "accountCex" service.
+func (c *Client) WalletInfo(ctx context.Context, p *WalletInfoPayload) (res *WalletInfoResult, err error) {
+	var ires interface{}
+	ires, err = c.WalletInfoEndpoint(ctx, p)
 	if err != nil {
 		return
 	}
 	return ires.(*WalletInfoResult), nil
+}
+
+// CreateAccount calls the "createAccount" endpoint of the "accountCex" service.
+func (c *Client) CreateAccount(ctx context.Context, p *CACexAccountPayload) (res *CreateAccountResult, err error) {
+	var ires interface{}
+	ires, err = c.CreateAccountEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*CreateAccountResult), nil
+}
+
+// ListAccounts calls the "listAccounts" endpoint of the "accountCex" service.
+func (c *Client) ListAccounts(ctx context.Context) (res *ListAccountsResult, err error) {
+	var ires interface{}
+	ires, err = c.ListAccountsEndpoint(ctx, nil)
+	if err != nil {
+		return
+	}
+	return ires.(*ListAccountsResult), nil
+}
+
+// DeleteAccount calls the "deleteAccount" endpoint of the "accountCex" service.
+func (c *Client) DeleteAccount(ctx context.Context, p *DeleteAccountPayload) (res *DeleteAccountResult, err error) {
+	var ires interface{}
+	ires, err = c.DeleteAccountEndpoint(ctx, p)
+	if err != nil {
+		return
+	}
+	return ires.(*DeleteAccountResult), nil
 }

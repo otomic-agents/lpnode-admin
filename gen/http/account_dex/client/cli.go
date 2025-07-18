@@ -11,22 +11,79 @@ import (
 	accountdex "admin-panel/gen/account_dex"
 	"encoding/json"
 	"fmt"
+	"strconv"
+
+	goa "goa.design/goa/v3/pkg"
 )
 
 // BuildWalletInfoPayload builds the payload for the accountDex walletInfo
 // endpoint from CLI flags.
-func BuildWalletInfoPayload(accountDexWalletInfoBody string) (*accountdex.WalletInfoPayload, error) {
-	var err error
-	var body WalletInfoRequestBody
+func BuildWalletInfoPayload(accountDexWalletInfoID string) (*accountdex.WalletInfoPayload, error) {
+	var id string
 	{
-		err = json.Unmarshal([]byte(accountDexWalletInfoBody), &body)
-		if err != nil {
-			return nil, fmt.Errorf("invalid JSON for body, \nerror: %s, \nexample of valid JSON:\n%s", err, "'{\n      \"chainId\": 4494789737521289910\n   }'")
+		id = accountDexWalletInfoID
+	}
+	v := &accountdex.WalletInfoPayload{}
+	v.ID = id
+
+	return v, nil
+}
+
+// BuildGetWalletAssetsPayload builds the payload for the accountDex
+// getWalletAssets endpoint from CLI flags.
+func BuildGetWalletAssetsPayload(accountDexGetWalletAssetsAddresses string, accountDexGetWalletAssetsCurrency string, accountDexGetWalletAssetsHideZeroBalance string, accountDexGetWalletAssetsHideSmallBalance string, accountDexGetWalletAssetsSmallBalanceThreshold string) (*accountdex.GetWalletAssetsPayload, error) {
+	var err error
+	var addresses []string
+	{
+		if accountDexGetWalletAssetsAddresses != "" {
+			err = json.Unmarshal([]byte(accountDexGetWalletAssetsAddresses), &addresses)
+			if err != nil {
+				return nil, fmt.Errorf("invalid JSON for addresses, \nerror: %s, \nexample of valid JSON:\n%s", err, "'[\n      \"Qui est sint maiores minima ex.\",\n      \"Et facilis deleniti ea sit praesentium.\",\n      \"Odio velit odit nobis.\"\n   ]'")
+			}
 		}
 	}
-	v := &accountdex.WalletInfoPayload{
-		ChainID: body.ChainID,
+	var currency string
+	{
+		if accountDexGetWalletAssetsCurrency != "" {
+			currency = accountDexGetWalletAssetsCurrency
+			if !(currency == "USD" || currency == "EUR" || currency == "CNY" || currency == "JPY" || currency == "GBP") {
+				err = goa.MergeErrors(err, goa.InvalidEnumValueError("currency", currency, []interface{}{"USD", "EUR", "CNY", "JPY", "GBP"}))
+			}
+			if err != nil {
+				return nil, err
+			}
+		}
 	}
+	var hideZeroBalance bool
+	{
+		if accountDexGetWalletAssetsHideZeroBalance != "" {
+			hideZeroBalance, err = strconv.ParseBool(accountDexGetWalletAssetsHideZeroBalance)
+			if err != nil {
+				return nil, fmt.Errorf("invalid value for hideZeroBalance, must be BOOL")
+			}
+		}
+	}
+	var hideSmallBalance bool
+	{
+		if accountDexGetWalletAssetsHideSmallBalance != "" {
+			hideSmallBalance, err = strconv.ParseBool(accountDexGetWalletAssetsHideSmallBalance)
+			if err != nil {
+				return nil, fmt.Errorf("invalid value for hideSmallBalance, must be BOOL")
+			}
+		}
+	}
+	var smallBalanceThreshold string
+	{
+		if accountDexGetWalletAssetsSmallBalanceThreshold != "" {
+			smallBalanceThreshold = accountDexGetWalletAssetsSmallBalanceThreshold
+		}
+	}
+	v := &accountdex.GetWalletAssetsPayload{}
+	v.Addresses = addresses
+	v.Currency = currency
+	v.HideZeroBalance = hideZeroBalance
+	v.HideSmallBalance = hideSmallBalance
+	v.SmallBalanceThreshold = smallBalanceThreshold
 
 	return v, nil
 }

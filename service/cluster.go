@@ -101,34 +101,73 @@ func (lpc *LpCluster) DescPodEnv(namespace string, podName string) (envList []st
 	Name  string
 	Value string
 }, err error) {
+	log.Printf("Starting to get pod env vars - namespace: %s, podName: %s", namespace, podName)
+
 	useNamespace := apiv1.NamespaceDefault
 	if namespace != "" {
 		useNamespace = namespace
 	}
+	log.Printf("Using namespace: %s", useNamespace)
+
 	deploymentsClient := lpc.ClientSet.AppsV1().Deployments(useNamespace)
 	deployment, err := deploymentsClient.Get(context.TODO(), podName, metav1.GetOptions{})
+	if err != nil {
+		log.Printf("Error getting deployment: %v", err)
+		return nil, err
+	}
 
-	envList = []struct {
+	log.Printf("Successfully got deployment: %s", deployment.Name)
+
+	// Use map to handle duplicates
+	envMap := make(map[string]string)
+
+	containerCount := len(deployment.Spec.Template.Spec.Containers)
+	log.Printf("Found %d containers in deployment", containerCount)
+
+	if containerCount <= 0 {
+		log.Printf("No containers found in deployment %s/%s", namespace, podName)
+		return nil, fmt.Errorf("no containers found in deployment")
+	}
+
+	// Loop through all containers
+	for i, container := range deployment.Spec.Template.Spec.Containers {
+		log.Printf("Processing container %d: %s", i+1, container.Name)
+
+		envCount := len(container.Env)
+		log.Printf("Container %s has %d environment variables", container.Name, envCount)
+
+		// Later containers will override earlier ones for duplicate keys
+		for _, envItem := range container.Env {
+			oldValue, exists := envMap[envItem.Name]
+			if exists {
+				log.Printf("Overriding env var %s: old value=%s, new value=%s",
+					envItem.Name, oldValue, envItem.Value)
+			}
+			envMap[envItem.Name] = envItem.Value
+		}
+	}
+
+	log.Printf("Total unique environment variables found: %d", len(envMap))
+
+	// Convert map back to slice
+	envList = make([]struct {
 		Name  string
 		Value string
-	}{}
-	if len(deployment.Spec.Template.Spec.Containers) <= 0 {
-		log.Println("pod not found", namespace, podName)
-		return
-	}
-	pod := deployment.Spec.Template.Spec.Containers[0]
-	for _, envItem := range pod.Env {
-		v := struct {
+	}, 0, len(envMap))
+
+	for name, value := range envMap {
+		envList = append(envList, struct {
 			Name  string
 			Value string
 		}{
-			Name:  envItem.Name,
-			Value: envItem.Value,
-		}
-		envList = append(envList, v)
+			Name:  name,
+			Value: value,
+		})
+		log.Printf("Added env var to final list - Name: %s, Value: %s", name, value)
 	}
-	return
 
+	log.Printf("Successfully processed all environment variables")
+	return envList, nil
 }
 
 // list all client

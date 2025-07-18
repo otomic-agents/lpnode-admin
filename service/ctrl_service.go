@@ -1,11 +1,14 @@
 package service
 
 import (
+	"admin-panel/logger"
 	database "admin-panel/mongo_database"
 	"admin-panel/types"
 	"context"
 	"errors"
+	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -36,7 +39,33 @@ func (cps *CtrlPanelLogicService) ListInstallByInstallType(installType string) (
 	for _, result := range results {
 		cursor.Decode(&result)
 	}
+	for i := range results {
+		rpcValue, err := cps.getRpcFromPodEnv(results[i].ChainId, results[i].Name, results[i].ChainType)
+		if err != nil {
+			log.Printf("Error getting RPC for install %s: %v", results[i].Name, err)
+		} else {
+			log.Println("get rpc ok:----------", rpcValue)
+			results[i].EnvRpc = rpcValue
+		}
+	}
 	return results, nil
+}
+func (cps *CtrlPanelLogicService) getRpcFromPodEnv(chainId int64, name string, chainType string) (string, error) {
+	podName := fmt.Sprintf("chain-client-%s-%s-%d", chainType, name, chainId)
+	logger.System.Debug(podName, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	podEnvs, err := NewLpCluster().DescPodEnv(os.Getenv("NAMESPACE"), podName)
+	if err != nil {
+		return "", fmt.Errorf("failed to get pod environment variables: %w", err)
+	}
+
+	for _, env := range podEnvs {
+		logger.System.Debug(env.Name, env.Value)
+		if env.Name == "RPCS" {
+			return env.Value, nil
+		}
+	}
+
+	return "", fmt.Errorf("RPCS environment variable not found in pod %s", podName)
 }
 func (cps *CtrlPanelLogicService) Installed(installType string, name string) bool {
 	filter := bson.M{

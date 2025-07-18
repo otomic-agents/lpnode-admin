@@ -11,10 +11,20 @@ import (
 	"context"
 )
 
-// Service is the accountCex service interface.
+// Manage centralized exchange (CEX) accounts and their wallet information
 type Service interface {
-	// WalletInfo implements walletInfo.
-	WalletInfo(context.Context) (res *WalletInfoResult, err error)
+	// Get all token balances for a specified CEX account
+	GetAllTokenBalances(context.Context, *GetAllTokenBalancesPayload) (res *GetAllTokenBalancesResult, err error)
+	// Get specific token balance for a specified CEX account
+	TokenBalance(context.Context, *TokenBalancePayload) (res *TokenBalanceResult, err error)
+	// Get wallet balance information for a specified CEX account
+	WalletInfo(context.Context, *WalletInfoPayload) (res *WalletInfoResult, err error)
+	// Create a new CEX account configuration
+	CreateAccount(context.Context, *CACexAccountPayload) (res *CreateAccountResult, err error)
+	// List all configured CEX accounts
+	ListAccounts(context.Context) (res *ListAccountsResult, err error)
+	// Delete a specified CEX account
+	DeleteAccount(context.Context, *DeleteAccountPayload) (res *DeleteAccountResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -25,21 +35,146 @@ const ServiceName = "accountCex"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"walletInfo"}
+var MethodNames = [6]string{"getAllTokenBalances", "tokenBalance", "walletInfo", "createAccount", "listAccounts", "deleteAccount"}
 
-type CexAccountBalance struct {
-	Asset  *string
-	Total  *string
-	Free   *string
-	Locked *string
-	Price  *string
+// CEX account information
+type CACexAccount struct {
+	// ID
+	ID *string
+	// Account name (user-defined)
+	Name string
+	// Exchange name (e.g.: binance, okx)
+	Exchange string
+	// API Key (partially masked in list responses)
+	APIKey string
+	// Account status (e.g.: active, inactive, invalid_keys)
+	Status string
+}
+
+// Balance information for a single asset in a CEX account
+type CACexAccountBalance struct {
+	// Asset name (e.g.: USDT, BTC)
+	Asset string
+	// Total balance
+	Total string
+	// Available balance
+	Free string
+	// Locked balance
+	Locked string
+	// Current price (optional, if provided by exchange)
+	Price *string
+}
+
+// CACexAccountPayload is the payload type of the accountCex service
+// createAccount method.
+type CACexAccountPayload struct {
+	// Account name (user-defined)
+	Name string
+	// Exchange name (lowercase, e.g.: binance, okx)
+	Exchange string
+	// API Key provided by the exchange
+	APIKey string
+	// API Secret provided by the exchange
+	APISecret string
+	// Passphrase for API key (if required by the exchange)
+	Passphrase *string
+}
+
+// Balance information for a single token
+type CATokenBalance struct {
+	// Asset name
+	Asset string
+	// Available balance
+	Free string
+	// Locked balance
+	Locked string
+	// Total balance
+	Total string
+}
+
+// CreateAccountResult is the result type of the accountCex service
+// createAccount method.
+type CreateAccountResult struct {
+	ID   *string
+	Code int64
+	// Successfully created account information
+	Result  *CACexAccount
+	Message string
+}
+
+// DeleteAccountPayload is the payload type of the accountCex service
+// deleteAccount method.
+type DeleteAccountPayload struct {
+	// CEX account ID to delete
+	AccountID string
+}
+
+// DeleteAccountResult is the result type of the accountCex service
+// deleteAccount method.
+type DeleteAccountResult struct {
+	Code    int64
+	Message string
+}
+
+// GetAllTokenBalancesPayload is the payload type of the accountCex service
+// getAllTokenBalances method.
+type GetAllTokenBalancesPayload struct {
+	// CEX account ID to query
+	AccountID string
+}
+
+// GetAllTokenBalancesResult is the result type of the accountCex service
+// getAllTokenBalances method.
+type GetAllTokenBalancesResult struct {
+	// Status code
+	Code int64
+	// All token balance information
+	Result []*CATokenBalance
+	// Response message
+	Message string
+}
+
+// ListAccountsResult is the result type of the accountCex service listAccounts
+// method.
+type ListAccountsResult struct {
+	Code int64
+	// CEX account list
+	Result  []*CACexAccount
+	Message string
+}
+
+// TokenBalancePayload is the payload type of the accountCex service
+// tokenBalance method.
+type TokenBalancePayload struct {
+	// CEX account ID to query
+	AccountID string
+	// Token symbol to query
+	Symbol string
+}
+
+// TokenBalanceResult is the result type of the accountCex service tokenBalance
+// method.
+type TokenBalanceResult struct {
+	// Status code
+	Code int64
+	// Token balance information
+	Result *CATokenBalance
+	// Response message
+	Message string
+}
+
+// WalletInfoPayload is the payload type of the accountCex service walletInfo
+// method.
+type WalletInfoPayload struct {
+	// CEX account ID to query
+	AccountID string
 }
 
 // WalletInfoResult is the result type of the accountCex service walletInfo
 // method.
 type WalletInfoResult struct {
-	Code *int64
-	// result
-	Data    []*CexAccountBalance
-	Message *string
+	Code int64
+	// CEX account balance list
+	Data    []*CACexAccountBalance
+	Message string
 }

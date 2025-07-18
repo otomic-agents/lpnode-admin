@@ -127,6 +127,31 @@ func EncodeUpdateLpWalletResponse(encoder func(context.Context, http.ResponseWri
 	}
 }
 
+// DecodeUpdateLpWalletRequest returns a decoder for requests sent to the
+// dexWallet updateLpWallet endpoint.
+func DecodeUpdateLpWalletRequest(mux goahttp.Muxer, decoder func(*http.Request) goahttp.Decoder) func(*http.Request) (interface{}, error) {
+	return func(r *http.Request) (interface{}, error) {
+		var (
+			body UpdateLpWalletRequestBody
+			err  error
+		)
+		err = decoder(r).Decode(&body)
+		if err != nil {
+			if err == io.EOF {
+				return nil, goa.MissingPayloadError()
+			}
+			return nil, goa.DecodePayloadError(err.Error())
+		}
+		err = ValidateUpdateLpWalletRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
+		payload := NewUpdateLpWalletPayload(&body)
+
+		return payload, nil
+	}
+}
+
 // marshalDexwalletWalletRowToWalletRowResponseBody builds a value of type
 // *WalletRowResponseBody from a value of type *dexwallet.WalletRow.
 func marshalDexwalletWalletRowToWalletRowResponseBody(v *dexwallet.WalletRow) *WalletRowResponseBody {
@@ -134,18 +159,20 @@ func marshalDexwalletWalletRowToWalletRowResponseBody(v *dexwallet.WalletRow) *W
 		return nil
 	}
 	res := &WalletRowResponseBody{
-		ID:              v.ID,
-		WalletName:      v.WalletName,
-		PrivateKey:      v.PrivateKey,
-		Address:         v.Address,
-		ChainType:       v.ChainType,
-		AccountID:       v.AccountID,
-		ChainID:         v.ChainID,
-		StoreID:         v.StoreID,
-		VaultHostType:   v.VaultHostType,
-		VaultName:       v.VaultName,
-		VaultSecertType: v.VaultSecertType,
-		WalletType:      v.WalletType,
+		ID:                  v.ID,
+		WalletName:          v.WalletName,
+		PrivateKey:          v.PrivateKey,
+		Address:             v.Address,
+		ChainType:           v.ChainType,
+		AccountID:           v.AccountID,
+		ChainID:             v.ChainID,
+		StoreID:             v.StoreID,
+		VaultHostType:       v.VaultHostType,
+		VaultName:           v.VaultName,
+		VaultSecertType:     v.VaultSecertType,
+		SignServiceEndpoint: v.SignServiceEndpoint,
+		WalletType:          v.WalletType,
+		Balance:             v.Balance,
 	}
 
 	return res

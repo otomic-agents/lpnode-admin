@@ -12,7 +12,7 @@ var init_data = {
           precision: 18,
           chainType: "evm",
           rpcTx: "https://testnet.bscscan.com/tx/{tx}",
-          image: "otmoic/chainclient-evm:latest",
+          image: "otmoic/chainclient:v2.5.15",
           serviceName: "chain-client-evm-bsc-server-9006",
           deployName: "chain-client-evm-bsc-9006",
           envList: [
@@ -30,7 +30,7 @@ var init_data = {
           precision: 18,
           chainType: "evm",
           rpcTx: "https://testnet.snowtrace.io/tx/{tx}",
-          image: "otmoic/chainclient-evm:latest",
+          image: "otmoic/chainclient:v2.5.15",
           serviceName: "chain-client-evm-avax-server-9000",
           deployName: "chain-client-evm-avax-9000",
           envList: [
@@ -47,7 +47,7 @@ var init_data = {
           tokenUsd: 300,
           precision: 18,
           chainType: "evm",
-          image: "otmoic/chainclient-evm:latest",
+          image: "otmoic/chainclient:v2.5.15",
           rpcTx: "https://goerli.etherscan.io/tx/{tx}",
           serviceName: "chain-client-evm-eth-server-60",
           deployName: "chain-client-evm-eth-60",
@@ -66,7 +66,7 @@ var init_data = {
           precision: 18,
           chainType: "evm",
           rpcTx: "https://mumbai.polygonscan.com/tx/{tx}",
-          image: "otmoic/chainclient-evm:latest",
+          image: "otmoic/chainclient:v2.5.15",
           serviceName: "chain-client-evm-polygon-server-966",
           deployName: "chain-client-evm-polygon-966",
           envList: [
@@ -84,7 +84,7 @@ var init_data = {
           precision: 18,
           chainType: "evm",
           rpcTx: "",
-          image: "otmoic/chainclient-evm:latest",
+          image: "otmoic/chainclient:v2.5.15",
           serviceName: "chain-client-evm-op-server-614",
           deployName: "chain-client-evm-op-614",
           envList: [
@@ -102,7 +102,7 @@ var init_data = {
           precision: 9,
           chainType: "solana",
           rpcTx: "https://solscan.io/tx/{tx}",
-          image: "otmoic/chainclient-evm:latest",
+          image: "otmoic/chainclient:v2.5.15",
           serviceName: "chain-client-solana-solana-server-501",
           deployName: "chain-client-solana-solana-501",
           envList: [

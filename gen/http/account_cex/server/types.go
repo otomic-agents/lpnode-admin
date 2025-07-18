@@ -9,25 +9,150 @@ package server
 
 import (
 	accountcex "admin-panel/gen/account_cex"
+
+	goa "goa.design/goa/v3/pkg"
 )
+
+// CreateAccountRequestBody is the type of the "accountCex" service
+// "createAccount" endpoint HTTP request body.
+type CreateAccountRequestBody struct {
+	// Account name (user-defined)
+	Name *string `form:"name,omitempty" json:"name,omitempty" xml:"name,omitempty"`
+	// Exchange name (lowercase, e.g.: binance, okx)
+	Exchange *string `form:"exchange,omitempty" json:"exchange,omitempty" xml:"exchange,omitempty"`
+	// API Key provided by the exchange
+	APIKey *string `form:"api_key,omitempty" json:"api_key,omitempty" xml:"api_key,omitempty"`
+	// API Secret provided by the exchange
+	APISecret *string `form:"api_secret,omitempty" json:"api_secret,omitempty" xml:"api_secret,omitempty"`
+	// Passphrase for API key (if required by the exchange)
+	Passphrase *string `form:"passphrase,omitempty" json:"passphrase,omitempty" xml:"passphrase,omitempty"`
+}
+
+// GetAllTokenBalancesResponseBody is the type of the "accountCex" service
+// "getAllTokenBalances" endpoint HTTP response body.
+type GetAllTokenBalancesResponseBody struct {
+	// Status code
+	Code int64 `form:"code" json:"code" xml:"code"`
+	// All token balance information
+	Result []*CATokenBalanceResponseBody `form:"result" json:"result" xml:"result"`
+	// Response message
+	Message string `form:"message" json:"message" xml:"message"`
+}
+
+// TokenBalanceResponseBody is the type of the "accountCex" service
+// "tokenBalance" endpoint HTTP response body.
+type TokenBalanceResponseBody struct {
+	// Status code
+	Code int64 `form:"code" json:"code" xml:"code"`
+	// Token balance information
+	Result *CATokenBalanceResponseBody `form:"result" json:"result" xml:"result"`
+	// Response message
+	Message string `form:"message" json:"message" xml:"message"`
+}
 
 // WalletInfoResponseBody is the type of the "accountCex" service "walletInfo"
 // endpoint HTTP response body.
 type WalletInfoResponseBody struct {
-	Code *int64 `form:"code,omitempty" json:"code,omitempty" xml:"code,omitempty"`
-	// result
-	Data    []*CexAccountBalanceResponseBody `form:"data,omitempty" json:"data,omitempty" xml:"data,omitempty"`
-	Message *string                          `form:"message,omitempty" json:"message,omitempty" xml:"message,omitempty"`
+	Code int64 `form:"code" json:"code" xml:"code"`
+	// CEX account balance list
+	Data    []*CACexAccountBalanceResponseBody `form:"data" json:"data" xml:"data"`
+	Message string                             `form:"message" json:"message" xml:"message"`
 }
 
-// CexAccountBalanceResponseBody is used to define fields on response body
+// CreateAccountResponseBody is the type of the "accountCex" service
+// "createAccount" endpoint HTTP response body.
+type CreateAccountResponseBody struct {
+	ID   *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	Code int64   `form:"code" json:"code" xml:"code"`
+	// Successfully created account information
+	Result  *CACexAccountResponseBody `form:"result" json:"result" xml:"result"`
+	Message string                    `form:"message" json:"message" xml:"message"`
+}
+
+// ListAccountsResponseBody is the type of the "accountCex" service
+// "listAccounts" endpoint HTTP response body.
+type ListAccountsResponseBody struct {
+	Code int64 `form:"code" json:"code" xml:"code"`
+	// CEX account list
+	Result  []*CACexAccountResponseBody `form:"result" json:"result" xml:"result"`
+	Message string                      `form:"message" json:"message" xml:"message"`
+}
+
+// DeleteAccountResponseBody is the type of the "accountCex" service
+// "deleteAccount" endpoint HTTP response body.
+type DeleteAccountResponseBody struct {
+	Code    int64  `form:"code" json:"code" xml:"code"`
+	Message string `form:"message" json:"message" xml:"message"`
+}
+
+// CATokenBalanceResponseBody is used to define fields on response body types.
+type CATokenBalanceResponseBody struct {
+	// Asset name
+	Asset string `form:"asset" json:"asset" xml:"asset"`
+	// Available balance
+	Free string `form:"free" json:"free" xml:"free"`
+	// Locked balance
+	Locked string `form:"locked" json:"locked" xml:"locked"`
+	// Total balance
+	Total string `form:"total" json:"total" xml:"total"`
+}
+
+// CACexAccountBalanceResponseBody is used to define fields on response body
 // types.
-type CexAccountBalanceResponseBody struct {
-	Asset  *string `form:"asset,omitempty" json:"asset,omitempty" xml:"asset,omitempty"`
-	Total  *string `form:"total,omitempty" json:"total,omitempty" xml:"total,omitempty"`
-	Free   *string `form:"free,omitempty" json:"free,omitempty" xml:"free,omitempty"`
-	Locked *string `form:"locked,omitempty" json:"locked,omitempty" xml:"locked,omitempty"`
-	Price  *string `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
+type CACexAccountBalanceResponseBody struct {
+	// Asset name (e.g.: USDT, BTC)
+	Asset string `form:"asset" json:"asset" xml:"asset"`
+	// Total balance
+	Total string `form:"total" json:"total" xml:"total"`
+	// Available balance
+	Free string `form:"free" json:"free" xml:"free"`
+	// Locked balance
+	Locked string `form:"locked" json:"locked" xml:"locked"`
+	// Current price (optional, if provided by exchange)
+	Price *string `form:"price,omitempty" json:"price,omitempty" xml:"price,omitempty"`
+}
+
+// CACexAccountResponseBody is used to define fields on response body types.
+type CACexAccountResponseBody struct {
+	// ID
+	ID *string `form:"id,omitempty" json:"id,omitempty" xml:"id,omitempty"`
+	// Account name (user-defined)
+	Name string `form:"name" json:"name" xml:"name"`
+	// Exchange name (e.g.: binance, okx)
+	Exchange string `form:"exchange" json:"exchange" xml:"exchange"`
+	// API Key (partially masked in list responses)
+	APIKey string `form:"api_key" json:"api_key" xml:"api_key"`
+	// Account status (e.g.: active, inactive, invalid_keys)
+	Status string `form:"status" json:"status" xml:"status"`
+}
+
+// NewGetAllTokenBalancesResponseBody builds the HTTP response body from the
+// result of the "getAllTokenBalances" endpoint of the "accountCex" service.
+func NewGetAllTokenBalancesResponseBody(res *accountcex.GetAllTokenBalancesResult) *GetAllTokenBalancesResponseBody {
+	body := &GetAllTokenBalancesResponseBody{
+		Code:    res.Code,
+		Message: res.Message,
+	}
+	if res.Result != nil {
+		body.Result = make([]*CATokenBalanceResponseBody, len(res.Result))
+		for i, val := range res.Result {
+			body.Result[i] = marshalAccountcexCATokenBalanceToCATokenBalanceResponseBody(val)
+		}
+	}
+	return body
+}
+
+// NewTokenBalanceResponseBody builds the HTTP response body from the result of
+// the "tokenBalance" endpoint of the "accountCex" service.
+func NewTokenBalanceResponseBody(res *accountcex.TokenBalanceResult) *TokenBalanceResponseBody {
+	body := &TokenBalanceResponseBody{
+		Code:    res.Code,
+		Message: res.Message,
+	}
+	if res.Result != nil {
+		body.Result = marshalAccountcexCATokenBalanceToCATokenBalanceResponseBody(res.Result)
+	}
+	return body
 }
 
 // NewWalletInfoResponseBody builds the HTTP response body from the result of
@@ -38,10 +163,118 @@ func NewWalletInfoResponseBody(res *accountcex.WalletInfoResult) *WalletInfoResp
 		Message: res.Message,
 	}
 	if res.Data != nil {
-		body.Data = make([]*CexAccountBalanceResponseBody, len(res.Data))
+		body.Data = make([]*CACexAccountBalanceResponseBody, len(res.Data))
 		for i, val := range res.Data {
-			body.Data[i] = marshalAccountcexCexAccountBalanceToCexAccountBalanceResponseBody(val)
+			body.Data[i] = marshalAccountcexCACexAccountBalanceToCACexAccountBalanceResponseBody(val)
 		}
 	}
 	return body
+}
+
+// NewCreateAccountResponseBody builds the HTTP response body from the result
+// of the "createAccount" endpoint of the "accountCex" service.
+func NewCreateAccountResponseBody(res *accountcex.CreateAccountResult) *CreateAccountResponseBody {
+	body := &CreateAccountResponseBody{
+		ID:      res.ID,
+		Code:    res.Code,
+		Message: res.Message,
+	}
+	if res.Result != nil {
+		body.Result = marshalAccountcexCACexAccountToCACexAccountResponseBody(res.Result)
+	}
+	return body
+}
+
+// NewListAccountsResponseBody builds the HTTP response body from the result of
+// the "listAccounts" endpoint of the "accountCex" service.
+func NewListAccountsResponseBody(res *accountcex.ListAccountsResult) *ListAccountsResponseBody {
+	body := &ListAccountsResponseBody{
+		Code:    res.Code,
+		Message: res.Message,
+	}
+	if res.Result != nil {
+		body.Result = make([]*CACexAccountResponseBody, len(res.Result))
+		for i, val := range res.Result {
+			body.Result[i] = marshalAccountcexCACexAccountToCACexAccountResponseBody(val)
+		}
+	}
+	return body
+}
+
+// NewDeleteAccountResponseBody builds the HTTP response body from the result
+// of the "deleteAccount" endpoint of the "accountCex" service.
+func NewDeleteAccountResponseBody(res *accountcex.DeleteAccountResult) *DeleteAccountResponseBody {
+	body := &DeleteAccountResponseBody{
+		Code:    res.Code,
+		Message: res.Message,
+	}
+	return body
+}
+
+// NewGetAllTokenBalancesPayload builds a accountCex service
+// getAllTokenBalances endpoint payload.
+func NewGetAllTokenBalancesPayload(accountID string) *accountcex.GetAllTokenBalancesPayload {
+	v := &accountcex.GetAllTokenBalancesPayload{}
+	v.AccountID = accountID
+
+	return v
+}
+
+// NewTokenBalancePayload builds a accountCex service tokenBalance endpoint
+// payload.
+func NewTokenBalancePayload(accountID string, symbol string) *accountcex.TokenBalancePayload {
+	v := &accountcex.TokenBalancePayload{}
+	v.AccountID = accountID
+	v.Symbol = symbol
+
+	return v
+}
+
+// NewWalletInfoPayload builds a accountCex service walletInfo endpoint payload.
+func NewWalletInfoPayload(accountID string) *accountcex.WalletInfoPayload {
+	v := &accountcex.WalletInfoPayload{}
+	v.AccountID = accountID
+
+	return v
+}
+
+// NewCreateAccountCACexAccountPayload builds a accountCex service
+// createAccount endpoint payload.
+func NewCreateAccountCACexAccountPayload(body *CreateAccountRequestBody) *accountcex.CACexAccountPayload {
+	v := &accountcex.CACexAccountPayload{
+		Name:       *body.Name,
+		Exchange:   *body.Exchange,
+		APIKey:     *body.APIKey,
+		APISecret:  *body.APISecret,
+		Passphrase: body.Passphrase,
+	}
+
+	return v
+}
+
+// NewDeleteAccountPayload builds a accountCex service deleteAccount endpoint
+// payload.
+func NewDeleteAccountPayload(accountID string) *accountcex.DeleteAccountPayload {
+	v := &accountcex.DeleteAccountPayload{}
+	v.AccountID = accountID
+
+	return v
+}
+
+// ValidateCreateAccountRequestBody runs the validations defined on
+// CreateAccountRequestBody
+func ValidateCreateAccountRequestBody(body *CreateAccountRequestBody) (err error) {
+	if body.Name == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("name", "body"))
+	}
+	if body.Exchange == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("exchange", "body"))
+	}
+	if body.APIKey == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("api_key", "body"))
+	}
+	if body.APISecret == nil {
+		err = goa.MergeErrors(err, goa.MissingFieldError("api_secret", "body"))
+	}
+	return
 }

@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/parnurzeal/gorequest"
@@ -21,9 +20,9 @@ func NewRelayRequestService() *RelayRequestService {
 	return &RelayRequestService{}
 }
 
-func (*RelayRequestService) RegisterAccount(name string, profile string) (res types.RelayRegisterResponse, err error) {
+func (*RelayRequestService) RegisterAccount(name string, profile string, relayUrl string) (res types.RelayRegisterResponse, err error) {
 	res = types.RelayRegisterResponse{}
-	relayUrl := os.Getenv("RELAY_ACCESS_URL")
+	// relayUrl := os.Getenv("RELAY_ACCESS_URL")
 	if relayUrl == "" {
 		err = errors.New("cannot find relay url")
 		return
@@ -43,13 +42,14 @@ func (*RelayRequestService) RegisterAccount(name string, profile string) (res ty
 	}
 	log.Println(sendPayload)
 	url := fmt.Sprintf("%s/relay-admin-panel/lpnode_admin_panel/register_lp", relayUrl)
-	log.Println(url)
+	log.Println("request url to register_lp", url)
 
 	resp, body, errs := gorequest.New().Post(url).
 		Send(sendPayload).
 		End()
 	if len(errs) > 0 {
 		err = errors.New(errs[0].Error())
+		log.Println(err)
 		return
 	}
 	if resp.StatusCode != 200 {

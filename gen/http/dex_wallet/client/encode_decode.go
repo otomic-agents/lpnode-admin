@@ -277,6 +277,22 @@ func (c *Client) BuildUpdateLpWalletRequest(ctx context.Context, v interface{}) 
 	return req, nil
 }
 
+// EncodeUpdateLpWalletRequest returns an encoder for requests sent to the
+// dexWallet updateLpWallet server.
+func EncodeUpdateLpWalletRequest(encoder func(*http.Request) goahttp.Encoder) func(*http.Request, interface{}) error {
+	return func(req *http.Request, v interface{}) error {
+		p, ok := v.(*dexwallet.UpdateLpWalletPayload)
+		if !ok {
+			return goahttp.ErrInvalidType("dexWallet", "updateLpWallet", "*dexwallet.UpdateLpWalletPayload", v)
+		}
+		body := NewUpdateLpWalletRequestBody(p)
+		if err := encoder(req).Encode(&body); err != nil {
+			return goahttp.ErrEncodingError("dexWallet", "updateLpWallet", err)
+		}
+		return nil
+	}
+}
+
 // DecodeUpdateLpWalletResponse returns a decoder for responses returned by the
 // dexWallet updateLpWallet endpoint. restoreBody controls whether the response
 // body should be restored after having been read.
@@ -324,18 +340,20 @@ func unmarshalWalletRowResponseBodyToDexwalletWalletRow(v *WalletRowResponseBody
 		return nil
 	}
 	res := &dexwallet.WalletRow{
-		ID:              v.ID,
-		WalletName:      *v.WalletName,
-		PrivateKey:      v.PrivateKey,
-		Address:         v.Address,
-		ChainType:       *v.ChainType,
-		AccountID:       v.AccountID,
-		ChainID:         *v.ChainID,
-		StoreID:         v.StoreID,
-		VaultHostType:   v.VaultHostType,
-		VaultName:       v.VaultName,
-		VaultSecertType: v.VaultSecertType,
-		WalletType:      *v.WalletType,
+		ID:                  v.ID,
+		WalletName:          *v.WalletName,
+		PrivateKey:          v.PrivateKey,
+		Address:             v.Address,
+		ChainType:           *v.ChainType,
+		AccountID:           v.AccountID,
+		ChainID:             *v.ChainID,
+		StoreID:             v.StoreID,
+		VaultHostType:       v.VaultHostType,
+		VaultName:           v.VaultName,
+		VaultSecertType:     v.VaultSecertType,
+		SignServiceEndpoint: v.SignServiceEndpoint,
+		WalletType:          *v.WalletType,
+		Balance:             v.Balance,
 	}
 
 	return res

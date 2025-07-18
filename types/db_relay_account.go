@@ -10,4 +10,5 @@ type DBRelayAccount struct {
 	Profile      string             `bson:"profile"`
 	RelayApiKey  string             `bson:"relayApiKey"`
 	ResponseName string             `bson:"responseName"`
+	RelayUrl     string             `bson:"relayUrl"`
 }

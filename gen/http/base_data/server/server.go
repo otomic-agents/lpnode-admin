@@ -18,10 +18,11 @@ import (
 
 // Server lists the baseData service endpoint HTTP handlers.
 type Server struct {
-	Mounts        []*MountPoint
-	ChainDataList http.Handler
-	GetLpInfo     http.Handler
-	RunTimeEnv    http.Handler
+	Mounts             []*MountPoint
+	ChainDataList      http.Handler
+	GetLpInfo          http.Handler
+	RunTimeEnv         http.Handler
+	GetWalletAndTokens http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -54,10 +55,12 @@ func New(
 			{"ChainDataList", "GET", "/lpnode/lpnode_admin_panel/baseData/chainDataList"},
 			{"GetLpInfo", "GET", "/lpnode/lpnode_admin_panel/baseData/getLpInfo"},
 			{"RunTimeEnv", "GET", "/lpnode/lpnode_admin_panel/baseData/runTimeEnv"},
+			{"GetWalletAndTokens", "POST", "/lpnode/lpnode_admin_panel/baseData/wallets"},
 		},
-		ChainDataList: NewChainDataListHandler(e.ChainDataList, mux, decoder, encoder, errhandler, formatter),
-		GetLpInfo:     NewGetLpInfoHandler(e.GetLpInfo, mux, decoder, encoder, errhandler, formatter),
-		RunTimeEnv:    NewRunTimeEnvHandler(e.RunTimeEnv, mux, decoder, encoder, errhandler, formatter),
+		ChainDataList:      NewChainDataListHandler(e.ChainDataList, mux, decoder, encoder, errhandler, formatter),
+		GetLpInfo:          NewGetLpInfoHandler(e.GetLpInfo, mux, decoder, encoder, errhandler, formatter),
+		RunTimeEnv:         NewRunTimeEnvHandler(e.RunTimeEnv, mux, decoder, encoder, errhandler, formatter),
+		GetWalletAndTokens: NewGetWalletAndTokensHandler(e.GetWalletAndTokens, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -69,6 +72,7 @@ func (s *Server) Use(m func(http.Handler) http.Handler) {
 	s.ChainDataList = m(s.ChainDataList)
 	s.GetLpInfo = m(s.GetLpInfo)
 	s.RunTimeEnv = m(s.RunTimeEnv)
+	s.GetWalletAndTokens = m(s.GetWalletAndTokens)
 }
 
 // MethodNames returns the methods served.
@@ -79,6 +83,7 @@ func Mount(mux goahttp.Muxer, h *Server) {
 	MountChainDataListHandler(mux, h.ChainDataList)
 	MountGetLpInfoHandler(mux, h.GetLpInfo)
 	MountRunTimeEnvHandler(mux, h.RunTimeEnv)
+	MountGetWalletAndTokensHandler(mux, h.GetWalletAndTokens)
 }
 
 // Mount configures the mux to serve the baseData endpoints.
@@ -206,6 +211,57 @@ func NewRunTimeEnvHandler(
 		ctx = context.WithValue(ctx, goa.ServiceKey, "baseData")
 		var err error
 		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountGetWalletAndTokensHandler configures the mux to serve the "baseData"
+// service "getWalletAndTokens" endpoint.
+func MountGetWalletAndTokensHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/lpnode/lpnode_admin_panel/baseData/wallets", f)
+}
+
+// NewGetWalletAndTokensHandler creates a HTTP handler which loads the HTTP
+// request and calls the "baseData" service "getWalletAndTokens" endpoint.
+func NewGetWalletAndTokensHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeGetWalletAndTokensRequest(mux, decoder)
+		encodeResponse = EncodeGetWalletAndTokensResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "getWalletAndTokens")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "baseData")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

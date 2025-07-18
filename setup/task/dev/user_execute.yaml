@@ -10,13 +10,13 @@ spec:
         - name: user-script
           hostPath:
             type: DirectoryOrCreate
-            path: "{{.UserSpacePath}}/UserScript"
+            path: "{{.UserSpacePath}}/user-script/"
       containers:
       - name: "user-once-script-run-{{.JobName}}"
         image: kldtks/edge:otmoic-lpnode-monitor-latest
         volumeMounts:
           - name: user-script
-            mountPath: /user-script/run-script
+            mountPath: /user-script/
         imagePullPolicy: Always
         env:
         - name: MongoDbHost

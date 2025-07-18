@@ -132,6 +132,8 @@ type CtrlDeploayItemResponseBody struct {
 	InstallContext *string `form:"installContext,omitempty" json:"installContext,omitempty" xml:"installContext,omitempty"`
 	// yaml
 	Yaml *string `form:"yaml,omitempty" json:"yaml,omitempty" xml:"yaml,omitempty"`
+	// chain client rpc
+	RPC *string `form:"rpc,omitempty" json:"rpc,omitempty" xml:"rpc,omitempty"`
 }
 
 // InstallDeploymentDataResultResponseBody is used to define fields on response

@@ -150,6 +150,7 @@ type AmmContext struct {
 			ChainID      int    `bson:"chainId" json:"chainId"`
 		} `bson:"dstToken" json:"dstToken"`
 	} `bson:"baseInfo" json:"baseInfo"`
+	BusinessHash string `bson:"businessHash" json:"businessHash"`
 	SwapInfo struct {
 		InputAmount     string  `bson:"inputAmount" json:"inputAmount"`
 		SrcAmount       string  `bson:"srcAmount" json:"srcAmount"`

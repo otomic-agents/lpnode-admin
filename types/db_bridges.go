@@ -1,6 +1,8 @@
 package types
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type DBBridgeRow struct {
 	ID                primitive.ObjectID `bson:"_id"`
@@ -21,9 +23,15 @@ type DBBridgeRow struct {
 	SrcClientUri      string             `bson:"srcClientUri"`
 	DstClientUri      string             `bson:"dstClientUri"`
 	RelayApiKey       string             `bson:"relayApiKey"`
+	RelayURI          string             `bson:"relayUri"`
 	AmmName           string             `bson:"ammName"`
 	EnableHedge       bool               `bson:"enableHedge"`
 	EnableLimiter     bool               `bson:"enableLimiter"`
+	SrcTokenBalance   string             `bson:"srcTokenBalance,omitempty"`
+	DstTokenBalance   string             `bson:"dstTokenBalance,omitempty"`
+	SrcTokenDecimals  int64              `bson:"srcTokenDecimals,omitempty"`
+	DstTokenDecimals  int64              `bson:"dstTokenDecimals,omitempty"`
+	PayAddress        string             `bson:"payAddress,omitempty" json:"payAddress"` 
 }
 
 type DBBridgeDstChainAggregateItem struct {

@@ -4,6 +4,7 @@ import (
 	"admin-panel/database_config"
 	"admin-panel/logger"
 	database "admin-panel/mongo_database"
+	"admin-panel/redis_database"
 	"admin-panel/service"
 	"context"
 	"fmt"
@@ -14,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/pkg/errors"
 	"github.com/robertkrimen/otto"
 	"github.com/tidwall/gjson"
 	"go.mongodb.org/mongo-driver/bson"
@@ -25,7 +27,7 @@ func init() {
 	service.NewLpCluster()
 	database_config.Init()
 	waitGroup := &sync.WaitGroup{}
-	waitGroup.Add(2)
+	waitGroup.Add(3)
 	startTime := time.Now().UnixNano() / 1e6
 	go func() {
 		for {
@@ -65,6 +67,42 @@ func init() {
 		}
 
 	}()
+	go func() {
+		startTime := time.Now().UnixNano() / 1e6
+		for {
+			logger.System.Info("Testing Redis connection...")
+			nowTime := time.Now().UnixNano() / 1e6
+			if nowTime-startTime > 1000*120 {
+				logger.System.Error("exit if redis not connected after timeout")
+				os.Exit(5)
+			}
+
+			logger.System.Debug("preparing redis connection test...")
+
+			_, err := redis_database.GetDataRedis().Set("system_redis_link_test", "1")
+			if err != nil {
+				logger.System.Error(err)
+				time.Sleep(time.Second * 3)
+				continue
+			}
+
+			value, err := redis_database.GetDataRedis().GetString("system_redis_link_test")
+			if err != nil {
+				logger.System.Error(err)
+				time.Sleep(time.Second * 3)
+				continue
+			}
+
+			if value != "1" {
+				logger.System.Error("Redis test value mismatch")
+				time.Sleep(time.Second * 3)
+				continue
+			}
+
+			waitGroup.Done()
+			return
+		}
+	}()
 	waitGroup.Wait()
 	logger.System.Debug("database connection completed...")
 
@@ -88,8 +126,49 @@ func init() {
 	if err != nil {
 		log.Println("init Monitor failed", err)
 	}
-	InitInstall()
+	InitMarketPriceLoop()
+	onAppUp()
+	fistrtSetup()
 
+}
+func fistrtSetup() (err error) {
+	lpVersion := os.Getenv("LP_VERSION")
+	if lpVersion == "" {
+		log.Println("Warning: LP_VERSION environment variable not set, using 'unknown' as version")
+		lpVersion = "unknown"
+	}
+
+	// Check if this version has already initialized chain client
+	var versionDoc struct {
+		Version             string `bson:"version"`
+		InitChainClientDone bool   `bson:"init_chain_client_done"`
+	}
+
+	err = database.FindOne("main", "version_history", bson.M{"version": lpVersion}, &versionDoc)
+	if err == nil && versionDoc.InitChainClientDone {
+		log.Printf("Chain client already initialized for version %s, skipping", lpVersion)
+		return nil
+	}
+
+	InitInstall()
+	InitChainClientInstall()
+
+	// Update or insert version history document
+	updateDoc := bson.M{
+		"$set": bson.M{
+			"version":                lpVersion,
+			"init_chain_client_done": true,
+			"updated_at":             time.Now(),
+		},
+		"$setOnInsert": bson.M{
+			"created_at": time.Now(),
+		},
+	}
+	_, err = database.FindOneAndUpdate("main", "version_history", bson.M{"version": lpVersion}, updateDoc)
+	if err != nil {
+		return errors.WithMessage(err, "failed to update version_history")
+	}
+	return
 }
 func initDbData() {
 	initData, err := ioutil.ReadFile("./init_data/init_data.js")
@@ -200,6 +279,7 @@ func initIndex() (err error) {
 			{"srcToken_id", -1},
 			{"dstToken_id", -1},
 			{"ammName", -1},
+			{"relayApiKey", -1},
 		},
 		Options: options.Index().SetUnique(true),
 	}

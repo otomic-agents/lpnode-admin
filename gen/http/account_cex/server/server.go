@@ -18,8 +18,13 @@ import (
 
 // Server lists the accountCex service endpoint HTTP handlers.
 type Server struct {
-	Mounts     []*MountPoint
-	WalletInfo http.Handler
+	Mounts              []*MountPoint
+	GetAllTokenBalances http.Handler
+	TokenBalance        http.Handler
+	WalletInfo          http.Handler
+	CreateAccount       http.Handler
+	ListAccounts        http.Handler
+	DeleteAccount       http.Handler
 }
 
 // MountPoint holds information about the mounted endpoints.
@@ -49,9 +54,19 @@ func New(
 ) *Server {
 	return &Server{
 		Mounts: []*MountPoint{
-			{"WalletInfo", "GET", "/lpnode/lpnode_admin_panel/account/cex/walletInfo"},
+			{"GetAllTokenBalances", "GET", "/lpnode/lpnode_admin_panel/account/cex/{account_id}/tokens"},
+			{"TokenBalance", "GET", "/lpnode/lpnode_admin_panel/account/cex/{account_id}/token/{symbol}"},
+			{"WalletInfo", "GET", "/lpnode/lpnode_admin_panel/account/cex/{account_id}/walletInfo"},
+			{"CreateAccount", "POST", "/lpnode/lpnode_admin_panel/account/cex"},
+			{"ListAccounts", "GET", "/lpnode/lpnode_admin_panel/account/cex"},
+			{"DeleteAccount", "DELETE", "/lpnode/lpnode_admin_panel/account/cex/{account_id}"},
 		},
-		WalletInfo: NewWalletInfoHandler(e.WalletInfo, mux, decoder, encoder, errhandler, formatter),
+		GetAllTokenBalances: NewGetAllTokenBalancesHandler(e.GetAllTokenBalances, mux, decoder, encoder, errhandler, formatter),
+		TokenBalance:        NewTokenBalanceHandler(e.TokenBalance, mux, decoder, encoder, errhandler, formatter),
+		WalletInfo:          NewWalletInfoHandler(e.WalletInfo, mux, decoder, encoder, errhandler, formatter),
+		CreateAccount:       NewCreateAccountHandler(e.CreateAccount, mux, decoder, encoder, errhandler, formatter),
+		ListAccounts:        NewListAccountsHandler(e.ListAccounts, mux, decoder, encoder, errhandler, formatter),
+		DeleteAccount:       NewDeleteAccountHandler(e.DeleteAccount, mux, decoder, encoder, errhandler, formatter),
 	}
 }
 
@@ -60,7 +75,12 @@ func (s *Server) Service() string { return "accountCex" }
 
 // Use wraps the server handlers with the given middleware.
 func (s *Server) Use(m func(http.Handler) http.Handler) {
+	s.GetAllTokenBalances = m(s.GetAllTokenBalances)
+	s.TokenBalance = m(s.TokenBalance)
 	s.WalletInfo = m(s.WalletInfo)
+	s.CreateAccount = m(s.CreateAccount)
+	s.ListAccounts = m(s.ListAccounts)
+	s.DeleteAccount = m(s.DeleteAccount)
 }
 
 // MethodNames returns the methods served.
@@ -68,12 +88,119 @@ func (s *Server) MethodNames() []string { return accountcex.MethodNames[:] }
 
 // Mount configures the mux to serve the accountCex endpoints.
 func Mount(mux goahttp.Muxer, h *Server) {
+	MountGetAllTokenBalancesHandler(mux, h.GetAllTokenBalances)
+	MountTokenBalanceHandler(mux, h.TokenBalance)
 	MountWalletInfoHandler(mux, h.WalletInfo)
+	MountCreateAccountHandler(mux, h.CreateAccount)
+	MountListAccountsHandler(mux, h.ListAccounts)
+	MountDeleteAccountHandler(mux, h.DeleteAccount)
 }
 
 // Mount configures the mux to serve the accountCex endpoints.
 func (s *Server) Mount(mux goahttp.Muxer) {
 	Mount(mux, s)
+}
+
+// MountGetAllTokenBalancesHandler configures the mux to serve the "accountCex"
+// service "getAllTokenBalances" endpoint.
+func MountGetAllTokenBalancesHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/lpnode/lpnode_admin_panel/account/cex/{account_id}/tokens", f)
+}
+
+// NewGetAllTokenBalancesHandler creates a HTTP handler which loads the HTTP
+// request and calls the "accountCex" service "getAllTokenBalances" endpoint.
+func NewGetAllTokenBalancesHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeGetAllTokenBalancesRequest(mux, decoder)
+		encodeResponse = EncodeGetAllTokenBalancesResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "getAllTokenBalances")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "accountCex")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountTokenBalanceHandler configures the mux to serve the "accountCex"
+// service "tokenBalance" endpoint.
+func MountTokenBalanceHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/lpnode/lpnode_admin_panel/account/cex/{account_id}/token/{symbol}", f)
+}
+
+// NewTokenBalanceHandler creates a HTTP handler which loads the HTTP request
+// and calls the "accountCex" service "tokenBalance" endpoint.
+func NewTokenBalanceHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeTokenBalanceRequest(mux, decoder)
+		encodeResponse = EncodeTokenBalanceResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "tokenBalance")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "accountCex")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
 }
 
 // MountWalletInfoHandler configures the mux to serve the "accountCex" service
@@ -85,7 +212,7 @@ func MountWalletInfoHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("GET", "/lpnode/lpnode_admin_panel/account/cex/walletInfo", f)
+	mux.Handle("GET", "/lpnode/lpnode_admin_panel/account/cex/{account_id}/walletInfo", f)
 }
 
 // NewWalletInfoHandler creates a HTTP handler which loads the HTTP request and
@@ -99,6 +226,7 @@ func NewWalletInfoHandler(
 	formatter func(ctx context.Context, err error) goahttp.Statuser,
 ) http.Handler {
 	var (
+		decodeRequest  = DecodeWalletInfoRequest(mux, decoder)
 		encodeResponse = EncodeWalletInfoResponse(encoder)
 		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
 	)
@@ -106,8 +234,160 @@ func NewWalletInfoHandler(
 		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
 		ctx = context.WithValue(ctx, goa.MethodKey, "walletInfo")
 		ctx = context.WithValue(ctx, goa.ServiceKey, "accountCex")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountCreateAccountHandler configures the mux to serve the "accountCex"
+// service "createAccount" endpoint.
+func MountCreateAccountHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("POST", "/lpnode/lpnode_admin_panel/account/cex", f)
+}
+
+// NewCreateAccountHandler creates a HTTP handler which loads the HTTP request
+// and calls the "accountCex" service "createAccount" endpoint.
+func NewCreateAccountHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeCreateAccountRequest(mux, decoder)
+		encodeResponse = EncodeCreateAccountResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "createAccount")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "accountCex")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountListAccountsHandler configures the mux to serve the "accountCex"
+// service "listAccounts" endpoint.
+func MountListAccountsHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("GET", "/lpnode/lpnode_admin_panel/account/cex", f)
+}
+
+// NewListAccountsHandler creates a HTTP handler which loads the HTTP request
+// and calls the "accountCex" service "listAccounts" endpoint.
+func NewListAccountsHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		encodeResponse = EncodeListAccountsResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "listAccounts")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "accountCex")
 		var err error
 		res, err := endpoint(ctx, nil)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		if err := encodeResponse(ctx, w, res); err != nil {
+			errhandler(ctx, w, err)
+		}
+	})
+}
+
+// MountDeleteAccountHandler configures the mux to serve the "accountCex"
+// service "deleteAccount" endpoint.
+func MountDeleteAccountHandler(mux goahttp.Muxer, h http.Handler) {
+	f, ok := h.(http.HandlerFunc)
+	if !ok {
+		f = func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, r)
+		}
+	}
+	mux.Handle("DELETE", "/lpnode/lpnode_admin_panel/account/cex/{account_id}", f)
+}
+
+// NewDeleteAccountHandler creates a HTTP handler which loads the HTTP request
+// and calls the "accountCex" service "deleteAccount" endpoint.
+func NewDeleteAccountHandler(
+	endpoint goa.Endpoint,
+	mux goahttp.Muxer,
+	decoder func(*http.Request) goahttp.Decoder,
+	encoder func(context.Context, http.ResponseWriter) goahttp.Encoder,
+	errhandler func(context.Context, http.ResponseWriter, error),
+	formatter func(ctx context.Context, err error) goahttp.Statuser,
+) http.Handler {
+	var (
+		decodeRequest  = DecodeDeleteAccountRequest(mux, decoder)
+		encodeResponse = EncodeDeleteAccountResponse(encoder)
+		encodeError    = goahttp.ErrorEncoder(encoder, formatter)
+	)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		ctx := context.WithValue(r.Context(), goahttp.AcceptTypeKey, r.Header.Get("Accept"))
+		ctx = context.WithValue(ctx, goa.MethodKey, "deleteAccount")
+		ctx = context.WithValue(ctx, goa.ServiceKey, "accountCex")
+		payload, err := decodeRequest(r)
+		if err != nil {
+			if err := encodeError(ctx, w, err); err != nil {
+				errhandler(ctx, w, err)
+			}
+			return
+		}
+		res, err := endpoint(ctx, payload)
 		if err != nil {
 			if err := encodeError(ctx, w, err); err != nil {
 				errhandler(ctx, w, err)

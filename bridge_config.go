@@ -126,6 +126,14 @@ func (s *bridgeConfigsrvc) BridgeList(ctx context.Context) (res *bridgeconfig.Br
 	log.Println(len(list))
 	retList := make([]*bridgeconfig.ListBridgeItem, 0)
 	for _, v := range list {
+
+		var srcTokenBalance, dstTokenBalance string
+		if v.SrcTokenBalance != "" {
+			srcTokenBalance = v.SrcTokenBalance
+		}
+		if v.DstTokenBalance != "" {
+			dstTokenBalance = v.DstTokenBalance
+		}
 		retList = append(retList, &bridgeconfig.ListBridgeItem{
 			ID:                ptr.String(v.ID.Hex()),
 			DstChainID:        ptr.String(v.DstChain_ID.Hex()),
@@ -143,7 +151,12 @@ func (s *bridgeConfigsrvc) BridgeList(ctx context.Context) (res *bridgeconfig.Br
 			SrcToken:          ptr.String(v.SrcToken),
 			WalletName:        ptr.String(v.WalletName),
 			WalletID:          ptr.String(v.Wallet_ID.Hex()),
+			SrcWalletID:       ptr.String(v.Src_Wallet_Id.Hex()),
 			EnableHedge:       ptr.Bool(v.EnableHedge),
+			SrcTokenBalance:   srcTokenBalance,
+			DstTokenBalance:   dstTokenBalance,
+			SrcTokenDecimals:  v.SrcTokenDecimals,
+			DstTokenDecimals:  v.DstTokenDecimals,
 		})
 	}
 	res.Code = ptr.Int64(0)
@@ -207,12 +220,13 @@ func (s *bridgeConfigsrvc) BridgeTest(ctx context.Context, p *bridgeconfig.Bridg
 	// return
 	flag, err := bcls.ConfigLp()
 	fmt.Println(flag)
-	bcls.ConfigClient()
+	fmt.Println(err)
+	// bcls.ConfigClient()
 	//bcls.ConfigClient()
 
 	// log.Println(flag)
 	// _, err = bcls.ConfigAllClient()
-	log.Print(err)
+
 	if err != nil {
 		return
 	}

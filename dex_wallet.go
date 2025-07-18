@@ -10,10 +10,12 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"math/big"
 	"strings"
-	"time"
 
 	"github.com/aws/smithy-go/ptr"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/pkg/errors"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -37,6 +39,7 @@ func (s *dexWalletsrvc) ListDexWallet(ctx context.Context) (res *dexwallet.ListD
 	dws := service.NewDexWalletLogicService()
 	ret, findErr := dws.ListAll(bson.M{})
 
+	spew.Dump(ret)
 	if findErr != nil {
 		err = findErr
 		return
@@ -46,6 +49,16 @@ func (s *dexWalletsrvc) ListDexWallet(ctx context.Context) (res *dexwallet.ListD
 	res.Code = ptr.Int64(0)
 	res.Message = ptr.String("")
 	for _, v := range ret {
+		balance := "0"
+		if v.Balance != nil {
+			balanceInt, _ := new(big.Int).SetString(v.Balance.BalanceValue.Hex[2:], 16)
+			if balanceInt != nil {
+
+				decimals := new(big.Int).Exp(big.NewInt(10), big.NewInt(v.Balance.Decimals), nil)
+				balanceFloat := new(big.Float).Quo(new(big.Float).SetInt(balanceInt), new(big.Float).SetInt(decimals))
+				balance = balanceFloat.Text('f', 8)
+			}
+		}
 		res.Result = append(res.Result, &dexwallet.WalletRow{
 			ID:        ptr.String(v.ID.Hex()),
 			ChainID:   v.ChainId,
@@ -53,11 +66,13 @@ func (s *dexWalletsrvc) ListDexWallet(ctx context.Context) (res *dexwallet.ListD
 			Address:   ptr.String(v.Address),
 			AccountID: ptr.String(v.AccountId),
 			// PrivateKey: v.PrivateKey,
-			WalletType:      v.WalletType,
-			WalletName:      v.WalletName,
-			VaultHostType:   ptr.String(v.VaultHostType),
-			VaultName:       ptr.String(v.VaultName),
-			VaultSecertType: ptr.String(v.VaultSecertType),
+			SignServiceEndpoint: ptr.String(v.SignServiceEndpoint),
+			WalletType:          v.WalletType,
+			WalletName:          v.WalletName,
+			VaultHostType:       ptr.String(v.VaultHostType),
+			VaultName:           ptr.String(v.VaultName),
+			VaultSecertType:     ptr.String(v.VaultSecertType),
+			Balance:             ptr.String(balance),
 		})
 	}
 
@@ -73,8 +88,8 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 
 	address := ""
 	vaultHostType := ""
-	vaultName := ""
 	vaultSecertType := ""
+	vaultName := ""
 	storeId := ptr.ToString(p.StoreID)
 	dwls := service.NewDexWalletLogicService()
 	if p.WalletType == "storeId" {
@@ -98,14 +113,11 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 	}
 
 	if p.WalletType == "privateKey" {
-		if ptr.ToString(p.PrivateKey) == "" {
-			err = errors.WithMessage(utils.GetNoEmptyError(err), "privateKey cannot be empty")
-			return
-		}
 		if ptr.ToString(p.Address) == "" {
 			err = errors.WithMessage(utils.GetNoEmptyError(err), "address cannot be empty")
 			return
 		}
+		vaultName = ""
 		address = ptr.ToString(p.Address)
 	}
 	if p.WalletType == "privateKey" {
@@ -142,24 +154,18 @@ func (s *dexWalletsrvc) CreateDexWallet(ctx context.Context, p *dexwallet.Wallet
 		err = errors.New("wallet is already exist")
 		return
 	}
-	if p.WalletType == "secretVault" { // save to secret vault
-		privatePrivateKey := ptr.ToString(p.PrivateKey)
-		p.PrivateKey = ptr.String(fmt.Sprintf("%d", time.Now().UnixNano()))
-		storeWalletName := fmt.Sprintf("%s_%d", strings.ToLower(address), time.Now().UnixNano())
 
-		storedName, storeErr := dwls.StoreToSecretVault(storeWalletName, privatePrivateKey)
-		if storeErr != nil {
-			err = errors.WithMessage(storeErr, "save to secret vault failed")
-			return
-		}
-		vaultName = storedName
-
-	}
 	createData := &types.DBWalletRow{
-		ID:              primitive.NewObjectID(),
-		WalletName:      p.WalletName,
-		PrivateKey:      ptr.ToString(p.PrivateKey),
-		Address:         address,
+		ID:                  primitive.NewObjectID(),
+		WalletName:          p.WalletName,
+		PrivateKey:          ptr.ToString(p.PrivateKey),
+		SignServiceEndpoint: ptr.ToString(p.SignServiceEndpoint),
+		Address: func() string {
+			if p.ChainType == "evm" {
+				return common.HexToAddress(address).Hex() 
+			}
+			return address
+		}(),
 		ChainType:       p.ChainType,
 		ChainId:         p.ChainID,
 		AccountId:       ptr.ToString(p.AccountID),
@@ -243,11 +249,12 @@ func (s *dexWalletsrvc) VaultList(cxt context.Context) (res *dexwallet.VaultList
 	res.Message = ptr.String("")
 	return
 }
-func (s *dexWalletsrvc) UpdateLpWallet(cxt context.Context) (res *dexwallet.UpdateLpWalletResult, err error) {
+func (s *dexWalletsrvc) UpdateLpWallet(cxt context.Context, p *dexwallet.UpdateLpWalletPayload) (res *dexwallet.UpdateLpWalletResult, err error) {
 	res = &dexwallet.UpdateLpWalletResult{}
 
 	dwls := service.NewDexWalletLogicService()
-	update, err := dwls.RefreshLpWallet()
+	relayUrl := p.RelayURL
+	update, err := dwls.RefreshLpWallet(relayUrl)
 	if err != nil {
 		return
 	}

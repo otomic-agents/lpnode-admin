@@ -51,6 +51,7 @@ func (s *relayAccountsrvc) ListAccount(ctx context.Context) (res *relayaccount.L
 			LpIDFake:     ptr.String(result.LpIdFake),
 			LpNodeAPIKey: ptr.String(result.LpnodeApiKey),
 			RelayAPIKey:  ptr.String(result.RelayApiKey),
+			RelayURL:     ptr.String(result.RelayUrl),
 		})
 	}
 	res.Result = retList
@@ -63,7 +64,9 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 	rowData := struct {
 		Id primitive.ObjectID `bson:"_id"`
 	}{}
-	err = database.FindOne("main", "relayAccounts", bson.M{}, &rowData)
+	err = database.FindOne("main", "relayAccounts", bson.M{
+		"relayUrl": p.RelayURL,
+	}, &rowData)
 	if err != nil {
 		err = errors.WithMessage(err, "query database error occur")
 		return
@@ -77,15 +80,17 @@ func (s *relayAccountsrvc) RegisterAccount(ctx context.Context, p *relayaccount.
 		err = errors.WithMessage(errors.New("value error"), "cannot get env variable lpname")
 		return
 	}
-	registerResult, err := rrs.RegisterAccount(lpName, ptr.ToString(p.Profile))
+	registerResult, err := rrs.RegisterAccount(lpName, p.Profile, p.RelayURL)
 	if err != nil {
+		log.Println(err)
 		err = errors.WithMessage(err, "register account to backend error occur")
 		return
 	}
 	log.Println(registerResult)
 
 	ret, err := database.FindOneAndUpdate("main", "relayAccounts", bson.M{
-		"name": lpName,
+		"name":     lpName,
+		"relayUrl": p.RelayURL,
 	}, bson.M{
 		"$set": bson.M{
 			"profile":      p.Profile,

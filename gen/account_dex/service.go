@@ -15,6 +15,8 @@ import (
 type Service interface {
 	// WalletInfo implements walletInfo.
 	WalletInfo(context.Context, *WalletInfoPayload) (res *WalletInfoResult, err error)
+	// GetWalletAssets implements getWalletAssets.
+	GetWalletAssets(context.Context, *GetWalletAssetsPayload) (res *GetWalletAssetsResult, err error)
 }
 
 // ServiceName is the name of the service as defined in the design. This is the
@@ -25,29 +27,124 @@ const ServiceName = "accountDex"
 // MethodNames lists the service method names as defined in the design. These
 // are the same values that are set in the endpoint request contexts under the
 // MethodKey key.
-var MethodNames = [1]string{"walletInfo"}
+var MethodNames = [2]string{"walletInfo", "getWalletAssets"}
 
-type DexAccountBalance struct {
-	Token     *string
-	TokenName *string
-	Amount    *string
-	Free      *string
-	Locked    *string
-	Price     *string
+type ADBAddressAssetGroup struct {
+	// Wallet address
+	WalletAddress *string
+	// List of wallet names
+	WalletNames []string
+	// List of token balances
+	Tokens []*ADBTokenBalance
+	// Total value of the address (USD)
+	TotalValue *string
+}
+
+type ADBChainAssetGroup struct {
+	// Chain ID
+	ChainID *int
+	// Chain name
+	ChainName *string
+	// Chain type
+	ChainType *string
+	// Native token name
+	NativeToken *string
+	// Chain Logo URL
+	ChainLogo *string
+	// List of address assets
+	AddressAssets []*ADBAddressAssetGroup
+	// Total value on chain (USD)
+	TotalValue *string
+}
+
+type ADBTokenBalance struct {
+	// Token contract address
+	TokenAddress *string
+	// Token symbol
+	Symbol *string
+	// Formatted balance
+	FormattedBalance *string
+	// Token decimals
+	Decimals *int
+	// Whether it's a native token
+	IsNative *bool
+	// Token price (USD)
+	Price *string
+	// Token value (USD)
+	Value *string
+	// Update time
+	UpdatedAt *string
+}
+
+type ADBWalletAssetResponse struct {
+	// Number of monitored addresses
+	TotalAddresses *int
+	// Last update time
+	LastUpdated *string
+	// Total asset value (USD)
+	TotalValue *string
+	// List of chain assets
+	ChainAssets []*ADBChainAssetGroup
+}
+
+type ADBWalletInfo struct {
+	// Wallet ID
+	ID *string
+	// Wallet name
+	WalletName *string
+	// Wallet address
+	Address *string
+	// Lowercase wallet address
+	AddressLower *string
+	// Chain type
+	ChainType *string
+	// Chain ID
+	ChainID *int
+	// Wallet type
+	WalletType *string
+	// Signature service endpoint
+	SignServiceEndpoint *string
+}
+
+// GetWalletAssetsPayload is the payload type of the accountDex service
+// getWalletAssets method.
+type GetWalletAssetsPayload struct {
+	// List of wallet addresses, returns assets for all monitored addresses if not
+	// provided
+	Addresses []string
+	// Display currency, default is USD
+	Currency string
+	// Whether to hide zero balance assets
+	HideZeroBalance bool
+	// Whether to hide small balance assets
+	HideSmallBalance bool
+	// Small balance threshold
+	SmallBalanceThreshold string
+}
+
+// GetWalletAssetsResult is the result type of the accountDex service
+// getWalletAssets method.
+type GetWalletAssetsResult struct {
+	// Status code
+	Code *int
+	// Wallet asset data
+	Result *ADBWalletAssetResponse
+	// Response message
+	Message string
 }
 
 // WalletInfoPayload is the payload type of the accountDex service walletInfo
 // method.
 type WalletInfoPayload struct {
-	// chain Id
-	ChainID *int64
+	// MongoDB ID of the wallet
+	ID string
 }
 
 // WalletInfoResult is the result type of the accountDex service walletInfo
 // method.
 type WalletInfoResult struct {
 	Code *int64
-	// result
-	Data    []*DexAccountBalance
+	// Wallet information
+	Result  *ADBWalletInfo
 	Message *string
 }

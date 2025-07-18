@@ -56,6 +56,10 @@ func DecodeRegisterAccountRequest(mux goahttp.Muxer, decoder func(*http.Request)
 			}
 			return nil, goa.DecodePayloadError(err.Error())
 		}
+		err = ValidateRegisterAccountRequestBody(&body)
+		if err != nil {
+			return nil, err
+		}
 		payload := NewRegisterAccountPayload(&body)
 
 		return payload, nil
@@ -113,6 +117,7 @@ func marshalRelayaccountRelayAccountItemToRelayAccountItemResponseBody(v *relaya
 		LpIDFake:     v.LpIDFake,
 		LpNodeAPIKey: v.LpNodeAPIKey,
 		RelayAPIKey:  v.RelayAPIKey,
+		RelayURL:     v.RelayURL,
 	}
 
 	return res

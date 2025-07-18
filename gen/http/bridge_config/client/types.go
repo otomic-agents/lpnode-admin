@@ -29,7 +29,11 @@ type BridgeCreateRequestBody struct {
 	// mongodb primary key, from walletlist
 	SrcWalletID string `form:"srcWalletId" json:"srcWalletId" xml:"srcWalletId"`
 	// amm name at install
-	AmmName       string `form:"ammName" json:"ammName" xml:"ammName"`
+	AmmName string `form:"ammName" json:"ammName" xml:"ammName"`
+	// relay api key
+	RelayAPIKey string `form:"relayApiKey" json:"relayApiKey" xml:"relayApiKey"`
+	// relayUri
+	RelayURI      string `form:"relayUri" json:"relayUri" xml:"relayUri"`
 	EnableHedge   bool   `form:"enableHedge" json:"enableHedge" xml:"enableHedge"`
 	EnableLimiter bool   `form:"enableLimiter" json:"enableLimiter" xml:"enableLimiter"`
 }
@@ -98,7 +102,17 @@ type ListBridgeItemResponseBody struct {
 	SrcToken          *string `form:"srcToken,omitempty" json:"srcToken,omitempty" xml:"srcToken,omitempty"`
 	WalletName        *string `form:"walletName,omitempty" json:"walletName,omitempty" xml:"walletName,omitempty"`
 	WalletID          *string `form:"walletId,omitempty" json:"walletId,omitempty" xml:"walletId,omitempty"`
-	EnableHedge       *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	// receiving wallet id
+	SrcWalletID *string `form:"srcWalletId,omitempty" json:"srcWalletId,omitempty" xml:"srcWalletId,omitempty"`
+	EnableHedge *bool   `form:"enableHedge,omitempty" json:"enableHedge,omitempty" xml:"enableHedge,omitempty"`
+	// Source chain token balance
+	SrcTokenBalance *string `form:"srcTokenBalance,omitempty" json:"srcTokenBalance,omitempty" xml:"srcTokenBalance,omitempty"`
+	// Destination chain token balance
+	DstTokenBalance *string `form:"dstTokenBalance,omitempty" json:"dstTokenBalance,omitempty" xml:"dstTokenBalance,omitempty"`
+	// Source token decimals
+	SrcTokenDecimals *int64 `form:"srcTokenDecimals,omitempty" json:"srcTokenDecimals,omitempty" xml:"srcTokenDecimals,omitempty"`
+	// Destination token decimals
+	DstTokenDecimals *int64 `form:"dstTokenDecimals,omitempty" json:"dstTokenDecimals,omitempty" xml:"dstTokenDecimals,omitempty"`
 }
 
 // NewBridgeCreateRequestBody builds the HTTP request body from the payload of
@@ -113,6 +127,8 @@ func NewBridgeCreateRequestBody(p *bridgeconfig.BridgeItem) *BridgeCreateRequest
 		WalletID:      p.WalletID,
 		SrcWalletID:   p.SrcWalletID,
 		AmmName:       p.AmmName,
+		RelayAPIKey:   p.RelayAPIKey,
+		RelayURI:      p.RelayURI,
 		EnableHedge:   p.EnableHedge,
 		EnableLimiter: p.EnableLimiter,
 	}

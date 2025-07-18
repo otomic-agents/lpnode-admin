@@ -11,3 +11,8 @@ package server
 func WalletInfoAccountDexPath() string {
 	return "/lpnode/lpnode_admin_panel/account/dex/walletInfo"
 }
+
+// GetWalletAssetsAccountDexPath returns the URL path to the accountDex service getWalletAssets HTTP endpoint.
+func GetWalletAssetsAccountDexPath() string {
+	return "/lpnode/lpnode_admin_panel/wallet/assets"
+}
